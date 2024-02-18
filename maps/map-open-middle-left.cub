@@ -1,0 +1,11 @@
+NO ./textures/simple_wall.xpm
+SO ./textures/simple_wall.xpm
+WE ./textures/simple_wall.xpm
+EA ./textures/simple_wall.xpm
+
+F 220,100,0
+C 225,30,0
+
+1111111111111111
+01000000N0000001
+1111111111111111
