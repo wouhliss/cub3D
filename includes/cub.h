@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 05:16:19 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:08:51 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,14 @@
 # define FILE_ERR "File error\n"
 # define MAP_ERR "Map error\n"
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define ERR_FORMAT "%s: %s\n"
+# define NAME "Cub3d"
+# define EXT ".cub"
+# define ERR_ARGS "Wrong number of args specified (./game <map.cub>)"
+# define EXT_ERR "Wrong file extension specified (./game <map.cub>)"
+
+# define WIDTH 1280
+# define HEIGHT 720
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -64,106 +70,14 @@ typedef struct s_pos
 	double				y;
 }						t_pos;
 
-typedef struct s_mlx
-{
-	void				*mlx;
-	void				*win;
-	void				*img;
-	void				*addr;
-	int					height;
-	int					width;
-	int					bpp;
-	int					size_line;
-	int					endian;
-	bool				refresh;
-}						t_mlx;
-
-typedef struct s_line
-{
-	int					draw_start;
-	int					draw_end;
-	unsigned int		color;
-	int					texture_number;
-	double				wall_x;
-	int					texture_x;
-	int					texture_y;
-	double				texture_pos;
-	double				step;
-}						t_line;
-
-typedef struct s_texture
-{
-	void				*mlx;
-	void				*win;
-	void				*img;
-	void				*addr;
-	int					height;
-	int					width;
-	int					bpp;
-	int					size_line;
-	int					endian;
-}						t_texture;
-
-typedef struct s_player
-{
-	double				player_x;
-	double				perp_wall_dist;
-	int					step_x;
-	int					step_y;
-	int					map_x;
-	int					map_y;
-	int					side;
-	t_pos				pos;
-	t_pos				dir;
-	t_pos				plane;
-	t_pos				ray_dir;
-	t_pos				side_dist;
-	t_pos				delta_dist;
-	double				move_speed;
-	double				rot_speed;
-	bool				w;
-	bool				a;
-	bool				s;
-	bool				d;
-	bool				l_key;
-	bool				r_key;
-	int					hit;
-	float				angle;
-}						t_player;
-
-typedef struct s_map
-{
-	int					ceiling_color;
-	int					floor_color;
-	char				*path_north;
-	char				*path_south;
-	char				*path_east;
-	char				*path_west;
-	char				*path_door_closed;
-	int					total_parameters;
-	int					param_lines[7];
-	int					height;
-	int					width;
-	int					first_line_map;
-	int					start_coords[2];
-	char				start_direction;
-	int					islands;
-	char				**map;
-	t_texture			textures[5];
-}						t_map;
-
 typedef struct s_game
 {
 	int					fd;
-	t_player			*player;
-	t_map				*map;
 	char				start_direction;
 	int					length;
 	int					width;
-	char				*textures[4];
 	int					colors_c[4];
 	int					colors_f[4];
-	t_mlx				*mlx;
 }						t_game;
 
 typedef struct s_garbage
@@ -201,7 +115,7 @@ int						ft_strncmp(const char *s1, const char *s2, size_t n);
 void					*ft_calloc(size_t nmemb, size_t size);
 void					skip_spaces(char *line, int *i);
 int						plen(char **map);
-int						ft_atoi(const char *str);
+int						ft_atoc(const char *str);
 int						max(int a, int b);
 char					**ft_split(char const *s, char c);
 
@@ -219,7 +133,7 @@ void					*gc(void *ptr, int i);
 /*Free and exit*/
 
 void					panic(char *message);
-void					cfree(void *ptr);
+void					cfree(void **ptr);
 void					free_tab(char **tab);
 
 /*Raycasting*/

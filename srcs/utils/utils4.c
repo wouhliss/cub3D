@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 21:11:57 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 04:55:27 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:09:48 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
-#include "get_next_line.h"
 
 void	skip_spaces(char *line, int *i)
 {
@@ -19,27 +18,27 @@ void	skip_spaces(char *line, int *i)
 		(*i)++;
 }
 
-int	ft_atoi(const char *str)
+int	ft_atoc(const char *str)
 {
-	int	i;
 	int	nb;
 	int	sign;
 
-	i = 0;
-	sign = 1;
 	nb = 0;
-	while (str[i] && (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13)))
-		i++;
-	if (str[i] && (str[i] == '-' || str[i] == '+'))
+	sign = 1;
+	while (*str && (*str == ' ' || (*str >= 9 && *str <= 13)))
+		++str;
+	if (*str && (*str == '-' || *str == '+'))
 	{
-		if (str[i] == '-')
+		if (*str == '-')
 			sign = -1;
-		i++;
+		++str;
 	}
-	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	while (*str && *str >= '0' && *str <= '9')
 	{
-		nb = nb * 10 + (str[i] - '0');
-		i++;
+		if (nb > __UINT8_MAX__)
+			return (__UINT8_MAX__ + 1);
+		nb = nb * 10 + *str - '0';
+		++str;
 	}
 	return (nb * sign);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 19:32:26 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 04:55:35 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:39:46 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,14 @@
 
 int	ft_strlen(const char *str)
 {
-	int	i;
+	const char	*s;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
-void	ft_putstr(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		ft_putchar(str[i]);
-		i++;
-	}
+	if (!str)
+		return (0);
+	s = str;
+	while (*s)
+		++s;
+	return (s - str);
 }
 
 char	**ft_copy(char **map)
@@ -62,16 +47,10 @@ char	**ft_copy(char **map)
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t	i;
-
-	if (!s1 || !s2)
-		return (-1);
-	if (!s1 && !s2)
-		return (0);
-	i = 0;
-	while (s1[i] && s2[i] && s1[i] == s2[i] && i < n)
-		i++;
-	if (i == n)
-		return (0);
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+	while (*s1 && *s1 == s2 && n--)
+	{
+		++s1;
+		++s2;
+	}
+	return (*s1 - *s2);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   garbage.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 15:01:45 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 05:00:03 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 14:46:37 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,8 @@ void	ft_lstclear_gb(t_garbage **lst)
 	while (*lst)
 	{
 		tmp = (*lst)->next;
-		cfree((*lst)->content);
-		cfree(*lst);
+		cfree(&((*lst)->content));
+		cfree(lst);
 		*lst = tmp;
 	}
 }

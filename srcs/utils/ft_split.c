@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pibosc <pibosc@student.42.fr>              +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 14:04:10 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 03:38:01 by pibosc           ###   ########.fr       */
+/*   Updated: 2024/02/21 14:41:20 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,6 @@ static char	*get_next_word(char const *str, int *ptr, char c)
 	word[i] = 0;
 	return (word);
 }
-
-/*
-TODO free function
-*/
 
 char	**ft_split(char const *s, char c)
 {

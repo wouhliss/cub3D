@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 04:57:32 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:09:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	only_num(char *color)
 
 int	in_range(char *color)
 {
-	return (0 <= ft_atoi(color) && ft_atoi(color) <= 255);
+	return (0 <= ft_atoc(color) && ft_atoc(color) <= 255);
 }
 
 int	check_args_colors(char **colors)
@@ -52,16 +52,16 @@ int	get_color(char *line, int a, t_game *game)
 	if (a)
 	{
 		game->colors_c[0] = 1;
-		game->colors_c[1] = ft_atoi(splitted[0]);
-		game->colors_c[2] = ft_atoi(splitted[1]);
-		game->colors_c[3] = ft_atoi(splitted[2]);
+		game->colors_c[1] = ft_atoc(splitted[0]);
+		game->colors_c[2] = ft_atoc(splitted[1]);
+		game->colors_c[3] = ft_atoc(splitted[2]);
 	}
 	else
 	{
 		game->colors_f[0] = 1;
-		game->colors_f[1] = ft_atoi(splitted[0]);
-		game->colors_f[2] = ft_atoi(splitted[1]);
-		game->colors_f[3] = ft_atoi(splitted[2]);
+		game->colors_f[1] = ft_atoc(splitted[0]);
+		game->colors_f[2] = ft_atoc(splitted[1]);
+		game->colors_f[3] = ft_atoc(splitted[2]);
 	}
 	return (1);
 }

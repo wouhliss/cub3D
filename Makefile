@@ -1,8 +1,8 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror
 MLXFLAGS = -L ./minilibx-linux -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
-VPATH = srcs srcs/parsing srcs/utils srcs/error srcs/get_next_line srcs/ft_dprintf srcs/raycasting
+VPATH = srcs srcs/parsing srcs/utils srcs/error srcs/ft_dprintf
 RM = rm -rvf
 NAME = cub3D
 NAME_BONUS = cub3D_bonus
@@ -10,16 +10,12 @@ NAME_BONUS = cub3D_bonus
 UTILS = utils1 utils2 utils3 utils4 ft_split
 PARSING = checkings colors init map textures format settings
 ERROR = panic garbage
-GNL = get_next_line get_next_line_utils ft_lstclear
 DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
-RAYCASTING = draw hooks init_ray moves raycasting utils handle_doors rotations texture more_utils zero
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\
 	   $(addsuffix .c, $(ERROR))\
-	   $(addsuffix .c, $(GNL))\
 	   $(addsuffix .c, $(DPRINTF))\
-	   $(addsuffix .c, $(RAYCASTING))\
 	   main.c
 
 OBJ_DIR = obj
@@ -46,6 +42,7 @@ clean:
 fclean: clean
 	$(RM) $(NAME)
 
-re: fclean all
+re: fclean
+	make all
 
 .PHONY: all clean fclean re bonus
