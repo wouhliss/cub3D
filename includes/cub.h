@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:08:51 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/02/21 16:00:07 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sys/types.h>
 # include <unistd.h>
 
+# define PI 3.14f
+
 # define ON_KEYPRESS 2
 # define ON_KEYRELEASE 3
 # define ON_MOUSEPRESS 4
@@ -37,16 +39,14 @@
 # define BUTTONPRESS_MASK 4L
 # define CURSOR_RADIUS 10
 
-# define PI 3.14159265358979323846
-# define MALLOC_ERR "Malloc error\n"
-# define FILE_ERR "File error\n"
-# define MAP_ERR "Map error\n"
-
 # define ERR_FORMAT "%s: %s\n"
-# define NAME "Cub3d"
+# define NAME "cub3D"
 # define EXT ".cub"
-# define ERR_ARGS "Wrong number of args specified (./game <map.cub>)"
-# define EXT_ERR "Wrong file extension specified (./game <map.cub>)"
+# define ARGS_ERR "Wrong number of args specified (./game <map.cub>)."
+# define EXT_ERR "Wrong file extension specified (./game <map.cub>)."
+# define MALLOC_ERR "Could not allocate memory."
+# define FILE_ERR "Could not open map file."
+# define MAP_ERR "Something went wrong while parsing map file."
 
 # define WIDTH 1280
 # define HEIGHT 720
@@ -66,18 +66,41 @@
 
 typedef struct s_pos
 {
-	double				x;
-	double				y;
+	float				x;
+	float				y;
 }						t_pos;
+
+typedef struct s_player
+{
+	t_pos				pos;
+	float				angle;
+}						t_player;
+
+typedef struct s_map
+{
+	char				**map;
+	char				start_direction;
+}						t_map;
+
+typedef struct s_texture
+{
+	void				*img;
+	char				*addr;
+	int					bpp;
+	int					ll;
+	int					endian;
+}						t_texture;
 
 typedef struct s_game
 {
 	int					fd;
-	char				start_direction;
 	int					length;
 	int					width;
 	int					colors_c[4];
 	int					colors_f[4];
+	t_map				map;
+	t_player			player;
+	char				*textures[4];
 }						t_game;
 
 typedef struct s_garbage
@@ -95,16 +118,11 @@ int						set_texture(char *line, t_game *game);
 void					pre_format_map(t_game *game);
 void					format_map(t_game *game);
 int						check_map(t_game *game);
-int						create_trgb(int t, int r, int g, int b);
-void					put_colors(t_game *game);
-void					put_textures(t_game *game);
-void					set_h_w(t_game *game);
 
 /*Utils*/
 
-char					*ft_strchr(const char *s, int c);
+char					*ft_strchr(char *s, int c);
 int						ft_dprintf(int fd, const char *str, ...);
-char					*get_next_line(int fd);
 int						ft_strcmp(const char *s1, const char *s2);
 char					*ft_strdup(const char *s);
 char					**join_tab(char **map, char *str);
@@ -132,37 +150,7 @@ void					*gc(void *ptr, int i);
 
 /*Free and exit*/
 
-void					panic(char *message);
-void					cfree(void **ptr);
+void					panic(const char *message);
 void					free_tab(char **tab);
-
-/*Raycasting*/
-
-void					set_pos(t_pos *pos, double x, double y);
-void					draw_Vline(t_mlx *mlx, t_player *player, int x);
-bool					start_window(t_mlx *mlx, t_game *game);
-void					caster(t_mlx *mlx, t_map *map, t_player *player);
-
-/*Hooks*/
-
-int						on_keyrelease(int keycode, t_game *game);
-int						on_keypress(int keycode, t_game *game);
-int						on_destroy(t_game *game);
-void					move(t_game *game, t_mlx *mlx);
-int						select_texture_wall(t_player *player);
-unsigned int			get_color_r(t_map *map, int id, int texture_x,
-							int texture_y);
-bool					door(t_map *map, t_player *player);
-void					door_action(t_mlx *mlx, t_map *map, t_player *player);
-void					r_key(t_mlx *mlx, t_player *player);
-void					l_key(t_mlx *mlx, t_player *player);
-void					draw_3d_walls(t_mlx *mlx, t_map *map, t_player *player,
-							int x);
-void					set_to_zero_player(t_game *game, t_player *player);
-void					set_to_zero_mlx(t_game *game, t_mlx *mlx);
-void					set_to_zero_map(t_game *game, t_map *map);
-int						ft_in_charset(char *charset, char c);
-void					clean_mlx(t_mlx *mlx, t_texture textures[5]);
-bool					get_textures_walls(t_mlx *mlx, t_map *map);
 
 #endif

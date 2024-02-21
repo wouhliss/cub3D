@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   panic.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 15:59:33 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 05:00:27 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:42:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	panic(char *message)
+void	panic(const char *message)
 {
-	ft_dprintf(2, "Error\n%s", message);
+	ft_dprintf(2, ERR_FORMAT, NAME, message);
 	gc(NULL, 0);
 	exit(1);
 }

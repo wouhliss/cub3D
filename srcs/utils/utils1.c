@@ -6,13 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 17:49:36 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 14:44:10 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:53:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	if (!s)
 		return (NULL);

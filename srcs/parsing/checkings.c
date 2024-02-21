@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   checkings.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 05:35:05 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/02/21 15:47:24 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,36 +28,35 @@ int	ft_in_charset(char *charset, char c)
 
 void	set_player(char c, int i, int j, t_game *game)
 {
-	game->start_direction = c;
-	game->map->start_direction = c;
-	game->player->pos.x = j + 0.5;
-	game->player->pos.y = i + 0.5;
+	game->map.start_direction = c;
+	game->player.pos.x = j + 0.5;
+	game->player.pos.y = i + 0.5;
 	if (c == 'N')
-		game->player->angle = PI / 4;
+		game->player.angle = PI / 4.0f;
 	else if (c == 'S')
-		game->player->angle = 3 * PI / 2;
+		game->player.angle = 3.0f * PI / 2.0f;
 	else if (c == 'E')
-		game->player->angle = 2 * PI;
+		game->player.angle = 2.0f * PI;
 	else if (c == 'W')
-		game->player->angle = PI;
+		game->player.angle = PI;
 }
 
 int	check_one(t_game *game, int i, int j, int *player_count)
 {
 	if (i == 0 || i == game->length - 1 || j == 0 || j == game->width - 1)
-		return (ft_in_charset("12", game->map->map[i][j]));
-	if (game->map->map[i][j] == '2')
-		return (ft_in_charset("12", game->map->map[i + 1][j])
-			&& ft_in_charset("12", game->map->map[i][j + 1]));
-	else if (game->map->map[i][j] == '0')
-		return (ft_in_charset("01NSEW", game->map->map[i + 1][j])
-			&& ft_in_charset("01NSEW", game->map->map[i][j + 1]));
-	else if (ft_in_charset("NSEW", game->map->map[i][j]))
+		return (ft_in_charset("12", game->map.map[i][j]));
+	if (game->map.map[i][j] == '2')
+		return (ft_in_charset("12", game->map.map[i + 1][j])
+			&& ft_in_charset("12", game->map.map[i][j + 1]));
+	else if (game->map.map[i][j] == '0')
+		return (ft_in_charset("01NSEW", game->map.map[i + 1][j])
+			&& ft_in_charset("01NSEW", game->map.map[i][j + 1]));
+	else if (ft_in_charset("NSEW", game->map.map[i][j]))
 	{
-		set_player(game->map->map[i][j], i, j, game);
+		set_player(game->map.map[i][j], i, j, game);
 		(*player_count)++;
-		return (ft_in_charset("01", game->map->map[i + 1][j])
-			&& ft_in_charset("01", game->map->map[i][j + 1]));
+		return (ft_in_charset("01", game->map.map[i + 1][j])
+			&& ft_in_charset("01", game->map.map[i][j + 1]));
 	}
 	return (1);
 }
@@ -70,12 +69,12 @@ int	check_map(t_game *game)
 
 	i = 0;
 	player_count = 0;
-	while (game->map->map[i])
+	while (game->map.map[i])
 	{
 		j = 0;
-		while (game->map->map[i][j])
+		while (game->map.map[i][j])
 		{
-			if (!ft_in_charset("012NSEW", game->map->map[i][j]))
+			if (!ft_in_charset("012NSEW", game->map.map[i][j]))
 				return (0);
 			if (!check_one(game, i, j, &player_count))
 				return (0);
