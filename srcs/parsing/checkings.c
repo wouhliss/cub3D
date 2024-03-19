@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:47:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/20 00:13:23 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,23 +28,25 @@ int	ft_in_charset(char *charset, char c)
 
 void	set_player(char c, int i, int j, t_game *game)
 {
-	game->map.start_direction = c;
-	game->player.pos.x = j + 0.5;
-	game->player.pos.y = i + 0.5;
+	game->map.s_dir = c;
+	game->map.s_pos = (t_vec){j, i};
+	game->p.pos = (t_vec){j, i};
 	if (c == 'N')
-		game->player.angle = PI / 4.0f;
+		game->p.dir = (t_vec){-1, 0};
 	else if (c == 'S')
-		game->player.angle = 3.0f * PI / 2.0f;
-	else if (c == 'E')
-		game->player.angle = 2.0f * PI;
+		game->p.dir = (t_vec){-1, 0};
 	else if (c == 'W')
-		game->player.angle = PI;
+		game->p.dir = (t_vec){-1, 0};
+	else if (c == 'E')
+		game->p.dir = (t_vec){-1, 0};
+	game->p.plane = (t_vec){0, 0.66};
+	game->p.speed = 0.05;
 }
 
 int	check_one(t_game *game, int i, int j, int *player_count)
 {
 	if (i == 0 || i == game->length - 1 || j == 0 || j == game->width - 1)
-		return (ft_in_charset("12", game->map.map[i][j]));
+		return (ft_in_charset("12 ", game->map.map[i][j]));
 	if (game->map.map[i][j] == '2')
 		return (ft_in_charset("12", game->map.map[i + 1][j])
 			&& ft_in_charset("12", game->map.map[i][j + 1]));
@@ -54,6 +56,7 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 	else if (ft_in_charset("NSEW", game->map.map[i][j]))
 	{
 		set_player(game->map.map[i][j], i, j, game);
+		game->map.map[i][j] = '0';
 		(*player_count)++;
 		return (ft_in_charset("01", game->map.map[i + 1][j])
 			&& ft_in_charset("01", game->map.map[i][j + 1]));

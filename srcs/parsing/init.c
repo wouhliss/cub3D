@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:56:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/02/21 20:26:36 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,9 @@ void	init_map(char *path, t_game *game)
 	if (game->fd == -1)
 		panic(FILE_ERR);
 	get_info_map(game);
-	//put_colors(game);
-	//put_textures(game);
+	put_colors(game);
 	pre_format_map(game);
 	if (!check_map(game))
-		panic(MAP_ERR);
+		panic(CHAR_ERR);
 	format_map(game);
-	//set_h_w(game);
 }

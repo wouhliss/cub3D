@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 16:00:07 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/19 23:03:20 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@
 # include <X11/X.h>
 # include <X11/keysym.h>
 # include <fcntl.h>
-# include <float.h>
 # include <limits.h>
 # include <math.h>
 # include <stdbool.h>
@@ -25,6 +24,7 @@
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <time.h>
 # include <unistd.h>
 
 # define PI 3.14f
@@ -39,6 +39,8 @@
 # define BUTTONPRESS_MASK 4L
 # define CURSOR_RADIUS 10
 
+# define TEXTURES 4
+
 # define ERR_FORMAT "%s: %s\n"
 # define NAME "cub3D"
 # define EXT ".cub"
@@ -47,9 +49,24 @@
 # define MALLOC_ERR "Could not allocate memory."
 # define FILE_ERR "Could not open map file."
 # define MAP_ERR "Something went wrong while parsing map file."
+# define CHAR_ERR "Invalid char found in map file."
+# define EMPTYL_ERR "Empty line found in map file."
+# define EMPTY_ERR "Map file is empty."
+# define TEXTURE_ERR "Could not parse textures."
+# define TEXTURE_SIZE "Invalid texture size."
+# define MLX_ERR "Could not load the mlx."
+# define WIN_ERR "Could not create the window."
+# define SCREEN_ERR "Could not create the screen image."
+# define IMPORT_ERR "Could not import a texture file."
+# define SETTINGS_ERR "Some information are missing from the map file."
+# define MISSING_ERR "Invalid or no map was found in file."
+# define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
-# define WIDTH 1280
-# define HEIGHT 720
+# define FOV
+# define WIDTH 1600
+# define HEIGHT 900
+# define MINIMAP_WIDTH 320
+# define MINIMAP_HEIGHT 240
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -64,24 +81,74 @@
 # define ELECTRIC_BLUE 0x0066FF
 # define LAVA_RED 0xFF3300
 
-typedef struct s_pos
+/*GNL*/
+# define BUFFER_SIZE 1024
+# define EMPTY_BUFFER -42
+
+typedef struct s_buffer
 {
-	float				x;
-	float				y;
-}						t_pos;
+	char				buff[BUFFER_SIZE];
+	char				*line;
+	int					size;
+	int					read;
+	int					pos;
+	int					resume;
+}						t_buffer;
+
+typedef struct s_vec
+{
+	double				x;
+	double				y;
+}						t_vec;
+
+typedef struct s_intvec
+{
+	int					x;
+	int					y;
+}						t_intvec;
+
+typedef struct s_render
+{
+	t_vec				ray_dir;
+	t_vec				side_dist;
+	t_vec				delta_dist;
+	t_intvec			map;
+	t_intvec			step;
+	t_intvec			draw;
+	double				camera_x;
+	double				perp_dist;
+	int					hit;
+	int					side;
+	int					line_height;
+	int					color;
+}						t_render;
 
 typedef struct s_player
 {
-	t_pos				pos;
-	float				angle;
+	t_vec				pos;
+	t_vec				dir;
+	t_vec				plane;
+	double				speed;
+	int					y;
 }						t_player;
 
 typedef struct s_map
 {
+	t_vec				s_pos;
 	char				**map;
-	char				start_direction;
+	char				s_dir;
+	int					c_color;
+	int					f_color;
 }						t_map;
 
+typedef struct s_screen
+{
+	void				*img;
+	char				*addr;
+	int					bpp;
+	int					ll;
+	int					endian;
+}						t_screen;
 typedef struct s_texture
 {
 	void				*img;
@@ -89,18 +156,39 @@ typedef struct s_texture
 	int					bpp;
 	int					ll;
 	int					endian;
+	int					height;
+	int					width;
 }						t_texture;
+
+typedef struct s_mlx
+{
+	void				*mlx;
+	void				*win;
+	int					width;
+	int					height;
+}						t_mlx;
 
 typedef struct s_game
 {
+	t_map				map;
+	t_player			p;
+	t_mlx				mlx;
+	t_texture			textures[4];
+	t_screen			screen;
+	int					colors_c[4];
+	int					colors_f[4];
+	char				*files[4];
+	clock_t				last;
+	clock_t				now;
 	int					fd;
 	int					length;
 	int					width;
-	int					colors_c[4];
-	int					colors_f[4];
-	t_map				map;
-	t_player			player;
-	char				*textures[4];
+	int					front;
+	int					back;
+	int					up;
+	int					down;
+	int					left;
+	int					right;
 }						t_game;
 
 typedef struct s_garbage
@@ -108,6 +196,14 @@ typedef struct s_garbage
 	void				*content;
 	struct s_garbage	*next;
 }						t_garbage;
+
+/*events*/
+
+int						on_key_press(int key_code, void *param);
+int						on_key_release(int k, void *param);
+int						on_destroy_event(void *param);
+void					ft_draw(t_game *game);
+// int						logic_loop(void *param);
 
 /*Parsing*/
 
@@ -118,9 +214,11 @@ int						set_texture(char *line, t_game *game);
 void					pre_format_map(t_game *game);
 void					format_map(t_game *game);
 int						check_map(t_game *game);
-
+int						set_texture(char *line, t_game *game);
 /*Utils*/
 
+char					*get_next_line(int fd);
+int						ft_strnchr(t_buffer *buffer);
 char					*ft_strchr(char *s, int c);
 int						ft_dprintf(int fd, const char *str, ...);
 int						ft_strcmp(const char *s1, const char *s2);
@@ -136,7 +234,10 @@ int						plen(char **map);
 int						ft_atoc(const char *str);
 int						max(int a, int b);
 char					**ft_split(char const *s, char c);
-
+int						create_trgb(int t, int r, int g, int b);
+void					put_colors(t_game *game);
+void					my_mlx_pixel_put(t_screen *data, int x, int y,
+							int color);
 // int						first_last_line(t_game *game);
 // void					display_tab(char **tab);
 // int						check_line(t_game *game);

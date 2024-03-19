@@ -6,29 +6,29 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:09:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/12 08:37:27 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-int	only_num(char *color)
+static int	only_num(const char *color)
 {
-	int	i;
-
-	i = 0;
-	while (color[i])
+	while (*color)
 	{
-		if (!('0' <= color[i] && color[i] <= '9'))
+		if (*color < '0' || *color > '9')
 			return (0);
-		i++;
+		++color;
 	}
 	return (1);
 }
 
-int	in_range(char *color)
+static int	in_range(const char *color)
 {
-	return (0 <= ft_atoc(color) && ft_atoc(color) <= 255);
+	int	c;
+
+	c = ft_atoc(color);
+	return (c >= 0 && c <= 255);
 }
 
 int	check_args_colors(char **colors)

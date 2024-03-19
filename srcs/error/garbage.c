@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 15:01:45 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:55:03 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/17 17:07:33 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_garbage	*ft_lstnew(void *content)
 
 	lst = malloc(sizeof(t_garbage));
 	if (!lst)
-		return (NULL);
+		return (free(content), NULL);
 	lst->content = content;
 	lst->next = NULL;
 	return (lst);
@@ -35,10 +35,12 @@ t_garbage	*ft_lstlastt(t_garbage *lst)
 	return (lst);
 }
 
-void	ft_lstadd_back(t_garbage **lst, t_garbage *new)
+t_garbage	*ft_lstadd_back(t_garbage **lst, t_garbage *new)
 {
 	t_garbage	*last;
 
+	if (!new)
+		return (NULL);
 	if (lst)
 	{
 		if (*lst)
@@ -49,6 +51,7 @@ void	ft_lstadd_back(t_garbage **lst, t_garbage *new)
 		else
 			*lst = new;
 	}
+	return (new);
 }
 
 void	ft_lstclear_gb(t_garbage **lst)
@@ -72,7 +75,8 @@ void	*gc(void *ptr, int i)
 
 	if (i)
 	{
-		ft_lstadd_back(&gb, ft_lstnew(ptr));
+		if (!ft_lstadd_back(&gb, ft_lstnew(ptr)))
+			return (NULL);
 		return (ptr);
 	}
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   textures.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/23 18:09:11 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/01/31 04:54:06 by ybelatar         ###   ########.fr       */
+/*   Created: 2024/03/12 07:49:28 by wouhliss          #+#    #+#             */
+/*   Updated: 2024/03/13 02:52:09 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,21 @@ int	set_texture(char *line, t_game *game)
 	splitted = gc(ft_split(line, ' '), 1);
 	if (!splitted || plen(splitted) != 2)
 		return (0);
-	if (!ft_strcmp(splitted[0], "NO") && game->textures[0])
+	if (!ft_strcmp(splitted[0], "NO") && game->files[0])
 		return (0);
-	if (!ft_strcmp(splitted[0], "SO") && game->textures[1])
+	if (!ft_strcmp(splitted[0], "SO") && game->files[1])
 		return (0);
-	if (!ft_strcmp(splitted[0], "WE") && game->textures[2])
+	if (!ft_strcmp(splitted[0], "WE") && game->files[2])
 		return (0);
-	if (!ft_strcmp(splitted[0], "EA") && game->textures[3])
+	if (!ft_strcmp(splitted[0], "EA") && game->files[3])
 		return (0);
 	if (!ft_strcmp(splitted[0], "NO"))
-		game->textures[0] = gc(ft_strdup(splitted[1]), 1);
+		game->files[0] = gc(ft_strdup(splitted[1]), 1);
 	if (!ft_strcmp(splitted[0], "SO"))
-		game->textures[1] = gc(ft_strdup(splitted[1]), 1);
+		game->files[1] = gc(ft_strdup(splitted[1]), 1);
 	if (!ft_strcmp(splitted[0], "WE"))
-		game->textures[2] = gc(ft_strdup(splitted[1]), 1);
+		game->files[2] = gc(ft_strdup(splitted[1]), 1);
 	if (!ft_strcmp(splitted[0], "EA"))
-		game->textures[3] = gc(ft_strdup(splitted[1]), 1);
+		game->files[3] = gc(ft_strdup(splitted[1]), 1);
 	return (1);
 }
