@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/20 00:17:39 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/20 02:35:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,12 @@
 int	ft_loop(void *param)
 {
 	t_game	*game;
-	double	rotspeed;
-	double	old_dir_x;
-	double	old_plane_x;
+	double	x;
+	double	y;
 
-	rotspeed = 0.05;
 	game = param;
 	game->now = clock();
-	if (game->now - game->last < 10000)
+	if (game->now - game->last < 12000)
 		return (0);
 	game->last = clock();
 	if (game->front)
@@ -43,29 +41,27 @@ int	ft_loop(void *param)
 				- game->p.dir.x * game->p.speed)] == '0')
 			game->p.pos.x -= game->p.dir.x * game->p.speed;
 	}
-	if (game->left)
-	{
-		old_dir_x = game->p.dir.x;
-		game->p.dir.x = game->p.dir.x * cos(rotspeed) - game->p.dir.y
-			* sin(rotspeed);
-		game->p.dir.y = old_dir_x * sin(rotspeed) + game->p.dir.y
-			* cos(rotspeed);
-		old_plane_x = game->p.plane.x;
-		game->p.plane.x = old_plane_x * cos(rotspeed) - game->p.plane.y
-			* sin(rotspeed);
-		game->p.plane.y = game->p.plane.x * sin(rotspeed) + game->p.plane.y
-			* cos(rotspeed);
-	}
 	if (game->right)
 	{
-		game->p.dir.y = game->p.dir.x * sin(-rotspeed) + game->p.dir.y
-			* cos(-rotspeed);
-		game->p.dir.x = game->p.dir.x * cos(-rotspeed) - game->p.dir.y
-			* sin(-rotspeed);
-		game->p.plane.y = game->p.plane.x * sin(-rotspeed) + game->p.plane.y
-			* cos(-rotspeed);
-		game->p.plane.x = game->p.plane.x * cos(-rotspeed) - game->p.plane.y
-			* sin(-rotspeed);
+		x = game->p.dir.x;
+		y = game->p.dir.y;
+		game->p.dir.x = x * cos(-0.1) - y * sin(-0.1);
+		game->p.dir.y = x * sin(-0.1) + y * cos(-0.1);
+		x = game->p.plane.x;
+		y = game->p.plane.y;
+		game->p.plane.x = x * cos(-0.1) - y * sin(-0.1);
+		game->p.plane.y = x * sin(-0.1) + y * cos(-0.1);
+	}
+	if (game->left)
+	{
+		x = game->p.dir.x;
+		y = game->p.dir.y;
+		game->p.dir.x = x * cos(0.1) - y * sin(0.1);
+		game->p.dir.y = x * sin(0.1) + y * cos(0.1);
+		x = game->p.plane.x;
+		y = game->p.plane.y;
+		game->p.plane.x = x * cos(0.1) - y * sin(0.1);
+		game->p.plane.y = x * sin(0.1) + y * cos(0.1);
 	}
 	if (game->up)
 	{
