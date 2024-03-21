@@ -6,11 +6,30 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 19:32:26 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 20:25:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/20 23:48:45 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+char	*ft_strrchr(char *s, int c)
+{
+	int	i;
+
+	if (!s)
+		return (NULL);
+	i = 0;
+	while (s[i])
+		++i;
+	while (s[--i])
+	{
+		if (s[i] == c)
+			return (s + i);
+	}
+	if (s[i] == c)
+		return (s + i);
+	return (NULL);
+}
 
 int	ft_strlen(const char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/20 02:34:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/21 01:29:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ int	ft_in_charset(char *charset, char c)
 void	set_player(char c, int i, int j, t_game *game)
 {
 	game->map.s_dir = c;
-	game->map.s_pos = (t_vec){j, i};
-	game->p.pos = (t_vec){j, i};
+	game->map.s_pos = (t_vec){j + 0.5, i + 0.5};
+	game->p.pos = (t_vec){j + 0.5, i + 0.5};
 	if (c == 'N')
 	{
 		game->p.dir = (t_vec){-1, 0};

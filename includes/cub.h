@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/20 02:35:56 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/21 22:48:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,19 @@
 # include <time.h>
 # include <unistd.h>
 
-# define PI 3.14f
+# define PI 3.141592653589793
+# define HALF_PI 1.57079632679
 
 # define ON_KEYPRESS 2
 # define ON_KEYRELEASE 3
 # define ON_MOUSEPRESS 4
+# define ON_MOUSEMOVE 6
 # define ON_DESTROY 17
 # define NO_MASK 0L
 # define KEYPRESS_MASK 1L
 # define KEYRELEASE_MASK 2L
 # define BUTTONPRESS_MASK 4L
+# define POINTERMOTION_MASK 1L << 6
 # define CURSOR_RADIUS 10
 
 # define TEXTURES 4
@@ -189,6 +192,10 @@ typedef struct s_game
 	int					down;
 	int					left;
 	int					right;
+	int					turn_l;
+	int					turn_r;
+	int					minus;
+	int					plus;
 }						t_game;
 
 typedef struct s_garbage
@@ -202,6 +209,7 @@ typedef struct s_garbage
 int						on_key_press(int key_code, void *param);
 int						on_key_release(int k, void *param);
 int						on_destroy_event(void *param);
+int						on_mouse(int x, int y, void *param);
 void					ft_draw(t_game *game);
 // int						logic_loop(void *param);
 
@@ -220,6 +228,7 @@ int						set_texture(char *line, t_game *game);
 char					*get_next_line(int fd);
 int						ft_strnchr(t_buffer *buffer);
 char					*ft_strchr(char *s, int c);
+char					*ft_strrchr(char *s, int c);
 int						ft_dprintf(int fd, const char *str, ...);
 int						ft_strcmp(const char *s1, const char *s2);
 char					*ft_strdup(const char *s);

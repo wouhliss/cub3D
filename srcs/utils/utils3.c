@@ -6,11 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:23:37 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:54:10 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/20 23:47:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+
 
 void	free_tab(char **tab)
 {

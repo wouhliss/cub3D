@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/20 02:35:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/21 22:54:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,52 +25,96 @@ int	ft_loop(void *param)
 	game->last = clock();
 	if (game->front)
 	{
-		if (game->map.map[(int)(game->p.pos.y
-				+ game->p.dir.y * game->p.speed)][(int)game->p.pos.x] == '0')
+		if (game->map.map[(int)(game->p.pos.y + game->p.dir.y * (game->p.speed
+					* 2))][(int)game->p.pos.x] == '0')
 			game->p.pos.y += game->p.dir.y * game->p.speed;
 		if (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-				+ game->p.dir.x * game->p.speed)] == '0')
+				+ game->p.dir.x * (game->p.speed * 2))] == '0')
 			game->p.pos.x += game->p.dir.x * game->p.speed;
 	}
 	if (game->back)
 	{
-		if (game->map.map[(int)(game->p.pos.y
-				- game->p.dir.y * game->p.speed)][(int)game->p.pos.x] == '0')
+		if (game->map.map[(int)(game->p.pos.y - game->p.dir.y * (game->p.speed
+					* 2))][(int)game->p.pos.x] == '0')
 			game->p.pos.y -= game->p.dir.y * game->p.speed;
 		if (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-				- game->p.dir.x * game->p.speed)] == '0')
+				- game->p.dir.x * (game->p.speed * 2))] == '0')
 			game->p.pos.x -= game->p.dir.x * game->p.speed;
 	}
 	if (game->right)
 	{
-		x = game->p.dir.x;
-		y = game->p.dir.y;
-		game->p.dir.x = x * cos(-0.1) - y * sin(-0.1);
-		game->p.dir.y = x * sin(-0.1) + y * cos(-0.1);
-		x = game->p.plane.x;
-		y = game->p.plane.y;
-		game->p.plane.x = x * cos(-0.1) - y * sin(-0.1);
-		game->p.plane.y = x * sin(-0.1) + y * cos(-0.1);
+		if (game->map.map[(int)(game->p.pos.y + (game->p.dir.x * sin(-HALF_PI)
+					+ game->p.dir.y * cos(-HALF_PI)) * (game->p.speed
+					* 2))][(int)game->p.pos.x] == '0')
+			game->p.pos.y += (game->p.dir.x * sin(-HALF_PI) + game->p.dir.y
+					* cos(-HALF_PI)) * game->p.speed;
+		if (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
+				+ (game->p.dir.x * cos(-HALF_PI) - game->p.dir.y * sin(-PI
+						/ 2.0)) * (game->p.speed * 2))] == '0')
+			game->p.pos.x += game->p.dir.x * cos(-HALF_PI) - game->p.dir.y
+				* sin(-HALF_PI) * game->p.speed;
 	}
 	if (game->left)
 	{
+		if (game->map.map[(int)(game->p.pos.y + (game->p.dir.x * sin(HALF_PI)
+					+ game->p.dir.y * cos(HALF_PI)) * (game->p.speed
+					* 2))][(int)game->p.pos.x] == '0')
+			game->p.pos.y += (game->p.dir.x * sin(HALF_PI) + game->p.dir.y
+					* cos(HALF_PI)) * game->p.speed;
+		if (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
+				+ (game->p.dir.x * cos(HALF_PI) - game->p.dir.y * sin(PI / 2.0))
+				* (game->p.speed * 2))] == '0')
+			game->p.pos.x += game->p.dir.x * cos(HALF_PI) - game->p.dir.y
+				* sin(HALF_PI) * game->p.speed;
+	}
+	if (game->turn_r)
+	{
 		x = game->p.dir.x;
 		y = game->p.dir.y;
-		game->p.dir.x = x * cos(0.1) - y * sin(0.1);
-		game->p.dir.y = x * sin(0.1) + y * cos(0.1);
+		game->p.dir.x = x * cos(-0.05) - y * sin(-0.05);
+		game->p.dir.y = x * sin(-0.05) + y * cos(-0.05);
 		x = game->p.plane.x;
 		y = game->p.plane.y;
-		game->p.plane.x = x * cos(0.1) - y * sin(0.1);
-		game->p.plane.y = x * sin(0.1) + y * cos(0.1);
+		game->p.plane.x = x * cos(-0.05) - y * sin(-0.05);
+		game->p.plane.y = x * sin(-0.05) + y * cos(-0.05);
+	}
+	if (game->turn_l)
+	{
+		x = game->p.dir.x;
+		y = game->p.dir.y;
+		game->p.dir.x = x * cos(0.05) - y * sin(0.05);
+		game->p.dir.y = x * sin(0.05) + y * cos(0.05);
+		x = game->p.plane.x;
+		y = game->p.plane.y;
+		game->p.plane.x = x * cos(0.05) - y * sin(0.05);
+		game->p.plane.y = x * sin(0.05) + y * cos(0.05);
+	}
+	if (game->minus)
+	{
+		x = game->p.plane.x;
+		y = game->p.plane.y;
+		game->p.plane.x = x * cos(0.05) - y * sin(0.05);
+		game->p.plane.y = x * sin(-0.05) + y * cos(-0.05);
+		printf("%f, %f\n", game->p.plane.x, game->p.plane.y);
+		fflush(stdout);
+	}
+	if (game->plus)
+	{
+		x = game->p.plane.x;
+		y = game->p.plane.y;
+		game->p.plane.x = x * cos(-0.05) - y * sin(-0.05);
+		game->p.plane.y = x * sin(0.05) + y * cos(0.05);
+		printf("%f, %f\n", game->p.plane.x, game->p.plane.y);
+		fflush(stdout);
 	}
 	if (game->up)
 	{
 		if (game->p.y < HEIGHT)
-			game->p.y += 20;
+			game->p.y += 10;
 	}
 	if (game->down)
 		if (game->p.y > -HEIGHT)
-			game->p.y -= 20;
+			game->p.y -= 10;
 	ft_draw(game);
 	return (0);
 }
@@ -130,6 +174,8 @@ static inline int	ft_init_mlx(t_game *g)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, IMPORT_ERR), 1);
 	return (mlx_hook(g->mlx.win, ON_KEYPRESS, KEYPRESS_MASK, on_key_press, g),
 		mlx_hook(g->mlx.win, ON_DESTROY, NO_MASK, on_destroy_event, g),
+		mlx_mouse_hide(g->mlx.mlx, g->mlx.win), mlx_hook(g->mlx.win,
+			ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse, g),
 		mlx_loop_hook(g->mlx.mlx, ft_loop, g), mlx_hook(g->mlx.win,
 			ON_KEYRELEASE, KEYRELEASE_MASK, on_key_release, g), 0);
 }
@@ -169,7 +215,7 @@ int	main(int ac, char **av)
 
 	if (ac != 2)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, ARGS_ERR), 1);
-	s = ft_strchr(av[1], '.');
+	s = ft_strrchr(av[1], '.');
 	if (!s)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, EXT_ERR), 2);
 	if (ft_strcmp(s, EXT))

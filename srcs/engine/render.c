@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/19 23:30:26 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/20 23:41:00 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ inline void	ft_draw(t_game *game)
 	t_render	render;
 	int			y;
 	int			x;
+	int			map_x;
+	int			map_y;
 
 	x = 0;
 	while (x < WIDTH)
@@ -128,6 +130,30 @@ inline void	ft_draw(t_game *game)
 				my_mlx_pixel_put(&game->screen, x, y, render.color);
 			else
 				my_mlx_pixel_put(&game->screen, x, y, game->map.f_color);
+			++y;
+		}
+		++x;
+	}
+	map_x = (int)game->p.pos.x - 10;
+	if (map_x < 0)
+		map_x = 0;
+	map_y = (int)game->p.pos.y - 10;
+	if (map_y < 0)
+		map_y = 0;
+	x = 50;
+	while (x < MINIMAP_WIDTH + 50)
+	{
+		y = 20;
+		while (y < MINIMAP_HEIGHT + 20)
+		{
+			if (map_x + ((x - 50) / 16) >= game->width || map_y + ((y - 20) / 16) >= game->length)
+				;
+			else if (game->map.map[map_y + ((y - 20) / 16)][map_x + ((x - 50) / 16)] == '1')
+				my_mlx_pixel_put(&game->screen, x, y, 0x00000000);
+			else if (game->map.map[map_y + ((y - 20) / 16)][map_x + ((x - 50) / 16)] == '0')
+				my_mlx_pixel_put(&game->screen, x, y, 0x00FFFFFF);
+			if ((int)game->p.pos.x == map_x + ((x - 50) / 16) && (int)game->p.pos.y == map_y + ((y - 20) / 16))
+				my_mlx_pixel_put(&game->screen, x, y, 0x00FF0000);
 			++y;
 		}
 		++x;
