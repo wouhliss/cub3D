@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/21 22:54:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/21 23:05:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,21 +91,13 @@ int	ft_loop(void *param)
 	}
 	if (game->minus)
 	{
-		x = game->p.plane.x;
-		y = game->p.plane.y;
-		game->p.plane.x = x * cos(0.05) - y * sin(0.05);
-		game->p.plane.y = x * sin(-0.05) + y * cos(-0.05);
-		printf("%f, %f\n", game->p.plane.x, game->p.plane.y);
-		fflush(stdout);
+		game->p.plane.x -= 0.1;
+		game->p.plane.y += 0.1;
 	}
 	if (game->plus)
 	{
-		x = game->p.plane.x;
-		y = game->p.plane.y;
-		game->p.plane.x = x * cos(-0.05) - y * sin(-0.05);
-		game->p.plane.y = x * sin(0.05) + y * cos(0.05);
-		printf("%f, %f\n", game->p.plane.x, game->p.plane.y);
-		fflush(stdout);
+		game->p.plane.x += 0.1;
+		game->p.plane.y -= 0.1;
 	}
 	if (game->up)
 	{
