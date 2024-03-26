@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/22 02:56:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 12:49:45 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,13 +168,8 @@ static inline int	ft_init_mlx(t_game *g)
 static inline void	ft_start(t_game *game)
 {
 	int			i;
-	t_xvar		*moha;
-	t_win_list	*window;
 	int			err;
 
-	moha = game->mlx.mlx;
-	window = game->mlx.win;
-	XFixesHideCursor(moha->display, window->window);
 	i = TEXTURES;
 	err = 0;
 	while (i--)

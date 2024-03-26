@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/22 01:40:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:06:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <limits.h>
 # include <math.h>
 # include <mlx_int.h>
-# include <X11/extensions/Xfixes.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -69,7 +68,9 @@
 
 # define FOV
 # define WIDTH 1280
+# define HALF_WIDTH 640
 # define HEIGHT 720
+# define HALF_HEIGHT 360
 # define MINIMAP_WIDTH 320
 # define MINIMAP_HEIGHT 240
 # define BLACK 0x000000
@@ -126,6 +127,7 @@ typedef struct s_render
 	int					side;
 	int					line_height;
 	int					color;
+	int					twidth;
 }						t_render;
 
 typedef struct s_player
