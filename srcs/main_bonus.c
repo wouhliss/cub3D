@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/26 15:51:48 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 16:41:05 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,50 +18,90 @@ static inline void	ft_handleinput(t_game *game, clock_t delta)
 
 	if (game->front)
 	{
-		game->p.speed.y += 0.005;
+		game->p.speed.y += (game->p.dir.y * delta) * 0.0000001;
+		if (game->p.speed.y > 0.1)
+			game->p.speed.y = 0.1;
+		else if (game->p.speed.y < -0.1)
+			game->p.speed.y = -0.1;
+		game->p.speed.x += (game->p.dir.x * delta) * 0.0000001;
+		if (game->p.speed.x > 0.1)
+			game->p.speed.x = 0.1;
+		else if (game->p.speed.x < -0.1)
+			game->p.speed.x = -0.1;
+	}
+	if (game->back)
+	{
+		game->p.speed.y -= game->p.dir.y * delta * 0.0000001;
+		if (game->p.speed.y > 0.1)
+			game->p.speed.y = 0.1;
+		else if (game->p.speed.y < -0.1)
+			game->p.speed.y = -0.1;
+		game->p.speed.x -= game->p.dir.x * delta * 0.0000001;
+		if (game->p.speed.x > 0.1)
+			game->p.speed.x = 0.1;
+		else if (game->p.speed.x < -0.1)
+			game->p.speed.x = -0.1;
 	}
 	if (game->right)
 	{
-		game->p.speed.x += 0.07;
+		game->p.speed.x += (game->p.dir.x * sin(-HALF_PI) - game->p.dir.y
+				* sin(-HALF_PI)) * delta * 0.0000001;
+		if (game->p.speed.x > 0.1)
+			game->p.speed.x = 0.1;
+		else if (game->p.speed.x < -0.1)
+			game->p.speed.x = -0.1;
+		game->p.speed.y += (game->p.dir.x * sin(-HALF_PI) + game->p.dir.y
+				* cos(-HALF_PI)) * delta * 0.0000001;
+		if (game->p.speed.y > 0.1)
+			game->p.speed.y = 0.1;
+		else if (game->p.speed.y < -0.1)
+			game->p.speed.y = -0.1;
 	}
 	if (game->left)
 	{
-		game->p.speed.x -= 0.07;
+		game->p.speed.x += (game->p.dir.x * sin(HALF_PI) - game->p.dir.y
+				* sin(HALF_PI)) * delta * 0.0000001;
+		if (game->p.speed.x > 0.1)
+			game->p.speed.x = 0.1;
+		else if (game->p.speed.x < -0.1)
+			game->p.speed.x = -0.1;
+		game->p.speed.y += (game->p.dir.x * sin(HALF_PI) + game->p.dir.y
+				* cos(HALF_PI)) * delta * 0.0000001;
+		if (game->p.speed.y > 0.1)
+			game->p.speed.y = 0.1;
+		else if (game->p.speed.y < -0.1)
+			game->p.speed.y = -0.1;
 	}
 	if (game->turn_r)
 	{
 		x = game->p.dir.x;
-		game->p.dir.x = x * cos(-(delta / 128000.0)) - game->p.dir.y
-			* sin(-(delta / 128000.0));
-		game->p.dir.y = x * sin(-(delta / 128000.0)) + game->p.dir.y
-			* cos(-(delta / 128000.0));
+		game->p.dir.x = x * cos(-(0.000005 * delta)) - game->p.dir.y
+			* sin(-(0.000005 * delta));
+		game->p.dir.y = x * sin(-(0.000005 * delta)) + game->p.dir.y
+			* cos(-(0.000005 * delta));
 		x = game->p.plane.x;
-		game->p.plane.x = x * cos(-(delta / 128000.0)) - game->p.plane.y
-			* sin(-(delta / 128000.0));
-		game->p.plane.y = x * sin(-(delta / 128000.0)) + game->p.plane.y
-			* cos(-(delta / 128000.0));
+		game->p.plane.x = x * cos(-(0.000005 * delta)) - game->p.plane.y
+			* sin(-(0.000005 * delta));
+		game->p.plane.y = x * sin(-(0.000005 * delta)) + game->p.plane.y
+			* cos(-(0.000005 * delta));
 	}
 	if (game->turn_l)
 	{
 		x = game->p.dir.x;
-		game->p.dir.x = x * cos((delta / 128000.0)) - game->p.dir.y * sin((delta
-					/ 128000.0));
-		game->p.dir.y = x * sin((delta / 128000.0)) + game->p.dir.y * cos((delta
-					/ 128000.0));
+		game->p.dir.x = x * cos((0.000005 * delta)) - game->p.dir.y
+			* sin((0.000005 * delta));
+		game->p.dir.y = x * sin((0.000005 * delta)) + game->p.dir.y
+			* cos((0.000005 * delta));
 		x = game->p.plane.x;
-		game->p.plane.x = x * cos((delta / 128000.0)) - game->p.plane.y
-			* sin((delta / 128000.0));
-		game->p.plane.y = x * sin((delta / 128000.0)) + game->p.plane.y
-			* cos((delta / 128000.0));
+		game->p.plane.x = x * cos((0.000005 * delta)) - game->p.plane.y
+			* sin((0.000005 * delta));
+		game->p.plane.y = x * sin((0.000005 * delta)) + game->p.plane.y
+			* cos((0.000005 * delta));
 	}
 	if (game->up)
-	{
-		if (game->p.y < HEIGHT)
-			game->p.y += (delta / 300.0);
-	}
+		game->p.y += (0.002 * delta);
 	if (game->down)
-		if (game->p.y > -HEIGHT)
-			game->p.y -= (delta / 300.0);
+		game->p.y -= (0.002 * delta);
 }
 
 int	ft_loop(void *param)
@@ -73,26 +113,27 @@ int	ft_loop(void *param)
 	game->last = game->now;
 	game->now = clock();
 	delta = game->now - game->last;
-	if (game->p.speed.y && (int)(game->p.pos.y + game->p.dir.y
-			* game->p.speed.y) < game->length && (int)(game->p.pos.y + game->p.dir.y
-			* game->p.speed.y) > 0 && game->map.map[(int)(game->p.pos.y + game->p.dir.y
-			* game->p.speed.y)][(int)game->p.pos.x] == '0')
-	{
-		game->p.pos.y += game->p.dir.y * game->p.speed.y;
-		game->p.speed.y -= 0.001;
-	}
+	if (game->p.pos.y + (game->p.speed.y) > 0 && game->p.pos.y
+		+ (game->p.speed.y) < game->length && game->map.map[(int)(game->p.pos.y
+			+ (game->p.speed.y))][(int)game->p.pos.x] == '0')
+		game->p.pos.y += game->p.speed.y;
 	else
 		game->p.speed.y = 0;
-	if (game->p.speed.x && (int)(game->p.pos.x
-			+ game->p.dir.x * game->p.speed.x) < game->width && (int)(game->p.pos.x
-			+ game->p.dir.x * game->p.speed.x) > 0 && game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-			+ game->p.dir.x * game->p.speed.x)] == '0')
-	{
-		game->p.pos.x += game->p.dir.x * game->p.speed.x;
-		game->p.speed.x -= 0.001;
-	}
+	if (game->p.pos.x + (game->p.speed.x) > 0 && game->p.pos.x
+		+ (game->p.speed.x) < game->width
+		&& game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
+			+ (game->p.speed.x))] == '0')
+		game->p.pos.x += game->p.speed.x;
 	else
 		game->p.speed.x = 0;
+	if (game->p.speed.x > 0)
+		game->p.speed.x -= 0.0005;
+	else if (game->p.speed.x < 0)
+		game->p.speed.x += 0.0005;
+	if (game->p.speed.y > 0)
+		game->p.speed.y -= 0.0005;
+	else if (game->p.speed.y < 0)
+		game->p.speed.y += 0.0005;
 	ft_handleinput(game, delta);
 	ft_draw(game);
 	return (0);
