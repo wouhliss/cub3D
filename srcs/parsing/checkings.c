@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/22 02:36:27 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 15:32:32 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	set_player(char c, int i, int j, t_game *game)
 		game->p.dir = (t_vec){0, 1};
 		game->p.plane = (t_vec){0.66, 0};
 	}
-	game->p.speed = 0.05;
 }
 
 int	check_one(t_game *game, int i, int j, int *player_count)

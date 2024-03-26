@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/21 22:55:12 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 15:32:47 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ int	on_key_press(int k, void *param)
 		game->up = 1;
 	else if (k == XK_Down)
 		game->down = 1;
-	else if (k == XK_Shift_L)
-		game->p.speed = 0.1;
 	else if (k == 65453)
 		game->minus = 1;
 	else if (k == 65451)
@@ -65,8 +63,6 @@ int	on_key_release(int k, void *param)
 		game->up = 0;
 	else if (k == XK_Down)
 		game->down = 0;
-	else if (k == XK_Shift_L)
-		game->p.speed = 0.05;
 	else if (k == 65453)
 		game->minus = 0;
 	else if (k == 65451)

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/26 14:02:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 15:28:19 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1920
-# define HALF_WIDTH 960
-# define HEIGHT 1080
-# define HALF_HEIGHT 540
-# define MINIMAP_WIDTH 320
-# define MINIMAP_HEIGHT 240
+# define WIDTH 1280
+# define HALF_WIDTH 640
+# define HEIGHT 720
+# define HALF_HEIGHT 360
+# define MINIMAP_WIDTH 240
+# define MINIMAP_HEIGHT 120
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -138,7 +138,7 @@ typedef struct s_player
 	t_vec				pos;
 	t_vec				dir;
 	t_vec				plane;
-	double				speed;
+	t_vec				speed;
 	int					y;
 }						t_player;
 
@@ -191,8 +191,6 @@ typedef struct s_game
 	char				*files[4];
 	clock_t				last;
 	clock_t				now;
-	clock_t				max;
-	clock_t				min;
 	int					fd;
 	int					length;
 	int					width;
