@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/26 14:02:25 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:04:50 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ inline void	ft_draw(t_game *game)
 	{
 		ft_rays(game, &game->r, x);
 		game->r.twidth = game->textures[game->r.id].width;
-		y = 0;
 		ft_wall(game);
+		y = 0;
 		while (y < HEIGHT)
 		{
 			if (y < game->r.draw.x)

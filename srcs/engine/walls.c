@@ -6,20 +6,20 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/26 14:01:57 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:08:29 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline double	get_wall_x(t_game *g, t_render *r, double pwall)
+static inline double	get_wall_x(t_game *g, t_render *r)
 {
 	double	wallx;
 
 	if (r->side < 0)
-		wallx = g->p.pos.y + pwall * r->ray_dir.y;
+		wallx = g->p.pos.y + r->perp_dist * r->ray_dir.y;
 	else
-		wallx = g->p.pos.x + pwall * r->ray_dir.x;
+		wallx = g->p.pos.x + r->perp_dist * r->ray_dir.x;
 	wallx -= floor(wallx);
 	return (wallx);
 }
@@ -39,7 +39,7 @@ static inline int	get_tex_x(t_render *r, double wallx)
 		r->id = 2;
 	else if (r->side == 1)
 		r->id = 1;
-	else if (r->side == 0)
+	else if (r->side == 2)
 		r->id = 0;
 	return (val);
 }
@@ -48,7 +48,7 @@ inline void	ft_wall(t_game *game)
 {
 	double	wallx;
 
-	wallx = get_wall_x(game, &game->r, game->r.perp_dist);
+	wallx = get_wall_x(game, &game->r);
 	game->r.tex.x = get_tex_x(&game->r, wallx);
 	game->r.mystep = (double)game->r.twidth / game->r.line_height;
 	game->r.texpos = (game->r.draw.x - HALF_HEIGHT + game->r.line_height / 2
