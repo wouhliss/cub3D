@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/21 22:48:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/22 01:40:36 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
+# include <mlx_int.h>
+# include <X11/extensions/Xfixes.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -66,8 +68,8 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1600
-# define HEIGHT 900
+# define WIDTH 1280
+# define HEIGHT 720
 # define MINIMAP_WIDTH 320
 # define MINIMAP_HEIGHT 240
 # define BLACK 0x000000
@@ -183,6 +185,8 @@ typedef struct s_game
 	char				*files[4];
 	clock_t				last;
 	clock_t				now;
+	clock_t				max;
+	clock_t				min;
 	int					fd;
 	int					length;
 	int					width;

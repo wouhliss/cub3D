@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 21:11:57 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/16 11:08:28 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/22 01:44:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	skip_spaces(char *line, int *i)
 		(*i)++;
 }
 
-void	my_mlx_pixel_put(t_screen *data, int x, int y, int color)
+inline void	my_mlx_pixel_put(t_screen *data, int x, int y, int color)
 {
 	char	*dst;
 

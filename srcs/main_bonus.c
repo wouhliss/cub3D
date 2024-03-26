@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/21 23:05:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/22 02:56:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,12 @@ int	ft_loop(void *param)
 
 	game = param;
 	game->now = clock();
-	if (game->now - game->last < 12000)
-		return (0);
+	// if (game->now - game->last < 12000)
+	// 	return (0);
+	if (game->last && game->now - game->last > game->max)
+		game->max = game->now - game->last;
+	if ((game->last && game->now - game->last < game->min) || !game->min)
+		game->min = game->now - game->last;
 	game->last = clock();
 	if (game->front)
 	{
@@ -88,16 +92,6 @@ int	ft_loop(void *param)
 		y = game->p.plane.y;
 		game->p.plane.x = x * cos(0.05) - y * sin(0.05);
 		game->p.plane.y = x * sin(0.05) + y * cos(0.05);
-	}
-	if (game->minus)
-	{
-		game->p.plane.x -= 0.1;
-		game->p.plane.y += 0.1;
-	}
-	if (game->plus)
-	{
-		game->p.plane.x += 0.1;
-		game->p.plane.y -= 0.1;
 	}
 	if (game->up)
 	{
@@ -166,17 +160,21 @@ static inline int	ft_init_mlx(t_game *g)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, IMPORT_ERR), 1);
 	return (mlx_hook(g->mlx.win, ON_KEYPRESS, KEYPRESS_MASK, on_key_press, g),
 		mlx_hook(g->mlx.win, ON_DESTROY, NO_MASK, on_destroy_event, g),
-		mlx_mouse_hide(g->mlx.mlx, g->mlx.win), mlx_hook(g->mlx.win,
-			ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse, g),
+		mlx_hook(g->mlx.win, ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse, g),
 		mlx_loop_hook(g->mlx.mlx, ft_loop, g), mlx_hook(g->mlx.win,
 			ON_KEYRELEASE, KEYRELEASE_MASK, on_key_release, g), 0);
 }
 
 static inline void	ft_start(t_game *game)
 {
-	int	i;
-	int	err;
+	int			i;
+	t_xvar		*moha;
+	t_win_list	*window;
+	int			err;
 
+	moha = game->mlx.mlx;
+	window = game->mlx.win;
+	XFixesHideCursor(moha->display, window->window);
 	i = TEXTURES;
 	err = 0;
 	while (i--)
@@ -216,5 +214,6 @@ int	main(int ac, char **av)
 	if (ft_init_mlx(&game))
 		return (gc(NULL, 0), 3);
 	ft_start(&game);
+	printf("max : %ld, min : %ld\n", game.max, game.min);
 	return (0);
 }

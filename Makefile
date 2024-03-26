@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -MMD -MP -Ofast
-MLXFLAGS = -L ./minilibx-linux -lmlx -Ilmlx -lXext -lX11 -lm
+MLXFLAGS = -L ./minilibx-linux -lmlx -Ilmlx -lXext -lX11 -lm -lXfixes
 INCLUDE = -I./includes -Iminilibx-linux
 VPATH = srcs/parsing srcs/utils srcs/error srcs/ft_dprintf srcs/gnl srcs/hooks srcs/engine srcs
 RM = rm -rvf

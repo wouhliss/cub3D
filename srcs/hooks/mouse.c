@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/21 22:47:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/22 02:58:14 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ int	on_mouse(int w, int h, void *param)
 				- w) * 0.0015);
 	game->p.plane.y = x * sin((WIDTH / 2 - w) * 0.0015) + y * cos((WIDTH / 2
 				- w) * 0.0015);
-	game->p.y += HEIGHT / 2 - h;
+	game->p.y = ( h - HEIGHT / 2)  * -1;
+
 	if (game->p.y > HEIGHT)
 		game->p.y = HEIGHT;
 	else if (game->p.y < -HEIGHT)

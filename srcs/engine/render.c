@@ -6,11 +6,71 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/20 23:41:00 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/22 02:45:25 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+// void	draw_rayons_all_2(t_map *map, t_drawrays *r, t_plane *p, int i)
+// {
+// 	int	y;
+
+// 	y = -1;
+// 	r->step = 1.0 * 64 / r->lineh;
+// 	r->texpos = (r->draw.x - HEIGHT / 2 + r->lineh / 2) * r->step;
+// 	while (++y < HEIGHT)
+// 	{
+// 		if (y < r->draw.x)
+// 			r->color = create_trgb(map->ceiling);
+// 		else if (y > r->draw.y)
+// 			r->color = create_trgb(map->floor);
+// 		else
+// 		{
+// 			r->tex.y = (int)r->texpos & (64 - 1);
+// 			r->color = map->plane->texture[r->texnum][64 * r->tex.y + r->tex.x];
+// 			r->texpos += r->step;
+// 			wall_color(map->plane, &r->color, r->tex);
+// 		}
+// 		map->plane->buff[y][(int)i] = r->color;
+// 		p->re_buf = 1;
+// 	}
+// }
+
+static inline double	get_wall_x(t_game *g, t_render *r, double pwall)
+{
+	double	wallx;
+
+	if (r->side == 0)
+		wallx = g->p.pos.y + pwall * r->ray_dir.y;
+	else
+		wallx = g->p.pos.x + pwall * r->ray_dir.x;
+	wallx -= floor(wallx);
+	return (wallx);
+}
+
+static inline int	get_tex_x(t_render *r, double wallx)
+{
+	int	val;
+
+	val = (int)(wallx * (double)(64));
+	if (r->side == 0 && r->ray_dir.x > 0)
+		val = 64 - val - 1;
+	if (r->side == 1 && r->ray_dir.y > 0)
+		val = 64 - val - 1;
+	return (val);
+}
+// static inline void	ft_textures(t_game *game, t_render *render, int x, int y, int s, int texpos, int texx)
+// {
+// 	(void)game, (void)render, (void)x, (void)y;
+// 	t_intvec tex;
+// 	tex.y = (int)texpos & (64 - 1);
+// 	int color = game->textures[0].addr[64 * tex.y + texx];
+// 	texpos += s;
+// 	my_mlx_pixel_put(&game->screen, x, y, color);
+// 	// ou ton mur tape
+// 	// 
+// }
 
 static inline void	ft_dda(t_game *game, t_render *render)
 {
@@ -22,17 +82,17 @@ static inline void	ft_dda(t_game *game, t_render *render)
 		{
 			render->side_dist.x += render->delta_dist.x;
 			render->map.x += render->step.x;
-			render->side = -1;
-			if (render->step.x < 0)
-				render->side = -2;
+			render->side = 0;
+			// if (render->step.x < 0)
+				// render->side = -2;
 		}
 		else
 		{
 			render->side_dist.y += render->delta_dist.y;
 			render->map.y += render->step.y;
 			render->side = 1;
-			if (render->step.y < 0)
-				render->side = 2;
+			// if (render->step.y < 0)
+				// render->side = 2;
 		}
 		if (game->map.map[render->map.y][render->map.x] != '0')
 			render->hit = 1;
@@ -92,29 +152,39 @@ static inline void	ft_rays(t_game *game, t_render *render, int x)
 	render->draw.y = render->line_height / 2 + HEIGHT / 2 + game->p.y;
 	if (render->draw.y >= HEIGHT)
 		render->draw.y = HEIGHT - 1;
-	switch (render->side)
-	{
-	case -1:
-		render->color = create_trgb(0, 128, 0, 0);
-		break ;
-	case -2:
-		render->color = create_trgb(0, 0, 128, 0);
-		break ;
-	case 1:
-		render->color = create_trgb(0, 0, 0, 128);
-		break ;
-	default:
-		render->color = create_trgb(0, 128, 0, 128);
-		break ;
-	}
+	// switch (render->side)
+	// {
+	// case -1:
+	// 	render->color = create_trgb(0, 128, 0, 0); //east
+	// 	break ;
+	// case -2:
+	// 	render->color = create_trgb(0, 0, 128, 0); //west
+	// 	break ;
+	// case 1:
+	// 	render->color = create_trgb(0, 0, 0, 128); //south
+	// 	break ;
+	// default:
+	// 	render->color = create_trgb(0, 128, 0, 128); //north
+	// 	break ;
+	// }
 }
+// static inline double	sides(t_game *g, t_render *r)
+// {
+// 	double	pwall;
 
+// 	if (r->side == 0)
+// 		pwall = (r->map.x - g->p.pos.x + (1 - r->step.x) / 2) / r->ray_dir.x;
+// 	else
+// 		pwall = (r->map.y - g->p.pos.y + (1 - r->step.y) / 2) / r->ray_dir.y;
+// 	return (pwall);
+// }
 inline void	ft_draw(t_game *game)
 {
 	t_render	render;
 	int			y;
 	int			x;
 	int			map_x;
+	t_intvec tex;
 	int			map_y;
 
 	x = 0;
@@ -122,18 +192,36 @@ inline void	ft_draw(t_game *game)
 	{
 		ft_rays(game, &render, x);
 		y = 0;
-		while (y < HEIGHT)
+		
+		// moha
+		// double pwall = sides(game ,&render);
+		double wallx = get_wall_x(game, &render, render.perp_dist);
+		tex.x = get_tex_x(&render, wallx);
+		
+		double mystep = 1.0 * 64 / render.line_height;
+		double texpos = (render.draw.x - HEIGHT / 2 + render.line_height / 2) * mystep;
+		while (y < HEIGHT)	
 		{
 			if (y < render.draw.x)
 				my_mlx_pixel_put(&game->screen, x, y, game->map.c_color);
 			else if (y >= render.draw.x && y <= render.draw.y)
-				my_mlx_pixel_put(&game->screen, x, y, render.color);
+			{
+				tex.y = (int)texpos & (64 - 1);
+				texpos += mystep;
+				int color = ((int *)game->textures[3].addr)[64 * tex.y + tex.x];
+				//printf("[%i|%i]%i %i %f %f {%f} %f {%f, %f} %i\n",x,y, tex.x, tex.y, texpos, mystep, wallx, render.perp_dist, render.ray_dir.x, render.ray_dir.y, color);	
+				my_mlx_pixel_put(&game->screen, x, y, color);
+				
+				// ft_textures(game, &render, x, y, mystep, texpos, texx);
+
+			}
 			else
 				my_mlx_pixel_put(&game->screen, x, y, game->map.f_color);
 			++y;
 		}
 		++x;
 	}
+	//exit(0);
 	map_x = (int)game->p.pos.x - 10;
 	if (map_x < 0)
 		map_x = 0;

@@ -6,11 +6,35 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/21 01:29:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/22 02:36:27 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+// typedef int t_moha __attribute__((ext_vector_type(2)));
+
+// t_moha avion;
+// t_moha bateau;
+
+// avion.x = 3
+// avion.y = 5
+
+// avion *= 2;
+
+// avion.x = 6
+// avion.y = 10
+
+// bateau = 4;
+
+// bateau.x et bateau.y == 4
+
+// bateau.y 10;
+
+// avion.yx += bateau;
+
+// avion.y += bateau.x
+// avion.x += bateau.y
 
 int	ft_in_charset(char *charset, char c)
 {
