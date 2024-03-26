@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:06:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/17 17:05:35 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:32:08 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,6 @@ void	get_map(t_game *game, char *line)
 
 int	set_texture_color(char *line, int *c, t_game *game)
 {
-	int	i;
-
-	i = 0;
 	if (!ft_strncmp(line, "NO ", 3))
 		return ((*c)++, set_texture(line, game));
 	else if (!ft_strncmp(line, "SO ", 3))

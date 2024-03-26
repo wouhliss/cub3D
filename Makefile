@@ -1,4 +1,4 @@
-CC = cc
+CC = gcc	
 CFLAGS = -Wall -Wextra -Werror -MMD -MP -Ofast
 MLXFLAGS = -L ./minilibx-linux -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
@@ -14,7 +14,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = render
+ENGINE = render walls minimap
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

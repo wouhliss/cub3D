@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 18:53:09 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/11 09:35:46 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 13:32:34 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,8 @@ void	ft_putstr(const char *str, t_print *print)
 void	ft_putnbr(int nb, t_print *print)
 {
 	unsigned int	n;
-	unsigned int	sign;
 
 	n = nb;
-	sign = 1;
 	if (nb < 0)
 	{
 		n = -nb;

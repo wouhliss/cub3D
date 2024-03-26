@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/26 13:06:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/26 14:02:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,10 +67,10 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1280
-# define HALF_WIDTH 640
-# define HEIGHT 720
-# define HALF_HEIGHT 360
+# define WIDTH 1920
+# define HALF_WIDTH 960
+# define HEIGHT 1080
+# define HALF_HEIGHT 540
 # define MINIMAP_WIDTH 320
 # define MINIMAP_HEIGHT 240
 # define BLACK 0x000000
@@ -121,12 +121,15 @@ typedef struct s_render
 	t_intvec			map;
 	t_intvec			step;
 	t_intvec			draw;
+	t_intvec			tex;
 	double				camera_x;
 	double				perp_dist;
+	double				texpos;
+	double				mystep;
 	int					hit;
 	int					side;
 	int					line_height;
-	int					color;
+	int					id;
 	int					twidth;
 }						t_render;
 
@@ -182,6 +185,7 @@ typedef struct s_game
 	t_mlx				mlx;
 	t_texture			textures[4];
 	t_screen			screen;
+	t_render			r;
 	int					colors_c[4];
 	int					colors_f[4];
 	char				*files[4];
@@ -216,15 +220,19 @@ int						on_key_press(int key_code, void *param);
 int						on_key_release(int k, void *param);
 int						on_destroy_event(void *param);
 int						on_mouse(int x, int y, void *param);
-void					ft_draw(t_game *game);
 // int						logic_loop(void *param);
 
+/*Engine*/
+
+void					ft_draw(t_game *game);
+void					ft_drawmap(t_game *game, int x, int y);
+void					ft_wall(t_game *game);
+void					ft_drawpixel(t_game *game, int x, int y);
 /*Parsing*/
 
 void					init_map(char *path, t_game *game);
 void					get_info_map(t_game *game);
 int						set_colors(char *line, t_game *game);
-int						set_texture(char *line, t_game *game);
 void					pre_format_map(t_game *game);
 void					format_map(t_game *game);
 int						check_map(t_game *game);
