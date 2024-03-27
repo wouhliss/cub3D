@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 16:10:59 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:23:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,6 @@ static inline int	get_tex_x(t_render *r, double wallx)
 		val = r->twidth - val - 1;
 	if (r->side > 1 && r->ray_dir.y > 0)
 		val = r->twidth - val - 1;
-	if (r->side == -1)
-		r->id = 3;
-	else if (r->side == -2)
-		r->id = 2;
-	else if (r->side == 1)
-		r->id = 1;
-	else if (r->side == 2)
-		r->id = 0;
 	return (val);
 }
 
@@ -48,6 +40,16 @@ inline void	ft_wall(t_game *game)
 {
 	double	wallx;
 
+	if (game->r.side == -1)
+		game->r.id = 3;
+	else if (game->r.side == -2)
+		game->r.id = 2;
+	else if (game->r.side == 1)
+		game->r.id = 1;
+	else if (game->r.side == 2)
+		game->r.id = 0;
+	game->r.twidth = game->textures[game->r.id].width;
+	game->r.s = game->textures[game->r.id].s;
 	wallx = get_wall_x(game, &game->r);
 	game->r.tex.x = get_tex_x(&game->r, wallx);
 	game->r.mystep = (double)game->r.twidth / game->r.line_height;

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 16:18:31 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:35:46 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ int	ft_loop(void *param)
 	game->now = clock();
 	delta = game->now - game->last;
 	game->f = clock();
-	if (game->f - game->lf > 500000)
+	if (game->f - game->lf > 80000)
 	{
 		i = -1;
 		while (++i < 5)
@@ -248,7 +248,7 @@ static inline void	ft_start(t_game *game, int *err)
 			{
 				game->textures[4
 					+ game->sprites[i].type].img = mlx_xpm_file_to_image(game->mlx.mlx,
-						"textures/animation.xpm", &game->textures[4
+						"textures/barril.xpm", &game->textures[4
 						+ game->sprites[i].type].width, &game->textures[4
 						+ game->sprites[i].type].height);
 				if (!game->textures[4 + game->sprites[i].type].img)
