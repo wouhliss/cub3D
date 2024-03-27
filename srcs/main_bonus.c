@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 15:59:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:18:31 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,27 @@ int	ft_loop(void *param)
 {
 	t_game	*game;
 	double	delta;
+	int		i;
 
 	game = param;
 	game->last = game->now;
 	game->now = clock();
 	delta = game->now - game->last;
+	game->f = clock();
+	if (game->f - game->lf > 500000)
+	{
+		i = -1;
+		while (++i < 5)
+		{
+			if (game->textures[i].frames == 1)
+				continue ;
+			++game->textures[i].f;
+			if (game->textures[i].f == game->textures[i].frames)
+				game->textures[i].f = 0;
+			game->textures[i].s = game->textures[i].f * game->textures[i].width * game->textures[i].width;
+		}
+		game->lf = clock();
+	}
 	if (game->p.pos.y + (game->p.speed.y * delta * 0.00001) > 0 && game->p.pos.y
 		+ (game->p.speed.y * delta * 0.00001) < game->length
 		&& game->map.map[(int)(game->p.pos.y + (game->p.speed.y * delta
@@ -201,7 +217,7 @@ static inline void	ft_getsprites(t_game *game)
 				game->sprites[i].hr = 2;
 				game->sprites[i].vr = 2;
 				game->sprites[i++].pos = (t_vec){x + 0.5, y + 0.5};
-				game->map.map[y][x] = '0';	
+				game->map.map[y][x] = '0';
 			}
 			++y;
 		}
@@ -215,9 +231,13 @@ static inline void	ft_start(t_game *game, int *err)
 
 	i = TEXTURES;
 	while (i--)
+	{
 		if (!game->textures[i].width || game->textures[i].height
 			% game->textures[i].width)
 			*err = 1;
+		game->textures[i].frames = game->textures[i].height
+			/ game->textures[i].width;
+	}
 	if (!(*err))
 	{
 		ft_getsprites(game);
@@ -228,9 +248,9 @@ static inline void	ft_start(t_game *game, int *err)
 			{
 				game->textures[4
 					+ game->sprites[i].type].img = mlx_xpm_file_to_image(game->mlx.mlx,
-						"textures/pillar.xpm",
-						&game->textures[4 + game->sprites[i].type].width,
-						&game->textures[4 + game->sprites[i].type].height);
+						"textures/animation.xpm", &game->textures[4
+						+ game->sprites[i].type].width, &game->textures[4
+						+ game->sprites[i].type].height);
 				if (!game->textures[4 + game->sprites[i].type].img)
 					return ;
 				game->textures[4
@@ -239,9 +259,12 @@ static inline void	ft_start(t_game *game, int *err)
 						+ game->sprites[i].type].bpp, &game->textures[4
 						+ game->sprites[i].type].ll, &game->textures[4
 						+ game->sprites[i].type].endian);
+				game->textures[4
+					+ game->sprites[i].type].frames = game->textures[4
+					+ game->sprites[i].type].height / game->textures[4
+					+ game->sprites[i].type].width;
 			}
-			game->sprites[i].t = &game->textures[4
-				+ game->sprites[i].type];
+			game->sprites[i].t = &game->textures[4 + game->sprites[i].type];
 		}
 		mlx_loop(game->mlx.mlx);
 	}

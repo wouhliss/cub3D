@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 15:43:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:12:10 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,7 @@ typedef struct s_render
 	int					line_height;
 	int					id;
 	int					twidth;
+	int					s;
 }						t_render;
 
 typedef struct s_player
@@ -177,6 +178,9 @@ typedef struct s_texture
 	int					endian;
 	int					height;
 	int					width;
+	int					frames;
+	int					f;
+	int					s;
 }						t_texture;
 
 typedef struct s_mlx
@@ -214,6 +218,8 @@ typedef struct s_game
 	double				*sprite_dist;
 	clock_t				last;
 	clock_t				now;
+	clock_t				f;
+	clock_t				lf;
 	int					numsprites;
 	int					fd;
 	int					length;

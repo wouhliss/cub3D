@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 12:51:35 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:10:59 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ inline void	ft_drawpixel(t_game *game, int x, int y)
 
 	game->r.tex.y = (int)game->r.texpos & (game->r.twidth - 1);
 	game->r.texpos += game->r.mystep;
-	color = ((int *)game->textures[game->r.id].addr)[game->r.twidth
+	color = ((int *)game->textures[game->r.id].addr)[game->r.s + game->r.twidth
 		* game->r.tex.y + game->r.tex.x];
 	my_mlx_pixel_put(&game->screen, x, y, color);
 }

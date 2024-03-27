@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:15:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 15:57:05 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 16:10:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ static inline void	ft_putsprite(t_game *g, t_sprite *s)
 					/ 256;
 				color = 0;
 				if (tex.y > 0)
-					color = ((int *)s->t->addr)[s->t->width * tex.y + tex.x];
+					color = ((int *)s->t->addr)[s->t->s + s->t->width * tex.y
+						+ tex.x];
 				if ((color & 0x00FFFFFF) != 0)
 					my_mlx_pixel_put(&g->screen, d.x, d.y, color);
 			}
