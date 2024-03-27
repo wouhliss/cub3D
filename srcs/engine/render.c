@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/26 14:04:50 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 14:25:13 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,21 +92,22 @@ static inline void	ft_rays(t_game *game, t_render *render, int x)
 	render->draw.y = render->line_height / 2 + HALF_HEIGHT + game->p.y;
 	if (render->draw.y >= HEIGHT)
 		render->draw.y = HEIGHT - 1;
+	game->r.twidth = game->textures[game->r.id].width;
 }
 
 inline void	ft_draw(t_game *game)
 {
 	int			y;
 	int			x;
-
-	x = 0;
-	while (x < WIDTH)
+	
+	x = -1;
+	while (++x < WIDTH)
 	{
 		ft_rays(game, &game->r, x);
-		game->r.twidth = game->textures[game->r.id].width;
 		ft_wall(game);
-		y = 0;
-		while (y < HEIGHT)
+		game->r.zbuffer[x] = game->r.perp_dist;
+		y = -1;
+		while (++y < HEIGHT)
 		{
 			if (y < game->r.draw.x)
 				my_mlx_pixel_put(&game->screen, x, y, game->map.c_color);
@@ -114,10 +115,9 @@ inline void	ft_draw(t_game *game)
 				ft_drawpixel(game, x, y);
 			else
 				my_mlx_pixel_put(&game->screen, x, y, game->map.f_color);
-			++y;
 		}
-		++x;
 	}
+	ft_drawsprites(game);
 	ft_drawmap(game, x, y);
 	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
 		0);

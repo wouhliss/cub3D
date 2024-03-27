@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/26 16:38:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:16:54 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,9 +115,14 @@ typedef struct s_intvec
 
 typedef struct s_render
 {
+	double				zbuffer[WIDTH];
 	t_vec				ray_dir;
 	t_vec				side_dist;
 	t_vec				delta_dist;
+	t_vec				transform;
+	t_vec				sprite;
+	t_intvec			draw_x;
+	t_intvec			draw_y;
 	t_intvec			map;
 	t_intvec			step;
 	t_intvec			draw;
@@ -126,6 +131,10 @@ typedef struct s_render
 	double				perp_dist;
 	double				texpos;
 	double				mystep;
+	double				invdet;
+	int					spritewidth;
+	int					sph;
+	int					spsx;
 	int					hit;
 	int					side;
 	int					line_height;
@@ -178,19 +187,30 @@ typedef struct s_mlx
 	int					height;
 }						t_mlx;
 
+typedef struct s_sprite
+{
+	t_vec				pos;
+	t_texture			*t;
+	int					type;
+}						t_sprite;
+
 typedef struct s_game
 {
 	t_map				map;
 	t_player			p;
 	t_mlx				mlx;
-	t_texture			textures[4];
+	t_texture			textures[5];
 	t_screen			screen;
 	t_render			r;
+	char				*files[4];
 	int					colors_c[4];
 	int					colors_f[4];
-	char				*files[4];
+	t_sprite			*sprites;
+	int					*sprite_order;
+	double				*sprite_dist;
 	clock_t				last;
 	clock_t				now;
+	int					numsprites;
 	int					fd;
 	int					length;
 	int					width;
@@ -224,6 +244,7 @@ int						on_mouse(int x, int y, void *param);
 
 void					ft_draw(t_game *game);
 void					ft_drawmap(t_game *game, int x, int y);
+void					ft_drawsprites(t_game *game);
 void					ft_wall(t_game *game);
 void					ft_drawpixel(t_game *game, int x, int y);
 /*Parsing*/
@@ -259,6 +280,8 @@ int						create_trgb(int t, int r, int g, int b);
 void					put_colors(t_game *game);
 void					my_mlx_pixel_put(t_screen *data, int x, int y,
 							int color);
+void					ft_swapi(int *a, int *b);
+void					ft_swapd(double *a, double *b);
 // int						first_last_line(t_game *game);
 // void					display_tab(char **tab);
 // int						check_line(t_game *game);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/26 15:32:32 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 14:16:50 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,21 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 		return (ft_in_charset("12", game->map.map[i + 1][j])
 			&& ft_in_charset("12", game->map.map[i][j + 1]));
 	else if (game->map.map[i][j] == '0')
-		return (ft_in_charset("01NSEW", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEW", game->map.map[i][j + 1]));
+		return (ft_in_charset("01NSEWP", game->map.map[i + 1][j])
+			&& ft_in_charset("01NSEWP", game->map.map[i][j + 1]));
+	else if (game->map.map[i][j] == 'P')
+	{
+		++game->numsprites;
+		return (ft_in_charset("01NSEWP", game->map.map[i + 1][j])
+			&& ft_in_charset("01NSEWP", game->map.map[i][j + 1]));
+	}
 	else if (ft_in_charset("NSEW", game->map.map[i][j]))
 	{
 		set_player(game->map.map[i][j], i, j, game);
 		game->map.map[i][j] = '0';
 		(*player_count)++;
-		return (ft_in_charset("01", game->map.map[i + 1][j])
-			&& ft_in_charset("01", game->map.map[i][j + 1]));
+		return (ft_in_charset("01P", game->map.map[i + 1][j])
+			&& ft_in_charset("01P", game->map.map[i][j + 1]));
 	}
 	return (1);
 }
@@ -111,7 +117,7 @@ int	check_map(t_game *game)
 		j = 0;
 		while (game->map.map[i][j])
 		{
-			if (!ft_in_charset("012NSEW", game->map.map[i][j]))
+			if (!ft_in_charset("012NSEWP", game->map.map[i][j]))
 				return (0);
 			if (!check_one(game, i, j, &player_count))
 				return (0);

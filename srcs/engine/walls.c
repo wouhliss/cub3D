@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/26 15:10:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 12:51:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ inline void	ft_wall(t_game *game)
 inline void	ft_drawpixel(t_game *game, int x, int y)
 {
 	int		color;
-	// int		*rgb;
 
 	game->r.tex.y = (int)game->r.texpos & (game->r.twidth - 1);
 	game->r.texpos += game->r.mystep;
