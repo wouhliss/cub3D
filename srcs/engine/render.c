@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 14:25:13 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:48:05 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static inline void	ft_dda(t_game *game, t_render *render)
 			if (render->step.y < 0)
 				render->side = 2;
 		}
-		if (game->map.map[render->map.y][render->map.x] != '0')
+		if (game->map.map[render->map.y][render->map.x] == '1')
 			render->hit = 1;
 	}
 }

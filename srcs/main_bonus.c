@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 15:17:02 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:59:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,11 @@ static inline void	ft_getsprites(t_game *game)
 			if (game->map.map[y][x] == 'P')
 			{
 				game->sprites[i].type = 0;
+				game->sprites[i].vdiff = 128.0;
+				game->sprites[i].hr = 2;
+				game->sprites[i].vr = 2;
 				game->sprites[i++].pos = (t_vec){x + 0.5, y + 0.5};
-				game->map.map[y][x] = '0';
+				game->map.map[y][x] = '0';	
 			}
 			++y;
 		}

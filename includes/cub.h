@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 15:16:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:43:54 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,10 @@ typedef struct s_sprite
 	t_vec				pos;
 	t_texture			*t;
 	int					type;
+	int					vr;
+	int					hr;
+	int					vpos;
+	double				vdiff;
 }						t_sprite;
 
 typedef struct s_game

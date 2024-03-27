@@ -6,17 +6,31 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:15:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 15:18:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:57:05 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline t_intvec	ft_getx(t_game *game)
+static inline t_intvec	ft_gety(t_game *game, t_sprite *s)
+{
+	t_intvec	draw_y;
+
+	game->r.sph = abs((int)(HEIGHT / (game->r.transform.y))) / s->vr;
+	draw_y.x = -game->r.sph / 2 + HALF_HEIGHT + game->p.y + s->vpos;
+	if (draw_y.x < 0)
+		draw_y.x = 0;
+	draw_y.y = game->r.sph / 2 + HALF_HEIGHT + game->p.y + s->vpos;
+	if (draw_y.y >= HEIGHT)
+		draw_y.y = HEIGHT - 1;
+	return (draw_y);
+}
+
+static inline t_intvec	ft_getx(t_game *game, t_sprite *s)
 {
 	t_intvec	draw_x;
 
-	game->r.spritewidth = abs((int)(HEIGHT / game->r.transform.y));
+	game->r.spritewidth = abs((int)(HEIGHT / (game->r.transform.y))) / s->hr;
 	draw_x.x = -game->r.spritewidth / 2 + game->r.spsx;
 	if (draw_x.x < 0)
 		draw_x.x = 0;
@@ -24,20 +38,6 @@ static inline t_intvec	ft_getx(t_game *game)
 	if (draw_x.y >= WIDTH)
 		draw_x.y = WIDTH - 1;
 	return (draw_x);
-}
-
-static inline t_intvec	ft_gety(t_game *game)
-{
-	t_intvec	draw_y;
-
-	game->r.sph = abs((int)(HEIGHT / game->r.transform.y));
-	draw_y.x = -game->r.sph / 2 + HALF_HEIGHT + game->p.y;
-	if (draw_y.x < 0)
-		draw_y.x = 0;
-	draw_y.y = game->r.sph / 2 + HALF_HEIGHT + game->p.y;
-	if (draw_y.y >= HEIGHT)
-		draw_y.y = HEIGHT - 1;
-	return (draw_y);
 }
 
 static inline void	ft_putsprite(t_game *g, t_sprite *s)
@@ -57,8 +57,9 @@ static inline void	ft_putsprite(t_game *g, t_sprite *s)
 			d.y = g->r.draw_y.x - 1;
 			while (++d.y < g->r.draw_y.y)
 			{
-				tex.y = ((((d.y - g->p.y) * 256 - HEIGHT * 128 + g->r.sph * 128)
-							* s->t->width) / g->r.sph) / 256;
+				tex.y = ((((d.y - g->p.y - s->vpos) * 256 - HEIGHT * 128
+								+ g->r.sph * 128) * s->t->width) / g->r.sph)
+					/ 256;
 				color = 0;
 				if (tex.y > 0)
 					color = ((int *)s->t->addr)[s->t->width * tex.y + tex.x];
@@ -99,16 +100,16 @@ static inline void	ft_sort_sprites(t_game *game)
 
 inline void	ft_drawsprites(t_game *game)
 {
-	int	i;
+	int			i;
+	t_sprite	*s;
 
 	ft_sort_sprites(game);
 	i = 0;
 	while (i < game->numsprites)
 	{
-		game->r.sprite.x = game->sprites[game->sprite_order[i]].pos.x
-			- game->p.pos.x;
-		game->r.sprite.y = game->sprites[game->sprite_order[i]].pos.y
-			- game->p.pos.y;
+		s = &game->sprites[game->sprite_order[i]];
+		game->r.sprite.x = s->pos.x - game->p.pos.x;
+		game->r.sprite.y = s->pos.y - game->p.pos.y;
 		game->r.invdet = 1.0 / (game->p.plane.x * game->p.dir.y - game->p.dir.x
 				* game->p.plane.y);
 		game->r.transform.x = game->r.invdet * (game->p.dir.y * game->r.sprite.x
@@ -117,9 +118,10 @@ inline void	ft_drawsprites(t_game *game)
 				* game->r.sprite.x + game->p.plane.x * game->r.sprite.y);
 		game->r.spsx = (int)((HALF_WIDTH) * (1.0 + game->r.transform.x
 					/ game->r.transform.y));
-		game->r.draw_x = ft_getx(game);
-		game->r.draw_y = ft_gety(game);
-		ft_putsprite(game, game->sprites + game->sprite_order[i]);
+		s->vpos = (int)(s->vdiff / game->r.transform.y);
+		game->r.draw_x = ft_getx(game, s);
+		game->r.draw_y = ft_gety(game, s);
+		ft_putsprite(game, s);
 		++i;
 	}
 }
