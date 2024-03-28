@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/28 15:34:37 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:50:13 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ int	ft_loop(void *param)
 		else
 		{
 			pthread_mutex_unlock(&game->rendered_m[i]);
-			usleep(500);
+			usleep(100);
 		}
 	}
 	ft_drawmap(game);

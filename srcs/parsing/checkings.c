@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/28 14:41:20 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:45:34 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,23 @@ void	set_player(char c, int i, int j, t_game *game)
 	game->p.pos = (t_vec){j + 0.5, i + 0.5};
 	if (c == 'N')
 	{
-		game->p.dir = (t_vec){-1, 0};
-		game->p.plane = (t_vec){0, 0.66};
+		game->p.dir = (t_vec){0, -1};
+		game->p.plane = (t_vec){-0.66, 0};
 	}
 	else if (c == 'S')
+	{
+		game->p.dir = (t_vec){0, 1};
+		game->p.plane = (t_vec){0.66, 0};
+	}
+	else if (c == 'W')
 	{
 		game->p.dir = (t_vec){1, 0};
 		game->p.plane = (t_vec){0, -0.66};
 	}
-	else if (c == 'W')
-	{
-		game->p.dir = (t_vec){0, -1};
-		game->p.plane = (t_vec){-0.66, 0};
-	}
 	else if (c == 'E')
 	{
-		game->p.dir = (t_vec){0, 1};
-		game->p.plane = (t_vec){0.66, 0};
+		game->p.dir = (t_vec){-1, 0};
+		game->p.plane = (t_vec){0, 0.66};
 	}
 }
 

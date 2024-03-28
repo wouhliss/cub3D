@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/28 14:59:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:49:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ void	*ft_thread(void *arg)
 			}
 			pthread_mutex_unlock(&game->state_m);
 			pthread_mutex_unlock(&game->rendered_m[t->id]);
-			usleep(500);
+			usleep(100);
 			pthread_mutex_lock(&game->state_m);
 			pthread_mutex_lock(&game->rendered_m[t->id]);
 		}

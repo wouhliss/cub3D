@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/28 15:33:09 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:52:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -318,6 +318,8 @@ void					put_colors(t_game *game);
 void					my_mlx_pixel_put(t_screen *data, int x, int y,
 							int color);
 void					my_mlx_pixel_tput(t_screen *data, int x, int y,
+							int color);
+void					my_mlx_pixel_hput(t_screen *data, int x, int y,
 							int color);
 void					ft_swapi(int *a, int *b);
 void					ft_swapd(double *a, double *b);
