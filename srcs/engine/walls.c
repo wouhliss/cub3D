@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 23:46:26 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 13:33:43 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,14 @@ inline void	ft_wall(t_game *game, t_render *r)
 		r->id = 0;
 	r->twidth = game->textures[r->id].width;
 	r->s = game->textures[r->id].s;
-	wallx = get_wall_x(game, &game->r);
-	r->tex.x = get_tex_x(&game->r, wallx);
+	wallx = get_wall_x(game, r);
+	r->tex.x = get_tex_x(r, wallx);
 	r->mystep = (double)r->twidth / r->line_height;
 	r->texpos = (r->draw.x - HALF_HEIGHT + r->line_height / 2
 			- game->p.y) * r->mystep;
 }
 
-inline void	ft_drawpixel(t_game *game, int x, int y, t_screen *screen, t_render *r)
+inline void	ft_drawpixel(t_game *game, int x, int y, t_render *r)
 {
 	int		color;
 
@@ -65,5 +65,5 @@ inline void	ft_drawpixel(t_game *game, int x, int y, t_screen *screen, t_render 
 	r->texpos += r->mystep;
 	color = ((int *)game->textures[r->id].addr)[r->s + r->twidth
 		* r->tex.y + r->tex.x];
-	my_mlx_pixel_put(screen, x, y, color);
+	my_mlx_pixel_put(&game->screen, x, y, color);
 }

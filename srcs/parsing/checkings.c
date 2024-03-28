@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 16:54:40 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 14:41:20 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,9 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 	else if (ft_in_charset("NSEW", game->map.map[i][j]))
 	{
 		set_player(game->map.map[i][j], i, j, game);
+		++(*player_count);
+		++game->numsprites;
 		game->map.map[i][j] = '0';
-		(*player_count)++;
 		return (ft_in_charset("01PbB", game->map.map[i + 1][j])
 			&& ft_in_charset("01PbB", game->map.map[i][j + 1]));
 	}

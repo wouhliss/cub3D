@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/26 15:32:47 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 14:54:04 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,28 @@ int	on_key_press(int k, void *param)
 		game->minus = 1;
 	else if (k == 65451)
 		game->plus = 1;
+	else if (k == XK_Shift_L)
+		game->shift = 1;
+	else if (k == XK_1)
+		game->hsprite ^= 1;
+	else if (k == XK_2)
+	{
+		if (game->noclip)
+		{
+			game->sprites[0].hide = 1;
+			game->p.pos = game->sprites[0].pos;
+			game->p.dir = game->sprites[0].dir;
+			game->p.plane = game->sprites[0].plane;
+		}
+		else
+		{
+			game->sprites[0].pos = game->p.pos;
+			game->sprites[0].dir = game->p.dir;
+			game->sprites[0].plane = game->p.plane;
+			game->sprites[0].hide = 0;
+		}
+		game->noclip ^= 1;
+	}
 	return (0);
 }
 
@@ -67,5 +89,7 @@ int	on_key_release(int k, void *param)
 		game->minus = 0;
 	else if (k == 65451)
 		game->plus = 0;
+	else if (k == XK_Shift_L)
+		game->shift = 0;
 	return (0);
 }

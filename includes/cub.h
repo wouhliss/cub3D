@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/28 12:34:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:33:09 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define POINTERMOTION_MASK 1L << 6
 # define CURSOR_RADIUS 10
 
-# define TEXTURES 7
+# define TEXTURES 4
 
 # define ERR_FORMAT "%s: %s\n"
 # define NAME "cub3D"
@@ -66,14 +66,14 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1600
-# define HALF_WIDTH 800
-# define Q_WIDTH 400
-# define HEIGHT 900
-# define HALF_HEIGHT 450
-# define Q_HEIGHT 225
-# define MINIMAP_WIDTH 240
-# define MINIMAP_HEIGHT 120
+# define WIDTH 1920
+# define HALF_WIDTH 960
+# define Q_WIDTH 480
+# define HEIGHT 1080
+# define HALF_HEIGHT 540
+# define Q_HEIGHT 270
+# define MINIMAP_WIDTH 360
+# define MINIMAP_HEIGHT 240
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -122,7 +122,6 @@ typedef struct s_intvec
 
 typedef struct s_render
 {
-	double				zbuffer[WIDTH];
 	t_vec				ray_dir;
 	t_vec				side_dist;
 	t_vec				delta_dist;
@@ -201,20 +200,24 @@ typedef struct s_mlx
 typedef struct s_sprite
 {
 	t_vec				pos;
+	t_vec				dir;
+	t_vec				plane;
 	t_texture			*t;
 	int					type;
 	int					vr;
 	int					hr;
 	int					vpos;
 	double				vdiff;
+	int					hide;
 }						t_sprite;
 
 typedef struct s_game
 {
+	double				zbuffer[WIDTH];
 	t_map				map;
 	t_player			p;
 	t_mlx				mlx;
-	t_texture			textures[7];
+	t_texture			textures[8];
 	t_screen			screen;
 	t_render			r;
 	char				*files[4];
@@ -223,14 +226,14 @@ typedef struct s_game
 	t_sprite			*sprites;
 	int					*sprite_order;
 	double				*sprite_dist;
-	clock_t				last;
-	clock_t				now;
-	clock_t				f;
-	clock_t				lf;
-	clock_t				second;
 	pthread_mutex_t		state_m;
 	pthread_mutex_t		rendered_m[4];
 	int					rendered[4];
+	time_t				now;
+	time_t				last;
+	time_t				a;
+	time_t				f;
+	int					texturec;
 	int					state;
 	int					id;
 	int					numsprites;
@@ -246,8 +249,11 @@ typedef struct s_game
 	int					right;
 	int					turn_l;
 	int					turn_r;
+	int					shift;
 	int					minus;
 	int					plus;
+	int					hsprite;
+	int					noclip;
 }						t_game;
 
 typedef struct s_thread
@@ -274,10 +280,9 @@ int						on_mouse(int x, int y, void *param);
 /*Engine*/
 
 void					ft_drawmap(t_game *game);
-void					ft_drawsprites(t_game *game, t_screen *screen, int dxd, t_render *render, int w);
+void					ft_drawsprites(t_game *game);
 void					ft_wall(t_game *game, t_render *r);
-void					ft_drawpixel(t_game *game, int x, int y,
-							t_screen *screen, t_render *r);
+void					ft_drawpixel(t_game *game, int x, int y, t_render *r);
 void					*ft_thread(void *arg);
 /*Parsing*/
 
@@ -311,6 +316,8 @@ char					**ft_split(char const *s, char c);
 int						create_trgb(int t, int r, int g, int b);
 void					put_colors(t_game *game);
 void					my_mlx_pixel_put(t_screen *data, int x, int y,
+							int color);
+void					my_mlx_pixel_tput(t_screen *data, int x, int y,
 							int color);
 void					ft_swapi(int *a, int *b);
 void					ft_swapd(double *a, double *b);

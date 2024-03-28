@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 20:26:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 15:03:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@
 
 void	init_map(char *path, t_game *game)
 {
+	int	i;
+
 	game->fd = open(path, O_RDONLY);
 	if (game->fd == -1)
 		panic(FILE_ERR);
@@ -57,4 +59,10 @@ void	init_map(char *path, t_game *game)
 	if (!check_map(game))
 		panic(CHAR_ERR);
 	format_map(game);
+	i = -1;
+	while (++i < 8)
+	{
+		game->textures[i].addr = 0;
+		game->textures[i].img = 0;
+	}
 }
