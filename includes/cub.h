@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/27 16:12:10 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 12:34:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 # define CUB_H
 
 # include "mlx.h"
-# include <X11/X.h>
-# include <X11/keysym.h>
 # include <fcntl.h>
 # include <limits.h>
 # include <math.h>
 # include <mlx_int.h>
+# include <pthread.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -43,7 +42,7 @@
 # define POINTERMOTION_MASK 1L << 6
 # define CURSOR_RADIUS 10
 
-# define TEXTURES 4
+# define TEXTURES 7
 
 # define ERR_FORMAT "%s: %s\n"
 # define NAME "cub3D"
@@ -67,10 +66,12 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1280
-# define HALF_WIDTH 640
-# define HEIGHT 720
-# define HALF_HEIGHT 360
+# define WIDTH 1600
+# define HALF_WIDTH 800
+# define Q_WIDTH 400
+# define HEIGHT 900
+# define HALF_HEIGHT 450
+# define Q_HEIGHT 225
 # define MINIMAP_WIDTH 240
 # define MINIMAP_HEIGHT 120
 # define BLACK 0x000000
@@ -86,6 +87,12 @@
 # define HOT_PINK 0xFF66B2
 # define ELECTRIC_BLUE 0x0066FF
 # define LAVA_RED 0xFF3300
+
+# define COMPUTING 0
+# define RENDERING 1
+# define DRAWING 2
+# define DRAWN 3
+# define ENDED 4
 
 /*GNL*/
 # define BUFFER_SIZE 1024
@@ -207,7 +214,7 @@ typedef struct s_game
 	t_map				map;
 	t_player			p;
 	t_mlx				mlx;
-	t_texture			textures[5];
+	t_texture			textures[7];
 	t_screen			screen;
 	t_render			r;
 	char				*files[4];
@@ -220,7 +227,14 @@ typedef struct s_game
 	clock_t				now;
 	clock_t				f;
 	clock_t				lf;
+	clock_t				second;
+	pthread_mutex_t		state_m;
+	pthread_mutex_t		rendered_m[4];
+	int					rendered[4];
+	int					state;
+	int					id;
 	int					numsprites;
+	int					frames;
 	int					fd;
 	int					length;
 	int					width;
@@ -235,6 +249,13 @@ typedef struct s_game
 	int					minus;
 	int					plus;
 }						t_game;
+
+typedef struct s_thread
+{
+	t_game				*game;
+	int					id;
+	pthread_t			tid;
+}						t_thread;
 
 typedef struct s_garbage
 {
@@ -252,11 +273,12 @@ int						on_mouse(int x, int y, void *param);
 
 /*Engine*/
 
-void					ft_draw(t_game *game);
-void					ft_drawmap(t_game *game, int x, int y);
-void					ft_drawsprites(t_game *game);
-void					ft_wall(t_game *game);
-void					ft_drawpixel(t_game *game, int x, int y);
+void					ft_drawmap(t_game *game);
+void					ft_drawsprites(t_game *game, t_screen *screen, int dxd, t_render *render, int w);
+void					ft_wall(t_game *game, t_render *r);
+void					ft_drawpixel(t_game *game, int x, int y,
+							t_screen *screen, t_render *r);
+void					*ft_thread(void *arg);
 /*Parsing*/
 
 void					init_map(char *path, t_game *game);

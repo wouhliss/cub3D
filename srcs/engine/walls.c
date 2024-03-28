@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 16:23:53 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 23:46:26 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,34 +36,34 @@ static inline int	get_tex_x(t_render *r, double wallx)
 	return (val);
 }
 
-inline void	ft_wall(t_game *game)
+inline void	ft_wall(t_game *game, t_render *r)
 {
 	double	wallx;
 
-	if (game->r.side == -1)
-		game->r.id = 3;
-	else if (game->r.side == -2)
-		game->r.id = 2;
-	else if (game->r.side == 1)
-		game->r.id = 1;
-	else if (game->r.side == 2)
-		game->r.id = 0;
-	game->r.twidth = game->textures[game->r.id].width;
-	game->r.s = game->textures[game->r.id].s;
+	if (r->side == -1)
+		r->id = 3;
+	else if (r->side == -2)
+		r->id = 2;
+	else if (r->side == 1)
+		r->id = 1;
+	else if (r->side == 2)
+		r->id = 0;
+	r->twidth = game->textures[r->id].width;
+	r->s = game->textures[r->id].s;
 	wallx = get_wall_x(game, &game->r);
-	game->r.tex.x = get_tex_x(&game->r, wallx);
-	game->r.mystep = (double)game->r.twidth / game->r.line_height;
-	game->r.texpos = (game->r.draw.x - HALF_HEIGHT + game->r.line_height / 2
-			- game->p.y) * game->r.mystep;
+	r->tex.x = get_tex_x(&game->r, wallx);
+	r->mystep = (double)r->twidth / r->line_height;
+	r->texpos = (r->draw.x - HALF_HEIGHT + r->line_height / 2
+			- game->p.y) * r->mystep;
 }
 
-inline void	ft_drawpixel(t_game *game, int x, int y)
+inline void	ft_drawpixel(t_game *game, int x, int y, t_screen *screen, t_render *r)
 {
 	int		color;
 
-	game->r.tex.y = (int)game->r.texpos & (game->r.twidth - 1);
-	game->r.texpos += game->r.mystep;
-	color = ((int *)game->textures[game->r.id].addr)[game->r.s + game->r.twidth
-		* game->r.tex.y + game->r.tex.x];
-	my_mlx_pixel_put(&game->screen, x, y, color);
+	r->tex.y = (int)r->texpos & (r->twidth - 1);
+	r->texpos += r->mystep;
+	color = ((int *)game->textures[r->id].addr)[r->s + r->twidth
+		* r->tex.y + r->tex.x];
+	my_mlx_pixel_put(screen, x, y, color);
 }

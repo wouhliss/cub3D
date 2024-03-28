@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/27 16:21:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/28 12:35:59 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,30 +94,65 @@ static inline void	ft_rays(t_game *game, t_render *render, int x)
 		render->draw.y = HEIGHT - 1;
 }
 
-inline void	ft_draw(t_game *game)
+static inline void	ft_draw(t_game *game, int w, int dx, t_screen *screen)
 {
+	t_render	r;
 	int			y;
 	int			x;
 	
-	x = -1;
-	while (++x < WIDTH)
+	x = dx - 1;
+	while (++x < w)
 	{
-		ft_rays(game, &game->r, x);
-		ft_wall(game);
-		game->r.zbuffer[x] = game->r.perp_dist;
+		ft_rays(game, &r, x);
+		ft_wall(game, &r);
+		r.zbuffer[x] = r.perp_dist;
 		y = -1;
 		while (++y < HEIGHT)
 		{
-			if (y < game->r.draw.x)
-				my_mlx_pixel_put(&game->screen, x, y, game->map.c_color);
-			else if (y >= game->r.draw.x && y <= game->r.draw.y)
-				ft_drawpixel(game, x, y);
+			if (y < r.draw.x)
+				my_mlx_pixel_put(screen, x - dx, y, game->map.c_color);
+			else if (y >= r.draw.x && y <= r.draw.y)
+				ft_drawpixel(game, x - dx, y, screen, &r);
 			else
-				my_mlx_pixel_put(&game->screen, x, y, game->map.f_color);
+				my_mlx_pixel_put(screen, x - dx, y, game->map.f_color);
 		}
 	}
-	ft_drawsprites(game);
-	ft_drawmap(game, x, y);
-	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
-		0);
+	//ft_drawsprites(game, screen, dx, &r, w);
+	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, screen->img, dx, 0);
+}
+
+void	*ft_thread(void *arg)
+{
+	t_thread	*t;
+	t_game		*game;
+	t_screen	screen;
+
+	t = arg;
+	game = t->game;
+	pthread_mutex_lock(&game->state_m);
+	screen.img = mlx_new_image(game->mlx.mlx, Q_WIDTH, HEIGHT);
+	pthread_mutex_unlock(&game->state_m);
+	screen.addr = mlx_get_data_addr(screen.img, &screen.bpp,
+			&screen.ll, &screen.endian);
+	pthread_mutex_lock(&game->state_m);
+	while (game->state != ENDED)
+	{
+		pthread_mutex_lock(&game->rendered_m[t->id]);
+		while (game->state != RENDERING || game->rendered[t->id])
+		{
+			pthread_mutex_unlock(&game->rendered_m[t->id]);
+			pthread_mutex_unlock(&game->state_m);
+			usleep(1000);
+			pthread_mutex_lock(&game->state_m);
+			pthread_mutex_lock(&game->rendered_m[t->id]);
+		}
+		pthread_mutex_unlock(&game->rendered_m[t->id]);
+		pthread_mutex_unlock(&game->state_m);
+		ft_draw(game, (t->id + 1) * Q_WIDTH, t->id * Q_WIDTH, &screen);
+		pthread_mutex_lock(&game->rendered_m[t->id]);
+		game->rendered[t->id] = 1;
+		pthread_mutex_unlock(&game->rendered_m[t->id]);
+		pthread_mutex_lock(&game->state_m);
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 21:11:57 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/22 01:44:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/27 23:26:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ inline void	my_mlx_pixel_put(t_screen *data, int x, int y, int color)
 	char	*dst;
 
 	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
+	// pthread_mutex_lock(&data->sm);
 	*(unsigned int *)dst = color;
+	// pthread_mutex_unlock(&data->sm);
 }
 
 int	ft_atoc(const char *str)
