@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/28 16:13:23 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 08:40:59 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,18 @@ inline void	ft_wall(t_game *game, t_render *r)
 		r->id = 1;
 	else if (r->side == 2)
 		r->id = 0;
+	if (r->side == game->portal_l.side && r->map.x == game->portal_l.pos.x && r->map.y == game->portal_l.pos.y)
+	{
+		r->id = 4;
+		if (game->portal_l.side && game->portal_r.side)
+			r->id = 6;
+	}
+	else if (r->side == game->portal_r.side && r->map.x == game->portal_r.pos.x && r->map.y == game->portal_r.pos.y)
+	{
+		r->id = 5;
+		if (game->portal_l.side && game->portal_r.side)
+			r->id = 6;
+	}
 	r->twidth = game->textures[r->id].width;
 	r->s = game->textures[r->id].s;
 	wallx = get_wall_x(game, r);

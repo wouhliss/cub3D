@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/30 07:15:11 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 08:29:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,8 +219,15 @@ typedef struct s_projectile	t_projectile;
 typedef struct s_projectile
 {
 	t_sprite				*sprite;
+	int						type;
 	t_projectile			*next;
 }							t_projectile;
+
+typedef struct s_portal
+{
+	t_intvec				pos;
+	int						side;
+}							t_portal;
 
 typedef struct s_game
 {
@@ -240,6 +247,8 @@ typedef struct s_game
 	pthread_mutex_t			state_m;
 	pthread_mutex_t			rendered_m[4];
 	int						rendered[4];
+	t_portal				portal_l;
+	t_portal				portal_r;
 	time_t					now;
 	time_t					last;
 	time_t					a;
@@ -297,7 +306,7 @@ void						ft_drawpixel(t_game *game, int x, int y,
 void						*ft_thread(void *arg);
 int							ft_loadsprites(t_game *game);
 t_projectile				*ft_addprojectile(t_game *game, t_vec pos,
-								t_vec dir);
+								t_vec dir, int type);
 void						ft_projectilesclear(t_game *game);
 /*Parsing*/
 

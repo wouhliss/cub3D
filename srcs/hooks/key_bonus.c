@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/30 06:12:28 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 08:30:04 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,11 @@ int	on_key_press(int k, void *param)
 		ft_loadsprites(game);
 	}
 	else if (k == XK_4)
-	{
-		ft_addprojectile(game, game->p.pos, game->p.dir);
-	}
+		ft_addprojectile(game, game->p.pos, game->p.dir, 0);
+	else if (k == XK_5)
+		ft_addprojectile(game, game->p.pos, game->p.dir, 1);
+	else if (k == XK_6)
+		ft_addprojectile(game, game->p.pos, game->p.dir, 2);
 	return (0);
 }
 
