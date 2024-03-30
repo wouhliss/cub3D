@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/28 15:49:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 07:21:29 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 static inline void	ft_dda(t_game *game, t_render *render)
 {
-	while (!render->hit && render->map.y < game->length
-		&& render->map.x < game->width && render->map.x > 0
-		&& render->map.y > 0)
+	while (!render->hit && !ft_outside(game, render->map.x, render->map.y))
 	{
 		if (render->side_dist.x < render->side_dist.y)
 		{
@@ -34,7 +32,7 @@ static inline void	ft_dda(t_game *game, t_render *render)
 			if (render->step.y < 0)
 				render->side = 2;
 		}
-		if (game->map.map[render->map.y][render->map.x] == '1')
+		if (!ft_outside(game, render->map.x, render->map.y) && game->map.map[render->map.y][render->map.x] == '1')
 			render->hit = 1;
 	}
 }

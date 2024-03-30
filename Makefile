@@ -1,5 +1,5 @@
 CC = gcc	
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -Ofast
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -g3
 MLXFLAGS = -L ./minilibx-linux -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
 VPATH = srcs/parsing srcs/utils srcs/error srcs/ft_dprintf srcs/gnl srcs/hooks srcs/engine srcs
@@ -7,14 +7,14 @@ RM = rm -rvf
 NAME = cub3D
 NAME_BONUS = cub3D_bonus
 
-UTILS = utils1 utils2 utils3 utils4 ft_split
-PARSING = checkings colors init map format settings textures
+UTILS = utils1 utils2 utils3 utils4 utils5 ft_split
+PARSING = checkings colors init map format settings textures sprite_parse
 ERROR = panic garbage
 DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = render walls minimap sprites
+ENGINE = render walls minimap sprites projectile
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

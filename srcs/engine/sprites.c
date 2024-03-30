@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:15:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/28 14:50:25 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 04:28:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,46 +71,57 @@ static inline void	ft_putsprite(t_game *g, t_sprite *s)
 	}
 }
 
-static inline void	ft_sort_sprites(t_game *game)
+static inline double	ft_calcdistance(t_game *game, t_sprite *sprite)
 {
-	int	i;
+	return ((game->p.pos.x - sprite->pos.x) * (game->p.pos.x - sprite->pos.x)
+		+ (game->p.pos.y - sprite->pos.y) * (game->p.pos.y - sprite->pos.y));
+}
 
-	i = 0;
-	while (i < game->numsprites)
+static inline void	ft_sortsprites(t_game *game)
+{
+	t_sprite	*a;
+	t_sprite	*b;
+	t_sprite	*c;
+	t_sprite	*d;
+
+	a = game->sprites;
+	if (!a || !a->next)
+		return ;
+	b = a->next;
+	if (ft_calcdistance(game, a) < ft_calcdistance(game, b))
 	{
-		game->sprite_order[i] = i;
-		game->sprite_dist[i] = ((game->p.pos.x - game->sprites[i].pos.x)
-				* (game->p.pos.x - game->sprites[i].pos.x) + (game->p.pos.y
-					- game->sprites[i].pos.y) * (game->p.pos.y
-					- game->sprites[i].pos.y));
-		++i;
+		game->sprites = b;
+		a->next = b->next;
+		b->next = a;
 	}
-	i = 0;
-	while (i + 1 < game->numsprites)
+	while (b && b->next)
 	{
-		if (game->sprite_dist[i] < game->sprite_dist[i + 1])
+		c = b->next;
+		if (ft_calcdistance(game, b) < ft_calcdistance(game, c))
 		{
-			ft_swapi(&game->sprite_order[i], &game->sprite_order[i + 1]);
-			ft_swapd(&game->sprite_dist[i], &game->sprite_dist[i + 1]);
-			i = 0;
+			d = c->next;
+			a->next = c;
+			c->next = b;
+			b->next = d;
 		}
-		else
-			++i;
+		a = b;
+		b = b->next;
 	}
 }
 
 inline void	ft_drawsprites(t_game *game)
 {
-	int			i;
 	t_sprite	*s;
 
-	ft_sort_sprites(game);
-	i = -1;
-	while (++i < game->numsprites && !game->hsprite)
+	ft_sortsprites(game);
+	s = game->sprites;
+	while (!game->hsprite && s)
 	{
-		s = &game->sprites[game->sprite_order[i]];
 		if (s->hide)
+		{
+			s = s->next;
 			continue ;
+		}
 		game->r.sprite.x = s->pos.x - game->p.pos.x;
 		game->r.sprite.y = s->pos.y - game->p.pos.y;
 		game->r.invdet = 1.0 / (game->p.plane.x * game->p.dir.y - game->p.dir.x
@@ -125,5 +136,6 @@ inline void	ft_drawsprites(t_game *game)
 		game->r.draw_x = ft_getx(game, s);
 		game->r.draw_y = ft_gety(game, s);
 		ft_putsprite(game, s);
+		s = s->next;
 	}
 }

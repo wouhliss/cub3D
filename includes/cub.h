@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/28 15:52:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 07:15:11 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,229 +100,248 @@
 
 typedef struct s_buffer
 {
-	char				buff[BUFFER_SIZE];
-	char				*line;
-	int					size;
-	int					read;
-	int					pos;
-	int					resume;
-}						t_buffer;
+	char					buff[BUFFER_SIZE];
+	char					*line;
+	int						size;
+	int						read;
+	int						pos;
+	int						resume;
+}							t_buffer;
 
 typedef struct s_vec
 {
-	double				x;
-	double				y;
-}						t_vec;
+	double					x;
+	double					y;
+}							t_vec;
 
 typedef struct s_intvec
 {
-	int					x;
-	int					y;
-}						t_intvec;
+	int						x;
+	int						y;
+}							t_intvec;
 
 typedef struct s_render
 {
-	t_vec				ray_dir;
-	t_vec				side_dist;
-	t_vec				delta_dist;
-	t_vec				transform;
-	t_vec				sprite;
-	t_intvec			draw_x;
-	t_intvec			draw_y;
-	t_intvec			map;
-	t_intvec			step;
-	t_intvec			draw;
-	t_intvec			tex;
-	double				camera_x;
-	double				perp_dist;
-	double				texpos;
-	double				mystep;
-	double				invdet;
-	int					spritewidth;
-	int					sph;
-	int					spsx;
-	int					hit;
-	int					side;
-	int					line_height;
-	int					id;
-	int					twidth;
-	int					s;
-}						t_render;
+	t_vec					ray_dir;
+	t_vec					side_dist;
+	t_vec					delta_dist;
+	t_vec					transform;
+	t_vec					sprite;
+	t_intvec				draw_x;
+	t_intvec				draw_y;
+	t_intvec				map;
+	t_intvec				step;
+	t_intvec				draw;
+	t_intvec				tex;
+	double					camera_x;
+	double					perp_dist;
+	double					texpos;
+	double					mystep;
+	double					invdet;
+	int						spritewidth;
+	int						sph;
+	int						spsx;
+	int						hit;
+	int						side;
+	int						line_height;
+	int						id;
+	int						twidth;
+	int						s;
+}							t_render;
 
 typedef struct s_player
 {
-	t_vec				pos;
-	t_vec				dir;
-	t_vec				plane;
-	t_vec				speed;
-	int					y;
-}						t_player;
+	t_vec					pos;
+	t_vec					dir;
+	t_vec					plane;
+	t_vec					speed;
+	int						y;
+}							t_player;
 
 typedef struct s_map
 {
-	t_vec				s_pos;
-	char				**map;
-	char				s_dir;
-	int					c_color;
-	int					f_color;
-}						t_map;
+	t_vec					s_pos;
+	char					**map;
+	char					s_dir;
+	int						c_color;
+	int						f_color;
+}							t_map;
 
 typedef struct s_screen
 {
-	void				*img;
-	char				*addr;
-	int					bpp;
-	int					ll;
-	int					endian;
-}						t_screen;
+	void					*img;
+	char					*addr;
+	int						bpp;
+	int						ll;
+	int						endian;
+}							t_screen;
 typedef struct s_texture
 {
-	void				*img;
-	char				*addr;
-	int					bpp;
-	int					ll;
-	int					endian;
-	int					height;
-	int					width;
-	int					frames;
-	int					f;
-	int					s;
-}						t_texture;
+	void					*img;
+	char					*addr;
+	int						bpp;
+	int						ll;
+	int						endian;
+	int						height;
+	int						width;
+	int						frames;
+	int						f;
+	int						s;
+}							t_texture;
 
 typedef struct s_mlx
 {
-	void				*mlx;
-	void				*win;
-	int					width;
-	int					height;
-}						t_mlx;
+	void					*mlx;
+	void					*win;
+	int						width;
+	int						height;
+}							t_mlx;
+
+typedef struct s_sprite		t_sprite;
 
 typedef struct s_sprite
 {
-	t_vec				pos;
-	t_vec				dir;
-	t_vec				plane;
-	t_texture			*t;
-	int					type;
-	int					vr;
-	int					hr;
-	int					vpos;
-	double				vdiff;
-	int					hide;
-}						t_sprite;
+	t_vec					pos;
+	t_vec					dir;
+	t_vec					plane;
+	t_texture				*t;
+	int						type;
+	int						vr;
+	int						hr;
+	int						vpos;
+	double					vdiff;
+	int						hide;
+	t_sprite				*next;
+}							t_sprite;
+
+typedef struct s_projectile	t_projectile;
+
+typedef struct s_projectile
+{
+	t_sprite				*sprite;
+	t_projectile			*next;
+}							t_projectile;
 
 typedef struct s_game
 {
-	double				zbuffer[WIDTH];
-	t_map				map;
-	t_player			p;
-	t_mlx				mlx;
-	t_texture			textures[8];
-	t_screen			screen;
-	t_render			r;
-	char				*files[4];
-	int					colors_c[4];
-	int					colors_f[4];
-	t_sprite			*sprites;
-	int					*sprite_order;
-	double				*sprite_dist;
-	pthread_mutex_t		state_m;
-	pthread_mutex_t		rendered_m[4];
-	int					rendered[4];
-	time_t				now;
-	time_t				last;
-	time_t				a;
-	time_t				f;
-	int					texturec;
-	int					state;
-	int					id;
-	int					numsprites;
-	int					frames;
-	int					fd;
-	int					length;
-	int					width;
-	int					front;
-	int					back;
-	int					up;
-	int					down;
-	int					left;
-	int					right;
-	int					turn_l;
-	int					turn_r;
-	int					shift;
-	int					minus;
-	int					plus;
-	int					hsprite;
-	int					noclip;
-}						t_game;
+	double					zbuffer[WIDTH];
+	t_map					map;
+	t_player				p;
+	t_mlx					mlx;
+	t_texture				textures[9];
+	t_screen				screen;
+	t_render				r;
+	char					*files[4];
+	int						colors_c[4];
+	int						colors_f[4];
+	t_sprite				*sprites;
+	t_sprite				*psprite;
+	t_projectile			*projectiles;
+	pthread_mutex_t			state_m;
+	pthread_mutex_t			rendered_m[4];
+	int						rendered[4];
+	time_t					now;
+	time_t					last;
+	time_t					a;
+	time_t					f;
+	int						texturec;
+	int						state;
+	int						id;
+	int						frames;
+	int						fd;
+	int						length;
+	int						width;
+	int						front;
+	int						back;
+	int						up;
+	int						down;
+	int						left;
+	int						right;
+	int						turn_l;
+	int						turn_r;
+	int						shift;
+	int						minus;
+	int						plus;
+	int						hsprite;
+	int						noclip;
+}							t_game;
 
 typedef struct s_thread
 {
-	t_game				*game;
-	int					id;
-	pthread_t			tid;
-}						t_thread;
+	t_game					*game;
+	int						id;
+	pthread_t				tid;
+}							t_thread;
 
 typedef struct s_garbage
 {
-	void				*content;
-	struct s_garbage	*next;
-}						t_garbage;
+	void					*content;
+	struct s_garbage		*next;
+}							t_garbage;
 
 /*events*/
 
-int						on_key_press(int key_code, void *param);
-int						on_key_release(int k, void *param);
-int						on_destroy_event(void *param);
-int						on_mouse(int x, int y, void *param);
+int							on_key_press(int key_code, void *param);
+int							on_key_release(int k, void *param);
+int							on_destroy_event(void *param);
+int							on_mouse(int x, int y, void *param);
 // int						logic_loop(void *param);
 
 /*Engine*/
 
-void					ft_drawmap(t_game *game);
-void					ft_drawsprites(t_game *game);
-void					ft_wall(t_game *game, t_render *r);
-void					ft_drawpixel(t_game *game, int x, int y, t_render *r);
-void					*ft_thread(void *arg);
+void						ft_drawmap(t_game *game);
+void						ft_drawsprites(t_game *game);
+void						ft_wall(t_game *game, t_render *r);
+void						ft_drawpixel(t_game *game, int x, int y,
+								t_render *r);
+void						*ft_thread(void *arg);
+int							ft_loadsprites(t_game *game);
+t_projectile				*ft_addprojectile(t_game *game, t_vec pos,
+								t_vec dir);
+void						ft_projectilesclear(t_game *game);
 /*Parsing*/
 
-void					init_map(char *path, t_game *game);
-void					get_info_map(t_game *game);
-int						set_colors(char *line, t_game *game);
-void					pre_format_map(t_game *game);
-void					format_map(t_game *game);
-int						check_map(t_game *game);
-int						set_texture(char *line, t_game *game);
+void						init_map(char *path, t_game *game);
+void						get_info_map(t_game *game);
+int							set_colors(char *line, t_game *game);
+void						pre_format_map(t_game *game);
+void						format_map(t_game *game);
+int							check_map(t_game *game);
+int							set_texture(char *line, t_game *game);
+t_sprite					*ft_addsprite(t_game *game, t_sprite *sprite);
+void						ft_spritesclear(t_game *game);
 /*Utils*/
 
-char					*get_next_line(int fd);
-int						ft_strnchr(t_buffer *buffer);
-char					*ft_strchr(char *s, int c);
-char					*ft_strrchr(char *s, int c);
-int						ft_dprintf(int fd, const char *str, ...);
-int						ft_strcmp(const char *s1, const char *s2);
-char					*ft_strdup(const char *s);
-char					**join_tab(char **map, char *str);
-int						ft_strlen(const char *str);
-char					**ft_copy(char **map);
-int						plen(char **map);
-int						ft_strncmp(const char *s1, const char *s2, size_t n);
-void					*ft_calloc(size_t nmemb, size_t size);
-void					skip_spaces(char *line, int *i);
-int						plen(char **map);
-int						ft_atoc(const char *str);
-int						max(int a, int b);
-char					**ft_split(char const *s, char c);
-int						create_trgb(int t, int r, int g, int b);
-void					put_colors(t_game *game);
-void					my_mlx_pixel_put(t_screen *data, int x, int y,
-							int color);
-void					my_mlx_pixel_tput(t_screen *data, int x, int y,
-							int color);
-void					my_mlx_pixel_hput(t_screen *data, int x, int y,
-							int color);
-void					ft_swapi(int *a, int *b);
-void					ft_swapd(double *a, double *b);
+char						*get_next_line(int fd);
+int							ft_strnchr(t_buffer *buffer);
+char						*ft_strchr(char *s, int c);
+char						*ft_strrchr(char *s, int c);
+int							ft_dprintf(int fd, const char *str, ...);
+int							ft_strcmp(const char *s1, const char *s2);
+char						*ft_strdup(const char *s);
+char						**join_tab(char **map, char *str);
+int							ft_strlen(const char *str);
+char						**ft_copy(char **map);
+int							plen(char **map);
+int							ft_strncmp(const char *s1, const char *s2,
+								size_t n);
+void						*ft_calloc(size_t nmemb, size_t size);
+void						skip_spaces(char *line, int *i);
+int							plen(char **map);
+int							ft_atoc(const char *str);
+int							max(int a, int b);
+char						**ft_split(char const *s, char c);
+int							create_trgb(int t, int r, int g, int b);
+void						put_colors(t_game *game);
+void						my_mlx_pixel_put(t_screen *data, int x, int y,
+								int color);
+void						my_mlx_pixel_tput(t_screen *data, int x, int y,
+								int color);
+void						my_mlx_pixel_hput(t_screen *data, int x, int y,
+								int color);
+void						ft_swapi(int *a, int *b);
+void						ft_swapd(double *a, double *b);
+int							ft_outside(t_game *game, int x, int y);
 // int						first_last_line(t_game *game);
 // void					display_tab(char **tab);
 // int						check_line(t_game *game);
@@ -332,11 +351,11 @@ void					ft_swapd(double *a, double *b);
 
 /*Garbage collector*/
 
-void					*gc(void *ptr, int i);
+void						*gc(void *ptr, int i);
 
 /*Free and exit*/
 
-void					panic(const char *message);
-void					free_tab(char **tab);
+void						panic(const char *message);
+void						free_tab(char **tab);
 
 #endif

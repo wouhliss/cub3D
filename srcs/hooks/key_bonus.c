@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/28 14:54:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/03/30 06:12:28 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	on_key_press(int k, void *param)
 {
-	t_game	*game;
+	t_game		*game;
 
 	game = param;
 	if (k == XK_Escape)
@@ -47,19 +47,32 @@ int	on_key_press(int k, void *param)
 	{
 		if (game->noclip)
 		{
-			game->sprites[0].hide = 1;
-			game->p.pos = game->sprites[0].pos;
-			game->p.dir = game->sprites[0].dir;
-			game->p.plane = game->sprites[0].plane;
+			game->psprite->hide = 1;
+			game->p.pos = game->psprite->pos;
+			game->p.dir = game->psprite->dir;
+			game->p.plane = game->psprite->plane;
 		}
 		else
 		{
-			game->sprites[0].pos = game->p.pos;
-			game->sprites[0].dir = game->p.dir;
-			game->sprites[0].plane = game->p.plane;
-			game->sprites[0].hide = 0;
+			game->psprite->pos = game->p.pos;
+			game->psprite->dir = game->p.dir;
+			game->psprite->plane = game->p.plane;
+			game->psprite->hide = 0;
 		}
 		game->noclip ^= 1;
+	}
+	else if (k == XK_3)
+	{
+		t_sprite	sprite;
+
+		sprite = (t_sprite){.type = 0, .vdiff = 64.0, .hr = 1,
+				.vr = 1, .hide = 0, .pos = game->p.pos};
+		ft_addsprite(game, &sprite);
+		ft_loadsprites(game);
+	}
+	else if (k == XK_4)
+	{
+		ft_addprojectile(game, game->p.pos, game->p.dir);
 	}
 	return (0);
 }
