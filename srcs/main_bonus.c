@@ -6,132 +6,78 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/30 08:33:57 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 12:53:40 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline void	ft_handleinput(t_game *game, double delta)
+static inline void	ft_steps(t_game *game)
 {
-	double	x;
-	double	speed;
-	double	sens;
+	game->p.delta_dist = (t_vec){1e30, 1e30};
+	if (-game->p.dir.x)
+		game->p.delta_dist.x = fabs(1.0 / -game->p.dir.x);
+	if (game->p.dir.y)
+		game->p.delta_dist.y = fabs(1.0 / game->p.dir.y);
+	game->p.map = (t_intvec){(int)game->p.pos.x, (int)game->p.pos.y};
+	if (-game->p.dir.x < 0)
+	{
+		game->p.step.x = -1;
+		game->p.side_dist.x = (game->p.pos.x - game->p.map.x)
+			* game->p.delta_dist.x;
+	}
+	else
+	{
+		game->p.step.x = 1;
+		game->p.side_dist.x = (game->p.map.x + 1.0 - game->p.pos.x)
+			* game->p.delta_dist.x;
+	}
+	if (game->p.dir.y < 0)
+	{
+		game->p.step.y = -1;
+		game->p.side_dist.y = (game->p.pos.y - game->p.map.y)
+			* game->p.delta_dist.y;
+	}
+	else
+	{
+		game->p.step.y = 1;
+		game->p.side_dist.y = (game->p.map.y + 1.0 - game->p.pos.y)
+			* game->p.delta_dist.y;
+	}
+}
 
-	speed = (delta * 0.000000005);
-	sens = 0.000000008 * delta;
-	if (game->front)
+static inline void	ft_dda(t_game *game)
+{
+	while (!game->p.looking && !ft_outside(game, game->p.map.x, game->p.map.y))
 	{
-		if (!ft_outside(game, (int)(game->p.pos.x + game->p.dir.x * (speed
-						+ (speed * game->shift * 0.6))), (int)game->p.pos.y)
-			&& (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-					+ game->p.dir.x * (speed + (speed * game->shift
-							* 0.6)))] == '0' || game->noclip))
-			game->p.pos.x += game->p.dir.x * (speed + (speed * game->shift
-						* 0.6));
-		if (!ft_outside(game, (int)game->p.pos.x, (int)(game->p.pos.y
-					+ game->p.dir.y * (speed + (speed * game->shift * 0.6))))
-			&& (game->map.map[(int)(game->p.pos.y + game->p.dir.y * (speed
-						+ (speed * game->shift
-							* 0.6)))][(int)game->p.pos.x] == '0'
-				|| game->noclip))
-			game->p.pos.y += game->p.dir.y * (speed + (speed * game->shift
-						* 0.6));
+		if (game->p.side_dist.x < game->p.side_dist.y)
+		{
+			game->p.side_dist.x += game->p.delta_dist.x;
+			game->p.map.x += game->p.step.x;
+			game->p.perp_dist = game->p.side_dist.x - game->p.delta_dist.x;
+		}
+		else
+		{
+			game->p.side_dist.y += game->p.delta_dist.y;
+			game->p.map.y += game->p.step.y;
+			game->p.perp_dist = game->p.side_dist.y - game->p.delta_dist.y;
+		}
+		if (game->p.perp_dist > 3)
+			break ;
+		if (!ft_outside(game, game->p.map.x, game->p.map.y)
+			&& game->map.map[game->p.map.y][game->p.map.x] != '0')
+		{
+			game->p.look_pos = (t_intvec){game->p.map.x, game->p.map.y};
+			game->p.looking = true;
+		}
 	}
-	if (game->back)
-	{
-		if (!ft_outside(game, (int)(game->p.pos.x - game->p.dir.x * (speed
-						+ (speed * game->shift * 0.6))), (int)game->p.pos.y)
-			&& (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-					- game->p.dir.x * (speed + (speed * game->shift
-							* 0.6)))] == '0' || game->noclip))
-			game->p.pos.x -= game->p.dir.x * (speed + (speed * game->shift
-						* 0.6));
-		if (!ft_outside(game, (int)game->p.pos.x, (int)(game->p.pos.y
-					- game->p.dir.y * (speed + (speed * game->shift * 0.6))))
-			&& (game->map.map[(int)(game->p.pos.y - game->p.dir.y * (speed
-						+ (speed * game->shift
-							* 0.6)))][(int)game->p.pos.x] == '0'
-				|| game->noclip))
-			game->p.pos.y -= game->p.dir.y * (speed + (speed * game->shift
-						* 0.6));
-	}
-	if (game->right)
-	{
-		if (!ft_outside(game, (int)(game->p.pos.x + (game->p.dir.x
-						* cos(-HALF_PI) - game->p.dir.y * sin(-HALF_PI))
-					* (speed + (speed * game->shift * 0.6))),
-				(int)game->p.pos.y)
-			&& (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-					+ (game->p.dir.x * cos(-HALF_PI) - game->p.dir.y
-						* sin(-HALF_PI)) * (speed + (speed * game->shift
-							* 0.6)))] == '0' || game->noclip))
-			game->p.pos.x += (game->p.dir.x * cos(-HALF_PI) - game->p.dir.y
-					* sin(-HALF_PI)) * (speed + (speed * game->shift * 0.6));
-		if (!ft_outside(game, (int)game->p.pos.x, (int)(game->p.pos.y
-					+ (game->p.dir.x * sin(-HALF_PI) + game->p.dir.y
-						* cos(-HALF_PI)) * (speed + (speed * game->shift
-							* 0.6)))) && (game->map.map[(int)(game->p.pos.y
-					+ (game->p.dir.x * sin(-HALF_PI) + game->p.dir.y
-						* cos(-HALF_PI)) * (speed + (speed * game->shift
-							* 0.6)))][(int)game->p.pos.x] == '0'
-				|| game->noclip))
-			game->p.pos.y += (game->p.dir.x * sin(-HALF_PI) + game->p.dir.y
-					* cos(-HALF_PI)) * (speed + (speed * game->shift * 0.6));
-	}
-	if (game->left)
-	{
-		if (!ft_outside(game, (int)(game->p.pos.x + (game->p.dir.x
-						* cos(HALF_PI) - game->p.dir.y * sin(HALF_PI)) * (speed
-						+ (speed * game->shift * 0.6))), (int)game->p.pos.y)
-			&& (game->map.map[(int)game->p.pos.y][(int)(game->p.pos.x
-					+ (game->p.dir.x * cos(HALF_PI) - game->p.dir.y
-						* sin(HALF_PI)) * (speed + (speed * game->shift
-							* 0.6)))] == '0' || game->noclip))
-			game->p.pos.x += (game->p.dir.x * cos(HALF_PI) - game->p.dir.y
-					* sin(HALF_PI)) * (speed + (speed * game->shift * 0.6));
-		if (!ft_outside(game, (int)game->p.pos.x, (int)(game->p.pos.y
-					+ (game->p.dir.x * sin(HALF_PI) + game->p.dir.y
-						* cos(HALF_PI)) * (speed + (speed * game->shift
-							* 0.6)))) && (game->map.map[(int)(game->p.pos.y
-					+ (game->p.dir.x * sin(HALF_PI) + game->p.dir.y
-						* cos(HALF_PI)) * (speed + (speed * game->shift
-							* 0.6)))][(int)game->p.pos.x] == '0'
-				|| game->noclip))
-			game->p.pos.y += (game->p.dir.x * sin(HALF_PI) + game->p.dir.y
-					* cos(HALF_PI)) * (speed + (speed * game->shift * 0.6));
-	}
-	if (game->turn_r)
-	{
-		x = game->p.dir.x;
-		game->p.dir.x = x * cos(-(sens)) - game->p.dir.y * sin(-(sens));
-		game->p.dir.y = x * sin(-(sens)) + game->p.dir.y * cos(-(sens));
-		x = game->p.plane.x;
-		game->p.plane.x = x * cos(-(sens)) - game->p.plane.y * sin(-(sens));
-		game->p.plane.y = x * sin(-(sens)) + game->p.plane.y * cos(-(sens));
-	}
-	if (game->turn_l)
-	{
-		x = game->p.dir.x;
-		game->p.dir.x = x * cos((sens)) - game->p.dir.y * sin((sens));
-		game->p.dir.y = x * sin((sens)) + game->p.dir.y * cos((sens));
-		x = game->p.plane.x;
-		game->p.plane.x = x * cos((sens)) - game->p.plane.y * sin((sens));
-		game->p.plane.y = x * sin((sens)) + game->p.plane.y * cos((sens));
-	}
-	if (game->up)
-		game->p.y += (0.000004 * delta);
-	if (game->down)
-		game->p.y -= (0.000004 * delta);
 }
 
 int	ft_loop(void *param)
 {
 	t_game			*game;
-	t_projectile	*p;
-	clock_t			delta;
+	t_door			*door;
 	int				i;
-	double			step;
 	struct timespec	t;
 
 	game = param;
@@ -147,7 +93,7 @@ int	ft_loop(void *param)
 	pthread_mutex_lock(&game->state_m);
 	game->state = COMPUTING;
 	pthread_mutex_unlock(&game->state_m);
-	delta = game->now - game->last;
+	game->delta = game->now - game->last;
 	if (game->now - game->a > 200000000)
 	{
 		i = -1;
@@ -163,129 +109,47 @@ int	ft_loop(void *param)
 		}
 		game->a = game->now;
 	}
-	p = game->projectiles;
-	while (p)
+	ft_handle_projectiles(game);
+	ft_move(game);
+	ft_aim(game);
+	game->p.looking = false;
+	ft_steps(game);
+	ft_dda(game);
+	if (game->p.jumping == JUMPING)
 	{
-		if (p->sprite->hide)
+		game->p.jump += game->delta * 0.000002;
+		if (game->p.jump > 300.0)
 		{
-			p = p->next;
-			continue ;
+			game->p.jump = 300.0;
+			game->p.jumping = FALLING;
 		}
-		step = 0;
-		while (!p->sprite->hide && step < delta * 0.00000002)
-		{
-			if (p->type == 0 && !ft_outside(game, (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step), (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-				&& game->map.map[(int)(p->sprite->pos.y + p->sprite->dir.y
-					* step)][(int)(p->sprite->pos.x + p->sprite->dir.x
-					* step)] == '1')
-			{
-				game->map.map[(int)(p->sprite->pos.y + p->sprite->dir.y
-						* step)][(int)(p->sprite->pos.x + p->sprite->dir.x
-						* step)] = '0';
-				p->sprite->hide = 1;
-			}
-			else if (p->type == 1 && !ft_outside(game, (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step), (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-				&& game->map.map[(int)(p->sprite->pos.y + p->sprite->dir.y
-					* step)][(int)(p->sprite->pos.x + p->sprite->dir.x
-					* step)] == '1')
-			{
-				game->portal_l.pos = (t_intvec){(int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step), (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step)};
-				if (p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) < 0.1 && p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) < p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-						game->portal_l.side = -1;
-				else if (p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) > 0.9 && p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) < p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step))
-						game->portal_l.side = -2;
-				else if (p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) < 0.1 && p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) < p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step))
-						game->portal_l.side = 1;
-				else if (p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) > 0.9 && p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) < p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-						game->portal_l.side = 2;
-				if (game->portal_l.pos.x == game->portal_r.pos.x && game->portal_l.pos.y == game->portal_r.pos.y && game->portal_l.side == game->portal_r.side)
-					game->portal_r.side = 0;
-				p->sprite->hide = 1;
-			}
-			else if (p->type == 2 && !ft_outside(game, (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step), (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-				&& game->map.map[(int)(p->sprite->pos.y + p->sprite->dir.y
-					* step)][(int)(p->sprite->pos.x + p->sprite->dir.x
-					* step)] == '1')
-			{
-				game->portal_r.pos = (t_intvec){(int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step), (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step)};
-				if (p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) < 0.1 && p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) < p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-						game->portal_r.side = -1;
-				else if (p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) > 0.9 && p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) < p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step))
-						game->portal_r.side = -2;
-				else if (p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) < 0.1 && p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) < p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step))
-						game->portal_r.side = 1;
-				else if (p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step) > 0.9 && p->sprite->pos.x
-						+ p->sprite->dir.x * step - (int)(p->sprite->pos.x
-						+ p->sprite->dir.x * step) < p->sprite->pos.y
-						+ p->sprite->dir.y * step - (int)(p->sprite->pos.y
-						+ p->sprite->dir.y * step))
-						game->portal_r.side = 2;
-				if (game->portal_l.pos.x == game->portal_r.pos.x && game->portal_l.pos.y == game->portal_r.pos.y && game->portal_l.side == game->portal_r.side)
-					game->portal_l.side = 0;
-				p->sprite->hide = 1;
-			}
-			step += 0.01;
-		}
-		p->sprite->pos = (t_vec){p->sprite->pos.x + p->sprite->dir.x * delta
-			* 0.00000002, p->sprite->pos.y + p->sprite->dir.y * delta
-			* 0.00000002};
-		p = p->next;
 	}
-	ft_handleinput(game, delta);
+	if (game->p.jumping == FALLING)
+	{
+		game->p.jump -= game->delta * 0.000002;
+		if (game->p.jump < 0.0)
+		{
+			game->p.jump = 0.0;
+			game->p.jumping = GROUND;
+		}
+	}
+	door = game->doors;
+	while (door)
+	{
+		if (door->state == OPENING)
+		{
+			door->frame += 0.000000001 * game->delta;
+			if (door->frame >= 1.0)
+				door->state = OPEN;
+		}
+		else if (door->state == CLOSING)
+		{
+			door->frame -= 0.000000001 * game->delta;
+			if (door->frame <= 0.0)
+				door->state = CLOSED;
+		}
+		door = door->next;
+	}
 	game->last = game->now;
 	pthread_mutex_lock(&game->state_m);
 	game->state = RENDERING;
@@ -302,11 +166,10 @@ int	ft_loop(void *param)
 		else
 		{
 			pthread_mutex_unlock(&game->rendered_m[i]);
-			usleep(100);
+			usleep(50);
 		}
 	}
 	ft_drawmap(game);
-	ft_drawsprites(game);
 	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
 		0);
 	pthread_mutex_lock(&game->state_m);
@@ -477,6 +340,7 @@ int	main(int ac, char **av)
 			mlx_destroy_image(game.mlx.mlx, game.textures[i].img);
 	ft_spritesclear(&game);
 	ft_projectilesclear(&game);
+	ft_doorsclear(&game);
 	return (mlx_destroy_window(game.mlx.mlx, game.mlx.win),
 		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx), gc(0, 0), 0);
 }

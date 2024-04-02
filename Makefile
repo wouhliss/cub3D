@@ -14,7 +14,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = render walls minimap sprites projectile
+ENGINE = render walls minimap sprites projectile projectile_utils movement aim door door_utils
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

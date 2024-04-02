@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/30 08:29:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 12:52:20 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,14 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1920
-# define HALF_WIDTH 960
-# define Q_WIDTH 480
-# define HEIGHT 1080
-# define HALF_HEIGHT 540
-# define Q_HEIGHT 270
-# define MINIMAP_WIDTH 360
-# define MINIMAP_HEIGHT 240
+# define WIDTH 1280
+# define HALF_WIDTH 640
+# define Q_WIDTH 320
+# define HEIGHT 720
+# define HALF_HEIGHT 360
+# define Q_HEIGHT 180
+# define MINIMAP_WIDTH 300
+# define MINIMAP_HEIGHT 200
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -93,6 +93,15 @@
 # define DRAWING 2
 # define DRAWN 3
 # define ENDED 4
+
+# define CLOSED 0
+# define OPEN 1
+# define OPENING 2
+# define CLOSING 3
+
+# define GROUND 0
+# define JUMPING 1
+# define FALLING 2
 
 /*GNL*/
 # define BUFFER_SIZE 1024
@@ -120,10 +129,23 @@ typedef struct s_intvec
 	int						y;
 }							t_intvec;
 
+typedef struct s_door		t_door;
+
+typedef struct s_door
+{
+	t_intvec				pos;
+	int						state;
+	double					frame;
+	t_door					*next;
+}							t_door;
+
 typedef struct s_render
 {
 	t_vec					ray_dir;
 	t_vec					side_dist;
+	t_vec					pside_dist;
+	t_vec					tside_dist;
+	t_vec					dside_dist;
 	t_vec					delta_dist;
 	t_vec					transform;
 	t_vec					sprite;
@@ -132,29 +154,62 @@ typedef struct s_render
 	t_intvec				map;
 	t_intvec				step;
 	t_intvec				draw;
+	t_intvec				pdraw;
+	t_intvec				tdraw;
+	t_intvec				ddraw;
 	t_intvec				tex;
+	t_intvec				dtex;
+	t_intvec				pixel;
 	double					camera_x;
 	double					perp_dist;
+	double					pperp_dist;
+	double					tperp_dist;
+	double					dperp_dist;
 	double					texpos;
+	double					dtexpos;
 	double					mystep;
+	double					dmystep;
 	double					invdet;
+	t_door					*door;
 	int						spritewidth;
 	int						sph;
 	int						spsx;
-	int						hit;
+	bool					hit;
+	int						phit;
+	bool					thit;
+	bool					dhit;
 	int						side;
+	int						pside;
+	int						tside;
+	int						dside;
 	int						line_height;
+	int						pline_height;
+	int						tline_height;
+	int						dline_height;
 	int						id;
+	int						did;
 	int						twidth;
+	int						dtwidth;
 	int						s;
+	int						ds;
+	int						portal;
 }							t_render;
 
 typedef struct s_player
 {
 	t_vec					pos;
 	t_vec					dir;
-	t_vec					plane;
+	t_vec					p;
 	t_vec					speed;
+	t_vec					delta_dist;
+	t_vec					side_dist;
+	t_intvec				look_pos;
+	t_intvec				step;
+	t_intvec				map;
+	double					perp_dist;
+	bool					looking;
+	double					jump;
+	int						jumping;
 	int						y;
 }							t_player;
 
@@ -211,6 +266,7 @@ typedef struct s_sprite
 	int						vpos;
 	double					vdiff;
 	int						hide;
+	int						delete;
 	t_sprite				*next;
 }							t_sprite;
 
@@ -220,18 +276,28 @@ typedef struct s_projectile
 {
 	t_sprite				*sprite;
 	int						type;
+	int						delete;
+	t_vec					delta_dist;
+	t_vec					side_dist;
+	t_intvec				map;
+	t_intvec				step;
+	double					perp_dist;
+	int						side;
 	t_projectile			*next;
 }							t_projectile;
 
 typedef struct s_portal
 {
 	t_intvec				pos;
+	t_vec					dir;
+	t_vec					plane;
 	int						side;
 }							t_portal;
 
+
 typedef struct s_game
 {
-	double					zbuffer[WIDTH];
+	double					zbuffer[WIDTH][HEIGHT];
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
@@ -244,15 +310,19 @@ typedef struct s_game
 	t_sprite				*sprites;
 	t_sprite				*psprite;
 	t_projectile			*projectiles;
+	t_door					*doors;
 	pthread_mutex_t			state_m;
 	pthread_mutex_t			rendered_m[4];
 	int						rendered[4];
 	t_portal				portal_l;
 	t_portal				portal_r;
+	double					speed;
+	double					sens;
 	time_t					now;
 	time_t					last;
 	time_t					a;
 	time_t					f;
+	time_t					delta;
 	int						texturec;
 	int						state;
 	int						id;
@@ -260,19 +330,20 @@ typedef struct s_game
 	int						fd;
 	int						length;
 	int						width;
-	int						front;
-	int						back;
-	int						up;
-	int						down;
-	int						left;
-	int						right;
-	int						turn_l;
-	int						turn_r;
-	int						shift;
-	int						minus;
-	int						plus;
-	int						hsprite;
-	int						noclip;
+	bool					front;
+	bool					back;
+	bool					up;
+	bool					down;
+	bool					left;
+	bool					right;
+	bool					turn_l;
+	bool					turn_r;
+	bool					shift;
+	bool					minus;
+	bool					plus;
+	bool					hsprite;
+	bool					noclip;
+	bool					space;
 }							t_game;
 
 typedef struct s_thread
@@ -299,15 +370,30 @@ int							on_mouse(int x, int y, void *param);
 /*Engine*/
 
 void						ft_drawmap(t_game *game);
-void						ft_drawsprites(t_game *game);
-void						ft_wall(t_game *game, t_render *r);
-void						ft_drawpixel(t_game *game, int x, int y,
-								t_render *r);
+void						ft_drawsprites(t_game *game, const int x,
+								const int dx);
+void						ft_wall(const t_game *game, t_render *r);
+void						ft_dwall(const t_game *game, t_render *r);
+void						ft_drawpixel(const t_game *game, const int x,
+								const int y, t_render *r);
+void						ft_ddrawpixel(t_game *game, const int x,
+								const int y, t_render *r);
 void						*ft_thread(void *arg);
 int							ft_loadsprites(t_game *game);
 t_projectile				*ft_addprojectile(t_game *game, t_vec pos,
 								t_vec dir, int type);
+t_door						*ft_adddoor(t_game *game, t_intvec pos);
+void						ft_doorsclear(t_game *game);
+void						ft_delete_projectile(t_game *game);
+void						ft_deletesprite(t_game *game);
 void						ft_projectilesclear(t_game *game);
+void						ft_pdraw(t_game *game, int x, int w, int y, int h,
+								t_portal *p);
+void						ft_move(t_game *game);
+void						ft_aim(t_game *game);
+void						ft_handle_projectiles(t_game *game);
+t_door						*ft_getdoor(const t_game *game, const int x,
+								const int y);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);
@@ -342,15 +428,16 @@ int							max(int a, int b);
 char						**ft_split(char const *s, char c);
 int							create_trgb(int t, int r, int g, int b);
 void						put_colors(t_game *game);
-void						my_mlx_pixel_put(t_screen *data, int x, int y,
-								int color);
+void						my_mlx_pixel_put(const t_screen *data, const int x,
+								const int y, const int color);
 void						my_mlx_pixel_tput(t_screen *data, int x, int y,
 								int color);
 void						my_mlx_pixel_hput(t_screen *data, int x, int y,
 								int color);
 void						ft_swapi(int *a, int *b);
 void						ft_swapd(double *a, double *b);
-int							ft_outside(t_game *game, int x, int y);
+int							ft_outside(const t_game *game, const int x,
+								const int y);
 // int						first_last_line(t_game *game);
 // void					display_tab(char **tab);
 // int						check_line(t_game *game);

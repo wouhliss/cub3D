@@ -1,36 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sprite_parse.c                                     :+:      :+:    :+:   */
+/*   door_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/29 23:40:04 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/01 16:33:16 by wouhliss         ###   ########.fr       */
+/*   Created: 2024/04/01 16:41:48 by wouhliss          #+#    #+#             */
+/*   Updated: 2024/04/02 09:43:03 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline t_sprite	*ft_newsprite(t_sprite *sprite)
+static inline t_door	*ft_newdoor(t_intvec pos)
 {
-	t_sprite	*new;
+	t_door		*new;
 
-	new = malloc(sizeof(t_sprite));
+	new = malloc(sizeof(t_door));
 	if (!new)
 		return (NULL);
-	*new = *sprite;
-	new->delete = 0;
+	new->pos = pos;
+	new->state = CLOSED;
+	new->frame = 0.0;
 	new->next = NULL;
 	return (new);
 }
 
-void	ft_spritesclear(t_game *game)
+void	ft_doorsclear(t_game *game)
 {
-	t_sprite	*el;
-	t_sprite	*temp;
+	t_door	*el;
+	t_door	*temp;
 
-	el = game->sprites;
+	el = game->doors;
 	while (el)
 	{
 		temp = el->next;
@@ -39,20 +40,20 @@ void	ft_spritesclear(t_game *game)
 	}
 }
 
-t_sprite	*ft_addsprite(t_game *game, t_sprite *sprite)
+t_door	*ft_adddoor(t_game *game, t_intvec pos)
 {
-	t_sprite	*new;
-	t_sprite	*el;
+	t_door	*new;
+	t_door	*el;
 
-	new = ft_newsprite(sprite);
+	new = ft_newdoor(pos);
 	if (!new)
 		return (NULL);
-	if (!game->sprites)
+	if (!game->doors)
 	{
-		game->sprites = new;
+		game->doors = new;
 		return (new);
 	}
-	el = game->sprites;
+	el = game->doors;
 	while (el->next)
 		el = el->next;
 	el->next = new;

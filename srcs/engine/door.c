@@ -1,18 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils5.c                                           :+:      :+:    :+:   */
+/*   door.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 07:13:46 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/01 16:50:44 by wouhliss         ###   ########.fr       */
+/*   Created: 2024/04/01 16:41:34 by wouhliss          #+#    #+#             */
+/*   Updated: 2024/04/01 17:29:25 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-int	ft_outside(const t_game *game, const int x, const int y)
+t_door	*ft_getdoor(const t_game *game, const int x, const int y)
 {
-	return (x < 1 || x >= game->width - 1 || y < 1 || y >= game->length - 1);
+	t_door	*el;
+
+	el = game->doors;
+	while (el)
+	{
+		if (el->pos.x == x && el->pos.y == y)
+			return (el);
+		el = el->next;
+	}
+	return (NULL);
 }

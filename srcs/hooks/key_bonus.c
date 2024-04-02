@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/30 08:30:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 12:52:50 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 int	on_key_press(int k, void *param)
 {
 	t_game		*game;
+	t_sprite	sprite;
+		t_door *door;
 
 	game = param;
 	if (k == XK_Escape)
@@ -50,23 +52,21 @@ int	on_key_press(int k, void *param)
 			game->psprite->hide = 1;
 			game->p.pos = game->psprite->pos;
 			game->p.dir = game->psprite->dir;
-			game->p.plane = game->psprite->plane;
+			game->p.p = game->psprite->plane;
 		}
 		else
 		{
 			game->psprite->pos = game->p.pos;
 			game->psprite->dir = game->p.dir;
-			game->psprite->plane = game->p.plane;
+			game->psprite->plane = game->p.p;
 			game->psprite->hide = 0;
 		}
 		game->noclip ^= 1;
 	}
 	else if (k == XK_3)
 	{
-		t_sprite	sprite;
-
-		sprite = (t_sprite){.type = 0, .vdiff = 64.0, .hr = 1,
-				.vr = 1, .hide = 0, .pos = game->p.pos};
+		sprite = (t_sprite){.type = 0, .vdiff = 64.0, .hr = 1, .vr = 1,
+			.hide = 0, .pos = game->p.pos};
 		ft_addsprite(game, &sprite);
 		ft_loadsprites(game);
 	}
@@ -76,6 +76,31 @@ int	on_key_press(int k, void *param)
 		ft_addprojectile(game, game->p.pos, game->p.dir, 1);
 	else if (k == XK_6)
 		ft_addprojectile(game, game->p.pos, game->p.dir, 2);
+	else if (k == XK_7)
+		game->p.jump += 10;
+	else if (k == XK_8)
+		game->p.jump -= 10;
+	else if (k == XK_space && game->p.jumping == GROUND)
+		game->p.jumping = JUMPING;
+	else if ((k == XK_e || k == XK_E) && game->p.looking
+		&& game->map.map[game->p.look_pos.y][game->p.look_pos.x] == 'D')
+	{
+		door = game->doors;
+		while (door)
+		{
+			if (door->pos.x == game->p.look_pos.x
+				&& door->pos.y == game->p.look_pos.y)
+			{
+				if (door->state == CLOSED)
+					door->state = OPENING;
+				else if (door->state == OPEN)
+					door->state = CLOSING;
+				break ;
+			}
+			door = door->next;
+		}
+		game->p.looking = false;
+	}
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/26 13:02:39 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/01 15:47:11 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ int	on_mouse(int w, int h, void *param)
 			* 0.0015);
 	game->p.dir.y = x * sin((HALF_WIDTH - w) * 0.0015) + y * cos((HALF_WIDTH - w)
 			* 0.0015);
-	x = game->p.plane.x;
-	y = game->p.plane.y;
-	game->p.plane.x = x * cos((HALF_WIDTH - w) * 0.0015) - y * sin((HALF_WIDTH
+	x = game->p.p.x;
+	y = game->p.p.y;
+	game->p.p.x = x * cos((HALF_WIDTH - w) * 0.0015) - y * sin((HALF_WIDTH
 				- w) * 0.0015);
-	game->p.plane.y = x * sin((HALF_WIDTH - w) * 0.0015) + y * cos((HALF_WIDTH
+	game->p.p.y = x * sin((HALF_WIDTH - w) * 0.0015) + y * cos((HALF_WIDTH
 				- w) * 0.0015);
 	if (h != HALF_HEIGHT)
 		game->p.y -= h - HALF_HEIGHT;
