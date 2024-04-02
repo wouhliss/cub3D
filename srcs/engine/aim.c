@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:02:56 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/01 16:01:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 16:57:58 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,16 @@ void	ft_aim(t_game *game)
 {
 	game->sens = 0.000000008 * game->delta;
 	ft_aim_h(game);
-	if (game->up)
+	if (game->up && game->p.y < HEIGHT)
+	{
 		game->p.y += (0.000004 * game->delta);
-	if (game->down)
+		if (game->p.y > HEIGHT)
+			game->p.y = HEIGHT;
+	}
+	if (game->down && game->p.y > -HEIGHT)
+	{
 		game->p.y -= (0.000004 * game->delta);
+		if (game->p.y < -HEIGHT)
+			game->p.y = -HEIGHT;
+	}
 }

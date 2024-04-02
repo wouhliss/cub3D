@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:34 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/01 16:52:13 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 17:04:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,10 @@ inline void	ft_drawmap(t_game *game)
 				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00777777);
 			else
 				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00FFFFFF);
+			if (game->portal_l.pos.x == pos.x && game->portal_l.pos.y == pos.y && game->portal_l.side)
+				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00007FFF);
+			if (game->portal_r.pos.x == pos.x && game->portal_r.pos.y == pos.y && game->portal_r.side)
+				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00FF7F00);
 			if ((int)game->p.pos.x == pos.x && (int)game->p.pos.y == pos.y)
 				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00FF0000);
 		}

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/02 12:52:20 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:04:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,14 +66,16 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1280
-# define HALF_WIDTH 640
-# define Q_WIDTH 320
-# define HEIGHT 720
-# define HALF_HEIGHT 360
-# define Q_HEIGHT 180
-# define MINIMAP_WIDTH 300
-# define MINIMAP_HEIGHT 200
+# define WIDTH 1920
+# define HALF_WIDTH 960
+# define Q_WIDTH 480
+# define H_WIDTH 240
+# define HEIGHT 1080
+# define HALF_HEIGHT 540
+# define Q_HEIGHT 270
+# define H_HEIGHT 135
+# define MINIMAP_WIDTH 400
+# define MINIMAP_HEIGHT 300
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -149,10 +151,13 @@ typedef struct s_render
 	t_vec					delta_dist;
 	t_vec					transform;
 	t_vec					sprite;
+	t_vec					pos;
 	t_intvec				draw_x;
 	t_intvec				draw_y;
 	t_intvec				map;
+	t_vec					dmap;
 	t_intvec				step;
+	t_vec					dstep;
 	t_intvec				draw;
 	t_intvec				pdraw;
 	t_intvec				tdraw;
@@ -193,6 +198,7 @@ typedef struct s_render
 	int						s;
 	int						ds;
 	int						portal;
+	int						vpos;
 }							t_render;
 
 typedef struct s_player
@@ -294,7 +300,6 @@ typedef struct s_portal
 	int						side;
 }							t_portal;
 
-
 typedef struct s_game
 {
 	double					zbuffer[WIDTH][HEIGHT];
@@ -323,6 +328,7 @@ typedef struct s_game
 	time_t					a;
 	time_t					f;
 	time_t					delta;
+	time_t					sync;
 	int						texturec;
 	int						state;
 	int						id;
@@ -394,6 +400,8 @@ void						ft_aim(t_game *game);
 void						ft_handle_projectiles(t_game *game);
 t_door						*ft_getdoor(const t_game *game, const int x,
 								const int y);
+void						ft_floorceil(t_game *game, const int w,
+								const int xx);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);

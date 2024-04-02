@@ -6,20 +6,20 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 12:35:12 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 15:41:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline double	get_wall_x(const t_game *g, t_render *r)
+static inline double	get_wall_x(t_render *r)
 {
 	double	wallx;
 
 	if (r->side < 0)
-		wallx = g->p.pos.y + r->perp_dist * r->ray_dir.y;
+		wallx = r->pos.y + r->perp_dist * r->ray_dir.y;
 	else
-		wallx = g->p.pos.x + r->perp_dist * r->ray_dir.x;
+		wallx = r->pos.x + r->perp_dist * r->ray_dir.x;
 	wallx -= floor(wallx);
 	return (wallx);
 }
@@ -50,21 +50,21 @@ inline void	ft_wall(const t_game *game, t_render *r)
 		r->id = 0;
 	r->twidth = game->textures[r->id].width;
 	r->s = game->textures[r->id].s;
-	wallx = get_wall_x(game, r);
+	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx);
 	r->mystep = (double)r->twidth / r->line_height;
 	r->texpos = (r->draw.x - HALF_HEIGHT + r->line_height / 2 - game->p.y
 			- (int)(game->p.jump) / r->perp_dist) * r->mystep;
 }
 
-static inline double	get_dwall_x(const t_game *g, t_render *r)
+static inline double	get_dwall_x(t_render *r)
 {
 	double	wallx;
 
 	if (r->dside < 0)
-		wallx = g->p.pos.y + r->dperp_dist * r->ray_dir.y;
+		wallx = r->pos.y + r->dperp_dist * r->ray_dir.y;
 	else
-		wallx = g->p.pos.x + r->dperp_dist * r->ray_dir.x;
+		wallx = r->pos.x + r->dperp_dist * r->ray_dir.x;
 	wallx -= floor(wallx);
 	return (wallx);
 }
@@ -88,7 +88,7 @@ inline void	ft_dwall(const t_game *game, t_render *r)
 	r->did = 4;
 	r->dtwidth = game->textures[r->did].width;
 	r->ds = game->textures[r->did].s;
-	wallx = get_dwall_x(game, r);
+	wallx = get_dwall_x(r);
 	r->dtex.x = get_dtex_x(r, wallx);
 	r->dmystep = (double)r->dtwidth / r->dline_height;
 	r->dtexpos = (r->ddraw.x - HALF_HEIGHT + r->dline_height / 2 - game->p.y

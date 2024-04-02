@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/02 10:44:47 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 17:27:19 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 		set_player(game->map.map[i][j], i, j, game);
 		++(*player_count);
 		sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 1};
+			.hide = 0};
 		sprite.pos = game->map.s_pos;
 		game->psprite = ft_addsprite(game, &sprite);
 		game->map.map[i][j] = '0';

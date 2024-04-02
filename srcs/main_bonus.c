@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/02 12:53:40 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:00:29 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ static inline void	ft_dda(t_game *game)
 			game->p.map.y += game->p.step.y;
 			game->p.perp_dist = game->p.side_dist.y - game->p.delta_dist.y;
 		}
-		if (game->p.perp_dist > 3)
+		if (game->p.perp_dist > 3 || (int)(HEIGHT
+				/ game->p.perp_dist) <= abs(game->p.y) * 2)
 			break ;
 		if (!ft_outside(game, game->p.map.x, game->p.map.y)
 			&& game->map.map[game->p.map.y][game->p.map.x] != '0')
@@ -150,6 +151,7 @@ int	ft_loop(void *param)
 		}
 		door = door->next;
 	}
+	game->psprite->pos = game->p.pos;
 	game->last = game->now;
 	pthread_mutex_lock(&game->state_m);
 	game->state = RENDERING;
@@ -166,12 +168,12 @@ int	ft_loop(void *param)
 		else
 		{
 			pthread_mutex_unlock(&game->rendered_m[i]);
-			usleep(50);
+			usleep(100);
 		}
 	}
 	ft_drawmap(game);
-	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
-		0);
+	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img,
+			0, 0);
 	pthread_mutex_lock(&game->state_m);
 	game->state = DRAWN;
 	pthread_mutex_unlock(&game->state_m);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:15:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 12:34:56 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 18:07:41 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static inline t_intvec	ft_gety(t_game *game, const t_sprite *s, t_render *r)
 	t_intvec	draw_y;
 
 	r->sph = abs((int)(HEIGHT / (r->transform.y))) / s->vr;
-	draw_y.x = -r->sph / 2 + HALF_HEIGHT + game->p.y + ((int)(game->p.jump) / r->transform.y) + s->vpos;
+	draw_y.x = -r->sph / 2 + HALF_HEIGHT + game->p.y + ((int)(game->p.jump) / r->transform.y) + r->vpos;
 	if (draw_y.x < 0)
 		draw_y.x = 0;
-	draw_y.y = r->sph / 2 + HALF_HEIGHT + game->p.y + ((int)(game->p.jump) / r->transform.y) + s->vpos;
+	draw_y.y = r->sph / 2 + HALF_HEIGHT + game->p.y + ((int)(game->p.jump) / r->transform.y) + r->vpos;
 	if (draw_y.y >= HEIGHT)
 		draw_y.y = HEIGHT - 1;
 	return (draw_y);
@@ -58,11 +58,11 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 			d.y = r->draw_y.x - 1;
 			while (++d.y < r->draw_y.y)
 			{
-				tex.y = ((((d.y - g->p.y - ((int)(g->p.jump) / r->transform.y) - s->vpos)
+				tex.y = ((((d.y - g->p.y - ((int)(g->p.jump) / r->transform.y) - r->vpos)
 								* 256 - HEIGHT * 128 + r->sph * 128)
 							* s->t->width) / r->sph) / 256;
 				color = 0;
-				if (tex.y > 0)
+				if (tex.y > 0 && tex.y < s->t->width)
 					color = ((int *)s->t->addr)[s->t->s + s->t->width * tex.y
 						+ tex.x];
 				if ((color & 0x00FFFFFF) != 0
@@ -100,10 +100,39 @@ inline void	ft_drawsprites(t_game *game, const int x, const int dx)
 		r.transform.y = r.invdet * (-game->p.p.y * -r.sprite.x + game->p.p.x
 				* r.sprite.y);
 		r.spsx = (int)((HALF_WIDTH) * (1.0 + r.transform.x / r.transform.y));
-		s->vpos = (int)(s->vdiff / r.transform.y);
+		r.vpos = (int)(s->vdiff / r.transform.y);
 		r.draw_x = ft_getx(&r, s, x, dx);
 		r.draw_y = ft_gety(game, s, &r);
 		ft_putsprite(game, s, &r);
+		if (game->portal_l.side && game->portal_r.side)
+		{
+			r.sprite.x = s->pos.x - game->portal_l.pos.x;
+			r.sprite.y = s->pos.y - game->portal_l.pos.y;
+			r.invdet = 1.0 / (game->p.p.x * game->p.dir.y - game->p.dir.x
+					* game->p.p.y);
+			r.transform.x = r.invdet * (game->p.dir.y * -r.sprite.x - game->p.dir.x
+					* r.sprite.y);
+			r.transform.y = r.invdet * (-game->p.p.y * -r.sprite.x + game->p.p.x
+					* r.sprite.y);
+			r.spsx = (int)((HALF_WIDTH) * (1.0 + r.transform.x / r.transform.y));
+			r.vpos = (int)(s->vdiff / r.transform.y);
+			r.draw_x = ft_getx(&r, s, x, dx);
+			r.draw_y = ft_gety(game, s, &r);
+			ft_putsprite(game, s, &r);
+			r.sprite.x = s->pos.x - game->portal_r.pos.x;
+			r.sprite.y = s->pos.y - game->portal_r.pos.y;
+			r.invdet = 1.0 / (game->p.p.x * game->p.dir.y - game->p.dir.x
+					* game->p.p.y);
+			r.transform.x = r.invdet * (game->p.dir.y * -r.sprite.x - game->p.dir.x
+					* r.sprite.y);
+			r.transform.y = r.invdet * (-game->p.p.y * -r.sprite.x + game->p.p.x
+					* r.sprite.y);
+			r.spsx = (int)((HALF_WIDTH) * (1.0 + r.transform.x / r.transform.y));
+			r.vpos = (int)(s->vdiff / r.transform.y);
+			r.draw_x = ft_getx(&r, s, x, dx);
+			r.draw_y = ft_gety(game, s, &r);
+			ft_putsprite(game, s, &r);
+		}
 		s = s->next;
 	}
 }

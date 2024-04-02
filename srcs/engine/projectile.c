@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 04:30:49 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 11:50:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/02 17:03:36 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static inline void	ft_dda(t_game *game, t_projectile *p)
 					&& game->portal_r.pos.y == game->portal_l.pos.y
 					&& game->portal_r.side == game->portal_l.side)
 					game->portal_r.side = 0;
-				printf("%d\n", game->portal_l.side);
 			}
 			else if (p->type == 2)
 			{
@@ -97,7 +96,6 @@ static inline void	ft_dda(t_game *game, t_projectile *p)
 					&& game->portal_r.pos.y == game->portal_l.pos.y
 					&& game->portal_r.side == game->portal_l.side)
 					game->portal_l.side = 0;
-				printf("%d\n", game->portal_r.side);
 			}
 		}
 		else if (!ft_outside(game, p->map.x, p->map.y)
@@ -127,6 +125,14 @@ void	ft_handle_projectiles(t_game *game)
 				game->map.map[(int)(p->sprite->pos.y + p->sprite->dir.y
 						* step)][(int)(p->sprite->pos.x + -p->sprite->dir.x
 						* step)] = '0';
+				if ((int)(p->sprite->pos.y + p->sprite->dir.y
+						* step) == game->portal_l.pos.y && (int)(p->sprite->pos.x + -p->sprite->dir.x
+						* step) == game->portal_l.pos.x)
+						game->portal_l.side = 0;
+				else if ((int)(p->sprite->pos.y + p->sprite->dir.y
+						* step) == game->portal_r.pos.y && (int)(p->sprite->pos.x + -p->sprite->dir.x
+						* step) == game->portal_r.pos.x)
+						game->portal_r.side = 0;
 				p->delete = 1;
 				p->sprite->delete = 1;
 				p->sprite->hide = 1;
