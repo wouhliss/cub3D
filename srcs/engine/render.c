@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 18:09:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 10:44:28 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -337,10 +337,25 @@ static inline void	ft_rays(const t_game *game, t_render *render, const int x)
 		render->draw.y = HEIGHT - 1;
 }
 
+static inline void	ft_clearzbuffer(t_game *game, const int w, const int dx)
+{
+	int	x;
+	int	y;
+
+	x = dx - 1;
+	while (++x < w)
+	{
+		y = -1;
+		while (++y < HEIGHT)
+			game->zbuffer[x][y] = -1.0;
+	}
+}
+
 static inline void	ft_draw(t_game *game, const int w, const int dx)
 {
 	t_render	r;
 
+	ft_clearzbuffer(game, w, dx);
 	ft_floorceil(game, w, dx);
 	r.pixel.x = dx - 1;
 	while (++r.pixel.x < w)
@@ -349,6 +364,8 @@ static inline void	ft_draw(t_game *game, const int w, const int dx)
 		ft_wall(game, &r);
 		if (r.dhit)
 			ft_dwall(game, &r);
+		if (r.phit == 3 || r.phit == 4)
+			ft_pwall(game, &r);
 		r.pixel.y = -1;
 		while (++r.pixel.y < HEIGHT)
 		{
@@ -372,12 +389,10 @@ static inline void	ft_draw(t_game *game, const int w, const int dx)
 			if (r.phit == 2 && r.pixel.y >= r.pdraw.x && r.pixel.y <= r.pdraw.y)
 				my_mlx_pixel_put(&game->screen, r.pixel.x, r.pixel.y,
 					create_trgb(0, 255, 127, 0));
-			if (r.phit == 3 && (r.pixel.y == r.pdraw.x || r.pixel.y == r.pdraw.y))
-				my_mlx_pixel_put(&game->screen, r.pixel.x, r.pixel.y,
-					create_trgb(0, 0, 127, 255));
-			if (r.phit == 4 && (r.pixel.y == r.pdraw.x || r.pixel.y == r.pdraw.y))
-				my_mlx_pixel_put(&game->screen, r.pixel.x, r.pixel.y,
-					create_trgb(0, 255, 127, 0));
+			if (r.phit == 3 && (r.pixel.y >= r.pdraw.x && r.pixel.y <= r.pdraw.y))
+				ft_pdrawpixel(game, r.pixel.x, r.pixel.y, &r);
+			if (r.phit == 4 && (r.pixel.y >= r.pdraw.x && r.pixel.y <= r.pdraw.y))
+				ft_pdrawpixel(game, r.pixel.x, r.pixel.y, &r);
 		}
 	}
 	ft_drawsprites(game, w, dx);
@@ -410,7 +425,7 @@ void	*ft_thread(void *arg)
 		}
 		pthread_mutex_unlock(&game->state_m);
 		pthread_mutex_unlock(&game->rendered_m[t->id]);
-		ft_draw(game, (t->id + 1) * Q_WIDTH, t->id * Q_WIDTH);
+		ft_draw(game, (t->id + 1) * H_WIDTH, t->id * H_WIDTH);
 		pthread_mutex_lock(&game->rendered_m[t->id]);
 		game->rendered[t->id] = 1;
 		pthread_mutex_unlock(&game->rendered_m[t->id]);

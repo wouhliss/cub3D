@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:15:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 18:07:41 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 09:39:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 	}
 }
 
-inline void	ft_drawsprites(t_game *game, const int x, const int dx)
+void	ft_drawsprites(t_game *game, const int x, const int dx)
 {
 	t_sprite	*s;
 	t_render	r;
@@ -104,35 +104,6 @@ inline void	ft_drawsprites(t_game *game, const int x, const int dx)
 		r.draw_x = ft_getx(&r, s, x, dx);
 		r.draw_y = ft_gety(game, s, &r);
 		ft_putsprite(game, s, &r);
-		if (game->portal_l.side && game->portal_r.side)
-		{
-			r.sprite.x = s->pos.x - game->portal_l.pos.x;
-			r.sprite.y = s->pos.y - game->portal_l.pos.y;
-			r.invdet = 1.0 / (game->p.p.x * game->p.dir.y - game->p.dir.x
-					* game->p.p.y);
-			r.transform.x = r.invdet * (game->p.dir.y * -r.sprite.x - game->p.dir.x
-					* r.sprite.y);
-			r.transform.y = r.invdet * (-game->p.p.y * -r.sprite.x + game->p.p.x
-					* r.sprite.y);
-			r.spsx = (int)((HALF_WIDTH) * (1.0 + r.transform.x / r.transform.y));
-			r.vpos = (int)(s->vdiff / r.transform.y);
-			r.draw_x = ft_getx(&r, s, x, dx);
-			r.draw_y = ft_gety(game, s, &r);
-			ft_putsprite(game, s, &r);
-			r.sprite.x = s->pos.x - game->portal_r.pos.x;
-			r.sprite.y = s->pos.y - game->portal_r.pos.y;
-			r.invdet = 1.0 / (game->p.p.x * game->p.dir.y - game->p.dir.x
-					* game->p.p.y);
-			r.transform.x = r.invdet * (game->p.dir.y * -r.sprite.x - game->p.dir.x
-					* r.sprite.y);
-			r.transform.y = r.invdet * (-game->p.p.y * -r.sprite.x + game->p.p.x
-					* r.sprite.y);
-			r.spsx = (int)((HALF_WIDTH) * (1.0 + r.transform.x / r.transform.y));
-			r.vpos = (int)(s->vdiff / r.transform.y);
-			r.draw_x = ft_getx(&r, s, x, dx);
-			r.draw_y = ft_gety(game, s, &r);
-			ft_putsprite(game, s, &r);
-		}
 		s = s->next;
 	}
 }

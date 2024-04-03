@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/02 18:00:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 10:38:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ int	ft_loop(void *param)
 	game->state = RENDERING;
 	pthread_mutex_unlock(&game->state_m);
 	i = 0;
-	while (i < 4)
+	while (i < 8)
 	{
 		pthread_mutex_lock(&game->rendered_m[i]);
 		if (game->rendered[i])
@@ -172,13 +172,13 @@ int	ft_loop(void *param)
 		}
 	}
 	ft_drawmap(game);
-	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img,
-			0, 0);
+	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
+		0);
 	pthread_mutex_lock(&game->state_m);
 	game->state = DRAWN;
 	pthread_mutex_unlock(&game->state_m);
 	i = -1;
-	while (++i < 4)
+	while (++i < 8)
 	{
 		pthread_mutex_lock(&game->rendered_m[i]);
 		game->rendered[i] = 0;
@@ -246,7 +246,7 @@ static inline int	ft_init_mlx(t_game *g)
 
 inline int	ft_loadsprites(t_game *game)
 {
-	char		*strs[5] = {"textures/pillar.xpm", "textures/barril.xpm",
+	char		*strs[7] = {"textures/pillar.xpm", "textures/barril.xpm",
 				"textures/barril.xpm", "textures/pillar.xpm",
 				"textures/barril.xpm"};
 	t_sprite	*sprite;
@@ -276,13 +276,29 @@ inline int	ft_loadsprites(t_game *game)
 		sprite->t = &game->textures[4 + sprite->type];
 		sprite = sprite->next;
 	}
+	game->textures[9].img = mlx_xpm_file_to_image(game->mlx.mlx,
+			"textures/blue.xpm", &game->textures[9].width,
+			&game->textures[9].height);
+	if (!game->textures[9].img)
+		return (1);
+	game->textures[9].addr = mlx_get_data_addr(game->textures[9].img,
+			&game->textures[9].bpp, &game->textures[9].ll,
+			&game->textures[9].endian);
+	game->textures[10].img = mlx_xpm_file_to_image(game->mlx.mlx,
+			"textures/orange.xpm", &game->textures[10].width,
+			&game->textures[10].height);
+	if (!game->textures[10].img)
+		return (1);
+	game->textures[10].addr = mlx_get_data_addr(game->textures[10].img,
+			&game->textures[10].bpp, &game->textures[10].ll,
+			&game->textures[10].endian);
 	return (0);
 }
 
 static inline void	ft_start(t_game *game, int *err)
 {
 	int			i;
-	t_thread	threads[4];
+	t_thread	threads[8];
 
 	i = 4;
 	while (i--)
@@ -299,7 +315,7 @@ static inline void	ft_start(t_game *game, int *err)
 	{
 		pthread_mutex_init(&game->state_m, NULL);
 		i = 0;
-		while (i < 4)
+		while (i < 8)
 		{
 			pthread_mutex_init(&game->rendered_m[i], NULL);
 			threads[i].id = i;

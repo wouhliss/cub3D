@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 15:41:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 10:57:11 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,99 @@ inline void	ft_ddrawpixel(t_game *game, const int x, const int y, t_render *r)
 	if ((color & 0x00FFFFFF) != 0)
 	{
 		game->zbuffer[x][y] = r->dperp_dist;
+		my_mlx_pixel_put(&game->screen, x, y, color);
+	}
+}
+
+
+static inline double	get_pwall_x(t_render *r)
+{
+	double	wallx;
+
+	if (r->pside < 0)
+		wallx = r->pos.y + r->pperp_dist * r->ray_dir.y;
+	else
+		wallx = r->pos.x + r->pperp_dist * r->ray_dir.x;
+	wallx -= floor(wallx);
+	return (wallx);
+}
+
+static inline int	get_ptex_x(t_render *r, const double wallx)
+{
+	int	val;
+
+	val = (wallx * r->ptwidth);
+	if (r->pside < 0 && r->ray_dir.x > 0)
+		val = r->ptwidth - val - 1;
+	if (r->pside > 1 && r->ray_dir.y > 0)
+		val = r->ptwidth - val - 1;
+	return (val);
+}
+
+static inline int	get_pwtex_x(t_render *r, const double wallx)
+{
+	int	val;
+
+	val = (wallx * r->ptwidth);
+	if (r->pside < 0 && r->ray_dir.x > 0)
+		val = r->pwtwidth - val - 1;
+	if (r->pside > 1 && r->ray_dir.y > 0)
+		val = r->pwtwidth - val - 1;
+	return (val);
+}
+
+inline void	ft_pwall(const t_game *game, t_render *r)
+{
+	double	wallx;
+
+	if (r->phit == 3)
+		r->pid = 9;
+	else if (r->phit == 4)
+		r->pid = 10;
+	if (r->pside == -1)
+		r->pwid = 3;
+	else if (r->pside == -2)
+		r->pwid = 2;
+	else if (r->pside == 1)
+		r->pwid = 1;
+	else if (r->pside == 2)
+		r->pwid = 0;
+	r->ptwidth = game->textures[r->pid].width;
+	r->ps = game->textures[r->pid].s;
+	r->pwtwidth = game->textures[r->pwid].width;
+	r->pws = game->textures[r->pwid].s;
+	wallx = get_pwall_x(r);
+	r->ptex.x = get_ptex_x(r, wallx);
+	r->pwtex.x = get_pwtex_x(r, wallx);
+	r->pmystep = (double)r->ptwidth / r->pline_height;
+	r->ptexpos = (r->pdraw.x - HALF_HEIGHT + r->pline_height / 2 - game->p.y
+			- (int)(game->p.jump) / r->pperp_dist) * r->pmystep;
+	r->pwmystep = (double)r->pwtwidth / r->pline_height;
+	r->pwtexpos = (r->pdraw.x - HALF_HEIGHT + r->pline_height / 2 - game->p.y
+			- (int)(game->p.jump) / r->pperp_dist) * r->pwmystep;
+}
+
+void	ft_pdrawpixel(t_game *game, const int x, const int y, t_render *r)
+{
+	int	pcolor;
+	int	color;
+
+	r->ptex.y = (int)r->ptexpos & (r->ptwidth - 1);
+	r->ptexpos += r->pmystep;
+	pcolor = ((int *)game->textures[r->pid].addr)[r->ps + r->ptwidth * r->ptex.y
+		+ r->ptex.x];
+	r->pwtex.y = (int)r->pwtexpos & (r->pwtwidth - 1);
+	r->pwtexpos += r->pwmystep;
+	color = ((int *)game->textures[r->pwid].addr)[r->pws + r->pwtwidth * r->pwtex.y
+		+ r->pwtex.x];
+	if ((pcolor & 0x00FFFFFF) != 0)
+	{
+		game->zbuffer[x][y] = r->pperp_dist;
+		my_mlx_pixel_put(&game->screen, x, y, pcolor);
+	}
+	if (pcolor == 65280)
+	{
+		game->zbuffer[x][y] = r->pperp_dist;
 		my_mlx_pixel_put(&game->screen, x, y, color);
 	}
 }

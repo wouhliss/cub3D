@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/02 18:04:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 10:55:03 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,10 +152,12 @@ typedef struct s_render
 	t_vec					transform;
 	t_vec					sprite;
 	t_vec					pos;
+	t_vec					ppos;
 	t_intvec				draw_x;
 	t_intvec				draw_y;
 	t_intvec				map;
 	t_vec					dmap;
+	t_vec					pmap;
 	t_intvec				step;
 	t_vec					dstep;
 	t_intvec				draw;
@@ -163,7 +165,9 @@ typedef struct s_render
 	t_intvec				tdraw;
 	t_intvec				ddraw;
 	t_intvec				tex;
+	t_intvec				ptex;
 	t_intvec				dtex;
+	t_intvec				pwtex;
 	t_intvec				pixel;
 	double					camera_x;
 	double					perp_dist;
@@ -172,8 +176,12 @@ typedef struct s_render
 	double					dperp_dist;
 	double					texpos;
 	double					dtexpos;
+	double					ptexpos;
+	double					pwtexpos;
 	double					mystep;
 	double					dmystep;
+	double					pmystep;
+	double					pwmystep;
 	double					invdet;
 	t_door					*door;
 	int						spritewidth;
@@ -193,10 +201,16 @@ typedef struct s_render
 	int						dline_height;
 	int						id;
 	int						did;
+	int						pid;
+	int						pwid;
 	int						twidth;
 	int						dtwidth;
+	int						ptwidth;
+	int						pwtwidth;
 	int						s;
 	int						ds;
+	int						ps;
+	int						pws;
 	int						portal;
 	int						vpos;
 }							t_render;
@@ -306,7 +320,7 @@ typedef struct s_game
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
-	t_texture				textures[9];
+	t_texture				textures[11];
 	t_screen				screen;
 	t_render				r;
 	char					*files[4];
@@ -317,8 +331,8 @@ typedef struct s_game
 	t_projectile			*projectiles;
 	t_door					*doors;
 	pthread_mutex_t			state_m;
-	pthread_mutex_t			rendered_m[4];
-	int						rendered[4];
+	pthread_mutex_t			rendered_m[8];
+	int						rendered[8];
 	t_portal				portal_l;
 	t_portal				portal_r;
 	double					speed;
@@ -402,6 +416,9 @@ t_door						*ft_getdoor(const t_game *game, const int x,
 								const int y);
 void						ft_floorceil(t_game *game, const int w,
 								const int xx);
+void						ft_pwall(const t_game *game, t_render *r);
+void						ft_pdrawpixel(t_game *game, const int x,
+								const int y, t_render *r);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);
