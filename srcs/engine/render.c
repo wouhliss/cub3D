@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 10:44:28 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:18:11 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,8 @@ static inline void	ft_portal(const t_game *game, t_render *render)
 		return ;
 	if (!render->portal)
 	{
+		render->pray_dir = render->ray_dir;
+		render->ppos = render->pos;
 		render->pside_dist.x = render->side_dist.x;
 		render->pside_dist.y = render->side_dist.y;
 		render->pside = render->side;
@@ -347,7 +349,10 @@ static inline void	ft_clearzbuffer(t_game *game, const int w, const int dx)
 	{
 		y = -1;
 		while (++y < HEIGHT)
+		{
 			game->zbuffer[x][y] = -1.0;
+			game->ztbuffer[x][y] = -1.0;
+		}
 	}
 }
 
@@ -378,11 +383,14 @@ static inline void	ft_draw(t_game *game, const int w, const int dx)
 			// else
 			// 	my_mlx_pixel_put(&game->screen, r.pixel.x, r.pixel.y,
 			// 		game->map.f_color);
-			if (r.thit && r.pixel.y >= r.tdraw.x && r.pixel.y <= r.tdraw.y)
-				my_mlx_pixel_tput(&game->screen, r.pixel.x, r.pixel.y,
-					create_trgb(0, 127, 127, 127));
 			if (r.dhit && r.pixel.y >= r.ddraw.x && r.pixel.y <= r.ddraw.y)
 				ft_ddrawpixel(game, r.pixel.x, r.pixel.y, &r);
+			if (r.thit && r.pixel.y >= r.tdraw.x && r.pixel.y <= r.tdraw.y)
+			{
+				my_mlx_pixel_tput(&game->screen, r.pixel.x, r.pixel.y,
+					create_trgb(0, 127, 127, 127));
+				game->ztbuffer[r.pixel.x][r.pixel.y] = r.tperp_dist;
+			}
 			if (r.phit == 1 && r.pixel.y >= r.pdraw.x && r.pixel.y <= r.pdraw.y)
 				my_mlx_pixel_put(&game->screen, r.pixel.x, r.pixel.y,
 					create_trgb(0, 0, 127, 255));

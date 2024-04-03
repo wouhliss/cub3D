@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 04:30:49 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 17:03:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 11:59:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static inline void	ft_dda(t_game *game, t_projectile *p)
 		{
 			p->side_dist.x += p->delta_dist.x;
 			p->map.x += p->step.x;
+			p->perp_dist = p->side_dist.x - p->delta_dist.x;
 			p->side = -1;
 			if (p->step.x < 0)
 				p->side = -2;
@@ -71,10 +72,13 @@ static inline void	ft_dda(t_game *game, t_projectile *p)
 		{
 			p->side_dist.y += p->delta_dist.y;
 			p->map.y += p->step.y;
+			p->perp_dist = p->side_dist.y - p->delta_dist.y;
 			p->side = 1;
 			if (p->step.y < 0)
 				p->side = 2;
 		}
+		if (p->perp_dist > game->delta * 0.00000001)
+			break ;
 		if (!ft_outside(game, p->map.x, p->map.y)
 			&& game->map.map[p->map.y][p->map.x] == '1')
 		{

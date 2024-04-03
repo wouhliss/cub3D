@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 12:52:50 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 11:33:23 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,8 @@
 
 int	on_key_press(int k, void *param)
 {
-	t_game		*game;
-	t_sprite	sprite;
-		t_door *door;
+	t_game	*game;
+	t_door	*door;
 
 	game = param;
 	if (k == XK_Escape)
@@ -63,23 +62,6 @@ int	on_key_press(int k, void *param)
 		}
 		game->noclip ^= 1;
 	}
-	else if (k == XK_3)
-	{
-		sprite = (t_sprite){.type = 0, .vdiff = 64.0, .hr = 1, .vr = 1,
-			.hide = 0, .pos = game->p.pos};
-		ft_addsprite(game, &sprite);
-		ft_loadsprites(game);
-	}
-	else if (k == XK_4)
-		ft_addprojectile(game, game->p.pos, game->p.dir, 0);
-	else if (k == XK_5)
-		ft_addprojectile(game, game->p.pos, game->p.dir, 1);
-	else if (k == XK_6)
-		ft_addprojectile(game, game->p.pos, game->p.dir, 2);
-	else if (k == XK_7)
-		game->p.jump += 10;
-	else if (k == XK_8)
-		game->p.jump -= 10;
 	else if (k == XK_space && game->p.jumping == GROUND)
 		game->p.jumping = JUMPING;
 	else if ((k == XK_e || k == XK_E) && game->p.looking

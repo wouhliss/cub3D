@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 10:57:11 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 11:56:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,9 @@ static inline double	get_pwall_x(t_render *r)
 	double	wallx;
 
 	if (r->pside < 0)
-		wallx = r->pos.y + r->pperp_dist * r->ray_dir.y;
+		wallx = r->ppos.y + r->pperp_dist * r->pray_dir.y;
 	else
-		wallx = r->pos.x + r->pperp_dist * r->ray_dir.x;
+		wallx = r->ppos.x + r->pperp_dist * r->pray_dir.x;
 	wallx -= floor(wallx);
 	return (wallx);
 }
@@ -132,9 +132,9 @@ static inline int	get_ptex_x(t_render *r, const double wallx)
 	int	val;
 
 	val = (wallx * r->ptwidth);
-	if (r->pside < 0 && r->ray_dir.x > 0)
+	if (r->pside < 0 && r->pray_dir.x > 0)
 		val = r->ptwidth - val - 1;
-	if (r->pside > 1 && r->ray_dir.y > 0)
+	if (r->pside > 1 && r->pray_dir.y > 0)
 		val = r->ptwidth - val - 1;
 	return (val);
 }
@@ -144,9 +144,9 @@ static inline int	get_pwtex_x(t_render *r, const double wallx)
 	int	val;
 
 	val = (wallx * r->ptwidth);
-	if (r->pside < 0 && r->ray_dir.x > 0)
+	if (r->pside < 0 && r->pray_dir.x > 0)
 		val = r->pwtwidth - val - 1;
-	if (r->pside > 1 && r->ray_dir.y > 0)
+	if (r->pside > 1 && r->pray_dir.y > 0)
 		val = r->pwtwidth - val - 1;
 	return (val);
 }

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 10:55:03 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:15:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,16 @@
 # define PI 3.141592653589793
 # define HALF_PI 1.57079632679
 
-# define ON_KEYPRESS 2
-# define ON_KEYRELEASE 3
-# define ON_MOUSEPRESS 4
+# define ON_KEYDOWN 2
+# define ON_KEYUP 3
+# define ON_MOUSEDOWN 4
 # define ON_MOUSEMOVE 6
 # define ON_DESTROY 17
 # define NO_MASK 0L
 # define KEYPRESS_MASK 1L
 # define KEYRELEASE_MASK 2L
 # define BUTTONPRESS_MASK 4L
-# define POINTERMOTION_MASK 1L << 6
+# define POINTERMOTION_MASK 64L
 # define CURSOR_RADIUS 10
 
 # define TEXTURES 4
@@ -66,16 +66,16 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # define FOV
-# define WIDTH 1920
-# define HALF_WIDTH 960
-# define Q_WIDTH 480
-# define H_WIDTH 240
-# define HEIGHT 1080
-# define HALF_HEIGHT 540
-# define Q_HEIGHT 270
-# define H_HEIGHT 135
-# define MINIMAP_WIDTH 400
-# define MINIMAP_HEIGHT 300
+# define WIDTH 1280
+# define HALF_WIDTH 640
+# define Q_WIDTH 320
+# define H_WIDTH 160
+# define HEIGHT 720
+# define HALF_HEIGHT 360
+# define Q_HEIGHT 180
+# define H_HEIGHT 90
+# define MINIMAP_WIDTH 200
+# define MINIMAP_HEIGHT 100
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -108,6 +108,19 @@
 /*GNL*/
 # define BUFFER_SIZE 1024
 # define EMPTY_BUFFER -42
+
+typedef union u_trgb
+{
+	u_int32_t				hex;
+	u_int8_t				trgb[4];
+	struct
+	{
+		u_int8_t			t;
+		u_int8_t			red;
+		u_int8_t			green;
+		u_int8_t			blue;
+	};
+}							t_color;
 
 typedef struct s_buffer
 {
@@ -144,6 +157,7 @@ typedef struct s_door
 typedef struct s_render
 {
 	t_vec					ray_dir;
+	t_vec					pray_dir;
 	t_vec					side_dist;
 	t_vec					pside_dist;
 	t_vec					tside_dist;
@@ -215,8 +229,30 @@ typedef struct s_render
 	int						vpos;
 }							t_render;
 
+typedef struct s_texture
+{
+	void					*img;
+	char					*addr;
+	int						bpp;
+	int						ll;
+	int						endian;
+	int						height;
+	int						width;
+	int						frames;
+	int						f;
+	int						s;
+}							t_texture;
+
+typedef struct s_weapon
+{
+	int						type;
+	int						state;
+	t_texture				*texture;
+}							t_weapon;
+
 typedef struct s_player
 {
+	t_weapon				weapon;
 	t_vec					pos;
 	t_vec					dir;
 	t_vec					p;
@@ -228,6 +264,7 @@ typedef struct s_player
 	t_intvec				map;
 	double					perp_dist;
 	bool					looking;
+	int						looking_side;
 	double					jump;
 	int						jumping;
 	int						y;
@@ -250,19 +287,6 @@ typedef struct s_screen
 	int						ll;
 	int						endian;
 }							t_screen;
-typedef struct s_texture
-{
-	void					*img;
-	char					*addr;
-	int						bpp;
-	int						ll;
-	int						endian;
-	int						height;
-	int						width;
-	int						frames;
-	int						f;
-	int						s;
-}							t_texture;
 
 typedef struct s_mlx
 {
@@ -317,6 +341,7 @@ typedef struct s_portal
 typedef struct s_game
 {
 	double					zbuffer[WIDTH][HEIGHT];
+	double					ztbuffer[WIDTH][HEIGHT];
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
@@ -384,7 +409,9 @@ typedef struct s_garbage
 int							on_key_press(int key_code, void *param);
 int							on_key_release(int k, void *param);
 int							on_destroy_event(void *param);
-int							on_mouse(int x, int y, void *param);
+int							on_mouse_move(int x, int y, void *param);
+int							on_mouse_click(int button, int x, int y,
+								void *param);
 // int						logic_loop(void *param);
 
 /*Engine*/
@@ -455,8 +482,8 @@ int							create_trgb(int t, int r, int g, int b);
 void						put_colors(t_game *game);
 void						my_mlx_pixel_put(const t_screen *data, const int x,
 								const int y, const int color);
-void						my_mlx_pixel_tput(t_screen *data, int x, int y,
-								int color);
+void						my_mlx_pixel_tput(const t_screen *data, const int x,
+								const int y, unsigned int color);
 void						my_mlx_pixel_hput(t_screen *data, int x, int y,
 								int color);
 void						ft_swapi(int *a, int *b);

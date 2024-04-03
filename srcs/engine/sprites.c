@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:15:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 09:39:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 11:47:18 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 					color = ((int *)s->t->addr)[s->t->s + s->t->width * tex.y
 						+ tex.x];
 				if ((color & 0x00FFFFFF) != 0
-					&& (r->transform.y < g->zbuffer[d.x][d.y] || g->zbuffer[d.x][d.y] < 0))
+					&& r->transform.y < g->zbuffer[d.x][d.y])
 				{
 					my_mlx_pixel_put(&g->screen, d.x, d.y, color);
-					if (g->zbuffer[d.x][d.y] < 0 && r->transform.y > fabs(g->zbuffer[d.x][d.y]))
+					if (g->ztbuffer[d.x][d.y] > 0 && r->transform.y > g->ztbuffer[d.x][d.y])
 						my_mlx_pixel_tput(&g->screen, d.x, d.y, create_trgb(0, 127, 127, 127));
 					g->zbuffer[d.x][d.y] = r->transform.y;
 				}

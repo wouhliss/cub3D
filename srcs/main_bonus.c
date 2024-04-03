@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 10:38:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 11:20:11 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,18 @@ static inline void	ft_dda(t_game *game)
 			game->p.side_dist.x += game->p.delta_dist.x;
 			game->p.map.x += game->p.step.x;
 			game->p.perp_dist = game->p.side_dist.x - game->p.delta_dist.x;
+			game->p.looking_side = -1;
+			if (game->p.step.x < 0)
+				game->p.looking_side = -2;
 		}
 		else
 		{
 			game->p.side_dist.y += game->p.delta_dist.y;
 			game->p.map.y += game->p.step.y;
 			game->p.perp_dist = game->p.side_dist.y - game->p.delta_dist.y;
+			game->p.looking_side = 1;
+			if (game->p.step.y < 0)
+				game->p.looking_side = 2;
 		}
 		if (game->p.perp_dist > 3 || (int)(HEIGHT
 				/ game->p.perp_dist) <= abs(game->p.y) * 2)
@@ -237,11 +243,12 @@ static inline int	ft_init_mlx(t_game *g)
 				&g->textures[i].width, &g->textures[i].height);
 	if (ft_import_textures(g))
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, IMPORT_ERR), 1);
-	return (mlx_hook(g->mlx.win, ON_KEYPRESS, KEYPRESS_MASK, on_key_press, g),
+	return (mlx_hook(g->mlx.win, ON_KEYDOWN, KEYPRESS_MASK, on_key_press, g),
 		mlx_hook(g->mlx.win, ON_DESTROY, NO_MASK, on_destroy_event, g),
-		mlx_hook(g->mlx.win, ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse, g),
-		mlx_loop_hook(g->mlx.mlx, ft_loop, g), mlx_hook(g->mlx.win,
-			ON_KEYRELEASE, KEYRELEASE_MASK, on_key_release, g), 0);
+		mlx_hook(g->mlx.win, ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse_move,
+			g), mlx_hook(g->mlx.win, ON_MOUSEDOWN, BUTTONPRESS_MASK,
+			on_mouse_click, g), mlx_loop_hook(g->mlx.mlx, ft_loop, g),
+		mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g), 0);
 }
 
 inline int	ft_loadsprites(t_game *game)

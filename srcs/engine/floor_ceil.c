@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/02 14:19:49 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 10:00:14 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 12:18:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,21 +48,17 @@ void	ft_floorceil(t_game *game, const int w, const int xx)
 		{
 			cell.x = (int)(floor.x);
 			cell.y = (int)(floor.y);
-			t.x = (int)(64 * (floor.x - cell.x) / 2) & (64 - 1);
-			t.y = (int)(64 * (floor.y - cell.y) / 2) & (64 - 1);
+			t.x = (int)(64 * (floor.x - cell.x)) & (64 - 1);
+			t.y = (int)(64 * (floor.y - cell.y)) & (64 - 1);
 			if (is_floor)
 			{
-				color = ((unsigned int *)game->textures[0].addr)[game->textures[0].s
-					+ 64 * (t.y + (cell.y % 2 ? 31 : 0)) + (t.x + (cell.x
-							% 2 ? 31 : 0))];
+				color = ((unsigned int *)game->textures[0].addr)[game->textures[0].s + 64 * t.y + t.x];
 				color = (color >> 1) & 8355711;
 				my_mlx_pixel_put(&game->screen, x, y, color);
 			}
 			else
 			{
-				color = ((unsigned int *)game->textures[1].addr)[game->textures[1].s
-					+ 64 * (t.y + (cell.y % 2 ? 31 : 0)) + (t.x + (cell.x
-							% 2 ? 31 : 0))];
+				color = ((unsigned int *)game->textures[1].addr)[game->textures[1].s + 64 * t.y + t.x];
 				color = (color >> 1) & 8355711;
 				my_mlx_pixel_put(&game->screen, x, y, color);
 			}

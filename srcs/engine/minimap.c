@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:34 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 17:04:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 16:16:38 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,17 +32,17 @@ inline void	ft_drawmap(t_game *game)
 		{
 			pos.y = s_pos.y + ((draw.y - 20) >> 3);
 			if (game->map.map[pos.y][pos.x] == '1')
-				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00000000);
+				my_mlx_pixel_tput(&game->screen, draw.x, draw.y, 0x00000000);
 			else if (game->map.map[pos.y][pos.x] == 'D')
-				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00777777);
+				my_mlx_pixel_tput(&game->screen, draw.x, draw.y, 0x00777777);
 			else
-				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00FFFFFF);
+				my_mlx_pixel_tput(&game->screen, draw.x, draw.y, 0x00FFFFFF);
 			if (game->portal_l.pos.x == pos.x && game->portal_l.pos.y == pos.y && game->portal_l.side)
-				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00007FFF);
+				my_mlx_pixel_tput(&game->screen, draw.x, draw.y, 0x00007FFF);
 			if (game->portal_r.pos.x == pos.x && game->portal_r.pos.y == pos.y && game->portal_r.side)
-				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00FF7F00);
+				my_mlx_pixel_tput(&game->screen, draw.x, draw.y, 0x00FF7F00);
 			if ((int)game->p.pos.x == pos.x && (int)game->p.pos.y == pos.y)
-				my_mlx_pixel_put(&game->screen, draw.x, draw.y, 0x00FF0000);
+				my_mlx_pixel_tput(&game->screen, draw.x, draw.y, 0x00FF0000);
 		}
 	}
 }
