@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/31 16:46:10 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:04:40 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,21 @@ void	init_map(char *path, t_game *game)
 		panic(CHAR_ERR);
 	format_map(game);
 	i = -1;
-	while (++i < 8)
+	while (++i < WTEXTURES)
 	{
-		game->textures[i].addr = 0;
-		game->textures[i].img = 0;
+		game->wtextures[i].addr = 0;
+		game->wtextures[i].img = 0;
+	}
+	i = -1;
+	while (++i < STEXTURES)
+	{
+		game->stextures[i].addr = 0;
+		game->stextures[i].img = 0;
+	}
+	i = -1;
+	while (++i < PTEXTURES)
+	{
+		game->ptextures[i].addr = 0;
+		game->ptextures[i].img = 0;
 	}
 }

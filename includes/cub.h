@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 16:15:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 18:59:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,14 @@
 # define POINTERMOTION_MASK 64L
 # define CURSOR_RADIUS 10
 
-# define TEXTURES 4
+# define WTEXTURES 4
+# define STEXTURES 7
+# define PTEXTURES 4
+
+# define TNO 0
+# define TSO 1
+# define TWE 2
+# define TEA 3
 
 # define ERR_FORMAT "%s: %s\n"
 # define NAME "cub3D"
@@ -65,15 +72,12 @@
 # define MISSING_ERR "Invalid or no map was found in file."
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
-# define FOV
-# define WIDTH 1280
-# define HALF_WIDTH 640
-# define Q_WIDTH 320
-# define H_WIDTH 160
-# define HEIGHT 720
-# define HALF_HEIGHT 360
-# define Q_HEIGHT 180
-# define H_HEIGHT 90
+# define THREADS 16
+# define WIDTH 800
+# define HALF_WIDTH WIDTH / 2
+# define T_WIDTH WIDTH / THREADS
+# define HEIGHT 600
+# define HALF_HEIGHT HEIGHT / 2
 # define MINIMAP_WIDTH 200
 # define MINIMAP_HEIGHT 100
 # define BLACK 0x000000
@@ -96,6 +100,9 @@
 # define DRAWN 3
 # define ENDED 4
 
+# define TDRAWING 0
+# define COMPLETED 1
+
 # define CLOSED 0
 # define OPEN 1
 # define OPENING 2
@@ -108,6 +115,16 @@
 /*GNL*/
 # define BUFFER_SIZE 1024
 # define EMPTY_BUFFER -42
+
+# define EMPTY 0
+# define ADD 1
+
+# define T 0
+# define R 1
+# define G 2
+# define B 3
+
+# define PARAMS 6
 
 typedef union u_trgb
 {
@@ -184,10 +201,10 @@ typedef struct s_render
 	t_intvec				pwtex;
 	t_intvec				pixel;
 	double					camera_x;
-	double					perp_dist;
-	double					pperp_dist;
-	double					tperp_dist;
-	double					dperp_dist;
+	double					pdist;
+	double					ppdist;
+	double					tpdist;
+	double					dpdist;
 	double					texpos;
 	double					dtexpos;
 	double					ptexpos;
@@ -209,10 +226,10 @@ typedef struct s_render
 	int						pside;
 	int						tside;
 	int						dside;
-	int						line_height;
-	int						pline_height;
-	int						tline_height;
-	int						dline_height;
+	int						lh;
+	int						plh;
+	int						tlh;
+	int						dlh;
 	int						id;
 	int						did;
 	int						pid;
@@ -262,7 +279,7 @@ typedef struct s_player
 	t_intvec				look_pos;
 	t_intvec				step;
 	t_intvec				map;
-	double					perp_dist;
+	double					pdist;
 	bool					looking;
 	int						looking_side;
 	double					jump;
@@ -275,8 +292,8 @@ typedef struct s_map
 	t_vec					s_pos;
 	char					**map;
 	char					s_dir;
-	int						c_color;
-	int						f_color;
+	t_color					c_color;
+	t_color					f_color;
 }							t_map;
 
 typedef struct s_screen
@@ -325,7 +342,7 @@ typedef struct s_projectile
 	t_vec					side_dist;
 	t_intvec				map;
 	t_intvec				step;
-	double					perp_dist;
+	double					pdist;
 	int						side;
 	t_projectile			*next;
 }							t_projectile;
@@ -345,10 +362,13 @@ typedef struct s_game
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
-	t_texture				textures[11];
+	t_texture				wtextures[WTEXTURES];
+	t_texture				stextures[STEXTURES];
+	t_texture				ptextures[PTEXTURES];
 	t_screen				screen;
 	t_render				r;
-	char					*files[4];
+	char					*files[WTEXTURES];
+	char					*sfiles[STEXTURES];
 	int						colors_c[4];
 	int						colors_f[4];
 	t_sprite				*sprites;
@@ -356,8 +376,8 @@ typedef struct s_game
 	t_projectile			*projectiles;
 	t_door					*doors;
 	pthread_mutex_t			state_m;
-	pthread_mutex_t			rendered_m[8];
-	int						rendered[8];
+	pthread_mutex_t			rendered_m[THREADS];
+	int						rendered[THREADS];
 	t_portal				portal_l;
 	t_portal				portal_r;
 	double					speed;
@@ -415,7 +435,7 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
-
+void						ft_draw(t_game *game, const int w, const int dx);
 void						ft_drawmap(t_game *game);
 void						ft_drawsprites(t_game *game, const int x,
 								const int dx);
@@ -426,7 +446,6 @@ void						ft_drawpixel(const t_game *game, const int x,
 void						ft_ddrawpixel(t_game *game, const int x,
 								const int y, t_render *r);
 void						*ft_thread(void *arg);
-int							ft_loadsprites(t_game *game);
 t_projectile				*ft_addprojectile(t_game *game, t_vec pos,
 								t_vec dir, int type);
 t_door						*ft_adddoor(t_game *game, t_intvec pos);
@@ -446,6 +465,10 @@ void						ft_floorceil(t_game *game, const int w,
 void						ft_pwall(const t_game *game, t_render *r);
 void						ft_pdrawpixel(t_game *game, const int x,
 								const int y, t_render *r);
+int							ft_loop(void *param);
+int							ft_import_textures(t_game *g);
+int							ft_init_mlx(t_game *g);
+void						ft_start(t_game *game);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/12 08:37:27 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:02:31 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,24 +44,24 @@ int	get_color(char *line, int a, t_game *game)
 {
 	char	**splitted;
 
-	splitted = gc(ft_split(line, ','), 1);
+	splitted = gc(ft_split(line, ','), ADD);
 	if (!splitted || plen(splitted) != 3)
 		return (0);
 	if (!check_args_colors(splitted))
 		return (0);
 	if (a)
 	{
-		game->colors_c[0] = 1;
-		game->colors_c[1] = ft_atoc(splitted[0]);
-		game->colors_c[2] = ft_atoc(splitted[1]);
-		game->colors_c[3] = ft_atoc(splitted[2]);
+		game->colors_c[T] = 1;
+		game->colors_c[R] = ft_atoc(splitted[0]);
+		game->colors_c[G] = ft_atoc(splitted[1]);
+		game->colors_c[B] = ft_atoc(splitted[2]);
 	}
 	else
 	{
-		game->colors_f[0] = 1;
-		game->colors_f[1] = ft_atoc(splitted[0]);
-		game->colors_f[2] = ft_atoc(splitted[1]);
-		game->colors_f[3] = ft_atoc(splitted[2]);
+		game->colors_f[T] = 1;
+		game->colors_f[R] = ft_atoc(splitted[0]);
+		game->colors_f[G] = ft_atoc(splitted[1]);
+		game->colors_f[B] = ft_atoc(splitted[2]);
 	}
 	return (1);
 }
@@ -70,7 +70,7 @@ int	set_colors(char *line, t_game *game)
 {
 	char	**splitted;
 
-	splitted = gc(ft_split(line, ' '), 1);
+	splitted = gc(ft_split(line, ' '), ADD);
 	if (!splitted || plen(splitted) != 2)
 		return (0);
 	if (!ft_strcmp(splitted[0], "C") && game->colors_c[0])

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 16:55:13 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:48:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:01:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	new_line(t_game *game, int i)
 	char	*res;
 	int		j;
 
-	res = gc(ft_calloc(1, game->width + 1), 1);
+	res = gc(ft_calloc(1, game->width + 1), ADD);
 	if (!res)
 		panic(MALLOC_ERR);
 	j = 0;

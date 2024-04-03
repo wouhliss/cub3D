@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:06:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/26 13:32:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:00:41 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	get_map(t_game *game, char *line)
 {
 	while (line)
 	{
-		game->map.map = gc(join_tab(game->map.map, line), 1);
+		game->map.map = gc(join_tab(game->map.map, line), ADD);
 		game->length++;
 		game->width = max(game->width, ft_strlen(line));
-		line = gc(get_next_line(game->fd), 1);
+		line = gc(get_next_line(game->fd), ADD);
 	}
 	if (!game->map.map)
 		panic(MAP_ERR);
@@ -49,7 +49,7 @@ void	get_info_map(t_game *game)
 	int		c;
 	char	*line;
 
-	line = gc(get_next_line(game->fd), 1);
+	line = gc(get_next_line(game->fd), ADD);
 	if (!line)
 		panic(EMPTY_ERR);
 	c = 0;
@@ -60,11 +60,11 @@ void	get_info_map(t_game *game)
 			get_next_line(EMPTY_BUFFER);
 			panic(INVALID_ERR);
 		}
-		line = gc(get_next_line(game->fd), 1);
+		line = gc(get_next_line(game->fd), ADD);
 		if (!line)
 			panic(MISSING_ERR);
 	}
-	if (c != 6)
+	if (c != PARAMS)
 	{
 		get_next_line(EMPTY_BUFFER);
 		panic(SETTINGS_ERR);

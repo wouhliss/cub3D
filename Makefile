@@ -1,6 +1,7 @@
 CC = gcc	
 CFLAGS = -Wall -Wextra -Werror -MMD -MP -Ofast
-MLXFLAGS = -L ./minilibx-linux -lmlx -Ilmlx -lXext -lX11 -lm
+MLXPATH = minilibx-linux/
+MLXFLAGS = -L $(MLXPATH) -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
 VPATH = srcs/parsing srcs/utils srcs/error srcs/ft_dprintf srcs/gnl srcs/hooks srcs/engine srcs
 RM = rm -rvf
@@ -14,7 +15,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = render walls minimap sprites projectile projectile_utils movement aim door door_utils floor_ceil
+ENGINE = mlx render loop walls thread
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\
@@ -45,11 +46,11 @@ DEPSB = $(SRCSB:%.c=$(OBJ_DIR)/%.d)
 
 all: $(NAME) $(NAME_BONUS)
 
-$(NAME): $(OBJ_DIR)  $(OBJS)
+$(NAME): $(MLXPATH) $(OBJ_DIR)  $(OBJS)
 	$(MAKE) -C ./minilibx-linux
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
 
-$(NAME_BONUS): $(OBJ_DIR)  $(OBJSB)
+$(NAME_BONUS): $(MLXPATH) $(OBJ_DIR) $(OBJSB)
 	$(MAKE) -C ./minilibx-linux
 	$(CC) $(CFLAGS) $(OBJSB) $(LIBFT) $(MLXFLAGS) -o $(NAME_BONUS)
 
@@ -70,6 +71,11 @@ fclean: clean
 
 re: fclean
 	make all
+
+$(MLXPATH):
+	wget https://cdn.intra.42.fr/document/document/22794/minilibx-linux.tgz
+	tar -xf minilibx-linux.tgz
+	rm minilibx-linux.tgz
 
 -include $(DEPS) $(DEPSB)
 

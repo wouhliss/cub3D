@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 16:41:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/02 09:43:03 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:33:03 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static inline t_door	*ft_newdoor(t_intvec pos)
 {
 	t_door		*new;
 
-	new = malloc(sizeof(t_door));
+	new = gc(malloc(sizeof(t_door)), ADD);
 	if (!new)
 		return (NULL);
 	new->pos = pos;

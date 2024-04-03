@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 23:40:04 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/01 16:33:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:33:30 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static inline t_sprite	*ft_newsprite(t_sprite *sprite)
 {
 	t_sprite	*new;
 
-	new = malloc(sizeof(t_sprite));
+	new = gc(malloc(sizeof(t_sprite)), ADD);
 	if (!new)
 		return (NULL);
 	*new = *sprite;

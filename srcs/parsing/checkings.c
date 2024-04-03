@@ -6,35 +6,11 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/02 17:27:19 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:43:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
-
-// typedef int t_moha __attribute__((ext_vector_type(2)));
-
-// t_moha avion;
-// t_moha bateau;
-
-// avion.x = 3
-// avion.y = 5
-
-// avion *= 2;
-
-// avion.x = 6
-// avion.y = 10
-
-// bateau = 4;
-
-// bateau.x et bateau.y == 4
-
-// bateau.y 10;
-
-// avion.yx += bateau;
-
-// avion.y += bateau.x
-// avion.x += bateau.y
 
 int	ft_in_charset(char *charset, char c)
 {
@@ -52,6 +28,8 @@ int	ft_in_charset(char *charset, char c)
 
 void	set_player(char c, int i, int j, t_game *game)
 {
+	//t_sprite	sprite;
+
 	game->map.s_dir = c;
 	game->map.s_pos = (t_vec){j + 0.5, i + 0.5};
 	game->p.pos = (t_vec){j + 0.5, i + 0.5};
@@ -75,12 +53,42 @@ void	set_player(char c, int i, int j, t_game *game)
 		game->p.dir = (t_vec){-1, 0};
 		game->p.p = (t_vec){0, 0.66};
 	}
+	//sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 0};
+	//sprite.pos = game->map.s_pos;
+	//game->psprite = ft_addsprite(game, &sprite);
+	game->map.map[i][j] = '0';
+}
+
+static inline void	ft_setsprite(t_game *game, int i, int j)
+{
+	t_sprite	sprite;
+
+	if (game->map.map[i][j] == 'b')
+	{
+		sprite = (t_sprite){.type = 2, .vdiff = 200.0, .hr = 2, .vr = 2,
+			.hide = 0};
+		sprite.pos = (t_vec){j + 0.5, i + 0.5};
+		game->map.map[i][j] = '0';
+	}
+	else if (game->map.map[i][j] == 'B')
+	{
+		sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
+			.hide = 0};
+		sprite.pos = (t_vec){j + 0.5, i + 0.5};
+		game->map.map[i][j] = '0';
+	}
+	else if (game->map.map[i][j] == 'P')
+	{
+		sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
+			.hide = 0};
+		sprite.pos = (t_vec){j + 0.5, i + 0.5};
+		game->map.map[i][j] = '0';
+	}
+	ft_addsprite(game, &sprite);
 }
 
 int	check_one(t_game *game, int i, int j, int *player_count)
 {
-	t_sprite	sprite;
-
 	if (i == 0 || i == game->length - 1 || j == 0 || j == game->width - 1)
 		return (ft_in_charset("12 ", game->map.map[i][j]));
 	if (game->map.map[i][j] == '2')
@@ -91,34 +99,13 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 			&& ft_in_charset("01NSEWPbBDt", game->map.map[i][j + 1]));
 	else if (ft_in_charset("PbB", game->map.map[i][j]))
 	{
-		if (game->map.map[i][j] == 'b')
-		{
-			sprite = (t_sprite){.type = 2, .vdiff = 200.0, .hr = 2, .vr = 2,
-				.hide = 0};
-			sprite.pos = (t_vec){j + 0.5, i + 0.5};
-			game->map.map[i][j] = '0';
-		}
-		else if (game->map.map[i][j] == 'B')
-		{
-			sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
-				.hide = 0};
-			sprite.pos = (t_vec){j + 0.5, i + 0.5};
-			game->map.map[i][j] = '0';
-		}
-		else if (game->map.map[i][j] == 'P')
-		{
-			sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
-				.hide = 0};
-			sprite.pos = (t_vec){j + 0.5, i + 0.5};
-			game->map.map[i][j] = '0';
-		}
-		ft_addsprite(game, &sprite);
+		//ft_setsprite(game, i, j);
 		return (ft_in_charset("01NSEWPbBDt", game->map.map[i + 1][j])
 			&& ft_in_charset("01NSEWPbBDt", game->map.map[i][j + 1]));
 	}
 	else if (ft_in_charset("D", game->map.map[i][j]))
 	{
-		ft_adddoor(game, (t_intvec){j, i});
+		//ft_adddoor(game, (t_intvec){j, i});
 		return (ft_in_charset("01NSEWPbBDt", game->map.map[i + 1][j])
 			&& ft_in_charset("01NSEWPbBDt", game->map.map[i][j + 1]));
 	}
@@ -126,11 +113,6 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 	{
 		set_player(game->map.map[i][j], i, j, game);
 		++(*player_count);
-		sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0};
-		sprite.pos = game->map.s_pos;
-		game->psprite = ft_addsprite(game, &sprite);
-		game->map.map[i][j] = '0';
 		return (ft_in_charset("01PbBDt", game->map.map[i + 1][j])
 			&& ft_in_charset("01PbBDt", game->map.map[i][j + 1]));
 	}

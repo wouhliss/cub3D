@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 16:03:19 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/01 16:33:09 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/03 17:33:13 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static inline t_projectile	*ft_newprojectile(t_game *game, t_vec pos,
 	t_projectile	*new;
 	t_sprite		sprite;
 
-	new = malloc(sizeof(t_projectile));
+	new = gc(malloc(sizeof(t_projectile)), ADD);
 	if (!new)
 		return (NULL);
 	sprite = (t_sprite){.type = 2, .vdiff = 64.0, .hr = 2, .vr = 2, .hide = 0,
