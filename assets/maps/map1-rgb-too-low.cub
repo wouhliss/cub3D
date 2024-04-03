@@ -1,0 +1,12 @@
+NO ./assets/textures/simple_wall.xpm
+SO ./assets/textures/simple_wall.xpm
+WE ./assets/textures/simple_wall.xpm
+EA ./assets/textures/simple_wall.xpm
+
+F 255,-10,255
+C 0,255,255
+
+11111
+10001
+100N1
+11111
