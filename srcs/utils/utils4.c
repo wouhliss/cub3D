@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 21:11:57 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/04 13:13:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 18:59:11 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,31 @@ int	ft_atoc(const char *str)
 	{
 		if (nb > __UINT8_MAX__)
 			return (__UINT8_MAX__ + 1);
+		nb = nb * 10 + *str - '0';
+		++str;
+	}
+	return (nb * sign);
+}
+
+long	ft_atoi(const char *str)
+{
+	long	nb;
+	int	sign;
+
+	nb = 0;
+	sign = 1;
+	while (*str && (*str == ' ' || (*str >= 9 && *str <= 13)))
+		++str;
+	if (*str && (*str == '-' || *str == '+'))
+	{
+		if (*str == '-')
+			sign = -1;
+		++str;
+	}
+	while (*str && *str >= '0' && *str <= '9')
+	{
+		if (nb * sign > INT_MAX || nb * sign < INT_MIN)
+			return ((long)INT_MAX + 1);
 		nb = nb * 10 + *str - '0';
 		++str;
 	}

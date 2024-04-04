@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 13:33:44 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 14:02:45 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void	ft_draw(t_game *game, const int w, const int dx)
 {
 	t_render	r;
 
-	if (game->p.y >= HEIGHT)
+	if (game->p.y >= HEIGHT || game->p.y <= -HEIGHT)
 		return ;
 	r.side = 0;
 	r.pixel.x = dx - 1;
