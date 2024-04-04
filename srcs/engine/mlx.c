@@ -6,13 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 17:52:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 13:18:36 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-int	ft_import_textures(t_game *g)
+static inline int	ft_import_textures(t_game *g)
 {
 	int	exit;
 	int	i;
@@ -72,7 +72,7 @@ int	ft_init_mlx(t_game *g)
 		mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g), 0);
 }
 
-int	ft_load_sprites(t_game *game)
+static inline int	ft_load_sprites(t_game *game)
 {
 	t_sprite	*sprite;
 
@@ -98,7 +98,7 @@ int	ft_load_sprites(t_game *game)
 	return (0);
 }
 
-int	ft_check_textures(t_game *game)
+static inline int	ft_check_textures(t_game *game)
 {
 	int	i;
 	int	err;

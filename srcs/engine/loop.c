@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 19:30:05 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 13:19:39 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static inline int	ft_get_state(t_game *game)
 
 static inline void	ft_set_state(t_game *game, const int state)
 {
-	usleep(10);
 	pthread_mutex_lock(&game->state_m);
 	game->state = state;
 	pthread_mutex_unlock(&game->state_m);
@@ -57,8 +56,6 @@ int	ft_loop(void *param)
 	}
 	++game->frames;
 	ft_set_state(game, COMPUTING);
-	game->delta = game->now - game->last;
-	game->last = game->now;
 	ft_set_state(game, RENDERING);
 	i = 0;
 	while (i < THREADS)
@@ -66,11 +63,10 @@ int	ft_loop(void *param)
 		if (ft_get_rendered(game, i) == COMPLETED)
 			++i;
 		else
-			usleep(10);
+			usleep(1);
 	}
 	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
 		0);
-	ft_set_state(game, DRAWN);
 	i = -1;
 	while (++i < THREADS)
 	{

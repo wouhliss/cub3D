@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 17:43:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 13:40:34 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,26 +95,19 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 		return (ft_in_charset("12", game->map.map[i + 1][j])
 			&& ft_in_charset("12", game->map.map[i][j + 1]));
 	else if (game->map.map[i][j] == '0')
-		return (ft_in_charset("01NSEWPbBDt", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEWPbBDt", game->map.map[i][j + 1]));
+		return (ft_in_charset("01NSEWPbBtD", game->map.map[i + 1][j])
+			&& ft_in_charset("01NSEWPbBtD", game->map.map[i][j + 1]));
 	else if (ft_in_charset("PbB", game->map.map[i][j]))
 	{
-		//ft_setsprite(game, i, j);
-		return (ft_in_charset("01NSEWPbBDt", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEWPbBDt", game->map.map[i][j + 1]));
-	}
-	else if (ft_in_charset("D", game->map.map[i][j]))
-	{
-		//ft_adddoor(game, (t_intvec){j, i});
-		return (ft_in_charset("01NSEWPbBDt", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEWPbBDt", game->map.map[i][j + 1]));
+		return (ft_in_charset("01NSEWPbBtD", game->map.map[i + 1][j])
+			&& ft_in_charset("01NSEWPbBtD", game->map.map[i][j + 1]));
 	}
 	else if (ft_in_charset("NSEW", game->map.map[i][j]))
 	{
 		set_player(game->map.map[i][j], i, j, game);
 		++(*player_count);
-		return (ft_in_charset("01PbBDt", game->map.map[i + 1][j])
-			&& ft_in_charset("01PbBDt", game->map.map[i][j + 1]));
+		return (ft_in_charset("01PbBtD", game->map.map[i + 1][j])
+			&& ft_in_charset("01PbBtD", game->map.map[i][j + 1]));
 	}
 	return (1);
 }
@@ -132,7 +125,7 @@ int	check_map(t_game *game)
 		j = 0;
 		while (game->map.map[i][j])
 		{
-			if (!ft_in_charset("012NSEWPbBDt", game->map.map[i][j]))
+			if (!ft_in_charset("012NSEWPbBtD", game->map.map[i][j]))
 				return (0);
 			if (!check_one(game, i, j, &player_count))
 				return (0);

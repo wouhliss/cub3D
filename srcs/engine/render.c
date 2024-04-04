@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 19:31:09 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 13:33:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,17 @@ static inline void	ft_steps(const t_game *g, t_render *r)
 	else
 	{
 		r->step.x = 1;
-		r->side_dist.x = (r->map.x + 1.0 - g->p.pos.x) * r->delta_dist.x;
+		r->side_dist.x = (r->map.x + 1.0f - g->p.pos.x) * r->delta_dist.x;
 	}
 	if (r->ray_dir.y < 0)
-	{	
+	{
 		r->step.y = -1;
 		r->side_dist.y = (g->p.pos.y - r->map.y) * r->delta_dist.y;
 	}
 	else
 	{
 		r->step.y = 1;
-		r->side_dist.y = (r->map.y + 1.0 - g->p.pos.y) * r->delta_dist.y;
+		r->side_dist.y = (r->map.y + 1.0f - g->p.pos.y) * r->delta_dist.y;
 	}
 }
 
@@ -64,16 +64,16 @@ static inline void	ft_dda(const t_game *g, t_render *r)
 
 static inline void	ft_rays(const t_game *g, t_render *r, const int x)
 {
-	r->camera_x = 2.0 * x / ((double)WIDTH) - 1.0;
+	r->camera_x = 2.0f * x / ((float)WIDTH) - 1.0f;
 	r->pos = g->p.pos;
 	r->ray_dir = (t_vec){-(g->p.dir.x + g->p.p.x * r->camera_x), g->p.dir.y
 		+ g->p.p.y * r->camera_x};
 	r->map = (t_intvec){(int)g->p.pos.x, (int)g->p.pos.y};
-	r->delta_dist = (t_vec){1e30, 1e30};
+	r->delta_dist = (t_vec){1e30f, 1e30f};
 	if (r->ray_dir.x)
-		r->delta_dist.x = fabs(1.0 / r->ray_dir.x);
+		r->delta_dist.x = fabsf(1.0f / r->ray_dir.x);
 	if (r->ray_dir.y)
-		r->delta_dist.y = fabs(1.0 / r->ray_dir.y);
+		r->delta_dist.y = fabsf(1.0f / r->ray_dir.y);
 	r->hit = 0;
 	ft_steps(g, r);
 	ft_dda(g, r);
@@ -90,11 +90,28 @@ static inline void	ft_rays(const t_game *g, t_render *r, const int x)
 		r->draw.y = HEIGHT - 1;
 }
 
+static inline void	ft_drawpixel(t_game *g, const int x, const int y,
+		t_render *r)
+{
+	g->zbuffer[x][y] = -1;
+	if (y < r->draw.x)
+		*(((unsigned int *)g->screen.addr) + (y * WIDTH)
+				+ x) = g->map.c_color.hex;
+	else if (y > r->draw.y)
+		*(((unsigned int *)g->screen.addr) + (y * WIDTH)
+				+ x) = g->map.f_color.hex;
+	else
+	{
+		ft_drawwallpixel(g, x, y, r);
+		g->zbuffer[x][y] = r->pdist;
+	}
+}
+
 void	ft_draw(t_game *game, const int w, const int dx)
 {
 	t_render	r;
 
-	if(game->p.y >= HEIGHT)
+	if (game->p.y >= HEIGHT)
 		return ;
 	r.side = 0;
 	r.pixel.x = dx - 1;
@@ -104,15 +121,6 @@ void	ft_draw(t_game *game, const int w, const int dx)
 		ft_wall(game, &r);
 		r.pixel.y = -1;
 		while (++r.pixel.y < HEIGHT)
-		{
-			if (r.pixel.y < r.draw.x)
-				*(((unsigned int *)game->screen.addr) + (r.pixel.y * WIDTH)
-						+ r.pixel.x) = game->map.c_color.hex;
-			else if (r.pixel.y > r.draw.y)
-				*(((unsigned int *)game->screen.addr) + (r.pixel.y * WIDTH)
-						+ r.pixel.x) = game->map.f_color.hex;
-			else
-				ft_drawpixel(game, r.pixel.x, r.pixel.y, &r);
-		}
+			ft_drawpixel(game, r.pixel.x, r.pixel.y, &r);
 	}
 }

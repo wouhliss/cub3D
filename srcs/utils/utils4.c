@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 21:11:57 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 18:05:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 13:13:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,41 +16,6 @@ void	skip_spaces(char *line, int *i)
 {
 	while (line[*i] == ' ' || (line[*i] >= 9 && line[*i] <= 13))
 		(*i)++;
-}
-
-inline void	my_mlx_pixel_put(const t_screen *data, const int x, const int y, const int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
-	*(unsigned int *)dst = color;
-}
-
-inline void	my_mlx_pixel_tput(const t_screen *data, const int x, const int y, unsigned int color)
-{
-	char			*dst;
-	t_color			tcolor;
-	t_color			scolor;
-	t_color			dcolor;
-
-	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
-	scolor.hex = *(unsigned int *)dst;
-	tcolor.hex = color;
-	dcolor.t = (0.50 * scolor.t) + (0.50 * tcolor.t);
-	dcolor.red = (0.50 * scolor.red) + (0.50 * tcolor.red);
-	dcolor.green = (0.50 * scolor.green) + (0.50 * tcolor.green);
-	dcolor.blue = (0.50 * scolor.blue) + (0.50 * tcolor.blue);
-	*(unsigned int *)dst = dcolor.hex;
-}
-
-inline void	my_mlx_pixel_hput(t_screen *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
-	*(unsigned int *)dst = create_trgb((unsigned char)(color >> 24) >> 1,
-			(unsigned char)(color >> 16) >> 1, (unsigned char)(color >> 8) >> 1,
-			(unsigned char)(color) >> 1);
 }
 
 int	ft_atoc(const char *str)
