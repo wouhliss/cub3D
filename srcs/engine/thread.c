@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:59:22 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 09:07:38 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 10:55:36 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*ft_thread(void *arg)
 		while (true)
 		{
 			state = ft_check_state(game);
-			if (state == RENDERING)
+			if (state == RENDERING && ft_check_rstate(game, t->id) != COMPLETED)
 				break ;
 			else if (state == ENDED)
 				return (NULL);

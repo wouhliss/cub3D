@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/29 23:40:04 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/03 17:33:30 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:42:25 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ void	ft_spritesclear(t_game *game)
 	while (el)
 	{
 		temp = el->next;
-		free(el);
 		el = temp;
 	}
 }

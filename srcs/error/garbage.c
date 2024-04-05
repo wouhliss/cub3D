@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 15:01:45 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/03/17 17:07:33 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:41:43 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ t_garbage	*ft_lstnew(void *content)
 
 	lst = malloc(sizeof(t_garbage));
 	if (!lst)
-		return (free(content), NULL);
+	{
+		free(content);
+		panic("could not allocate memory.");
+		return (NULL);
+	}
 	lst->content = content;
 	lst->next = NULL;
 	return (lst);

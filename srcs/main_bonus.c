@@ -6,11 +6,16 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 17:32:47 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:33:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+void __attribute__ ((destructor)) aftermain(void)
+{
+	gc(NULL, EMPTY);
+}
 
 int	main(int ac, char **av)
 {
@@ -25,7 +30,7 @@ int	main(int ac, char **av)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, EXT_ERR), 2);
 	init_map(av[1], &game);
 	if (ft_init_mlx(&game))
-		return (gc(NULL, EMPTY), 3);
+		return (3);
 	game.texturec = WTEXTURES;
 	ft_start(&game);
 	mlx_destroy_image(game.mlx.mlx, game.screen.img);
@@ -37,5 +42,6 @@ int	main(int ac, char **av)
 		if (game.stextures[i].img)
 			mlx_destroy_image(game.mlx.mlx, game.stextures[i].img);
 	return (mlx_destroy_window(game.mlx.mlx, game.mlx.win),
-		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx), gc(NULL, EMPTY), 0);
+		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx),
+		0);
 }

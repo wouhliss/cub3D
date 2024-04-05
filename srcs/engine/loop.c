@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 09:07:10 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:08:51 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static inline int	ft_get_state(t_game *game)
 	pthread_mutex_lock(&game->state_m);
 	state = game->state;
 	pthread_mutex_unlock(&game->state_m);
-	return (state);	
+	return (state);
 }
 
 static inline void	ft_set_state(t_game *game, const int state)
@@ -56,10 +56,15 @@ int	ft_loop(void *param)
 		game->f = game->now;
 	}
 	++game->frames;
-	ft_set_state(game, COMPUTING);
 	ft_handle_movement(game);
 	ft_handle_aim(game);
-	game->last = game->now;
+	i = -1;
+	while (++i < THREADS)
+	{
+		pthread_mutex_lock(&game->rendered_m[i]);
+		game->rendered[i] = TDRAWING;
+		pthread_mutex_unlock(&game->rendered_m[i]);
+	}
 	ft_set_state(game, RENDERING);
 	i = 0;
 	while (i < THREADS)
@@ -69,15 +74,11 @@ int	ft_loop(void *param)
 		else
 			usleep(1);
 	}
-	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
-		0);
+	ft_drawmap(game);
+	if (game->last)
+		mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img,
+			0, 0);
+	game->last = game->now;
 	ft_set_state(game, DRAWN);
-	i = -1;
-	while (++i < THREADS)
-	{
-		pthread_mutex_lock(&game->rendered_m[i]);
-		game->rendered[i] = TDRAWING;
-		pthread_mutex_unlock(&game->rendered_m[i]);
-	}
 	return (0);
 }

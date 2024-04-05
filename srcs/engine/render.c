@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 09:07:30 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:27:34 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static inline void	ft_steps(const t_game *g, t_render *r)
 	else
 	{
 		r->step.x = 1;
-		r->side_dist.x = (r->map.x + 1.0f - g->p.pos.x) * r->delta_dist.x;
+		r->side_dist.x = (r->map.x + 1.0 - g->p.pos.x) * r->delta_dist.x;
 	}
 	if (r->ray_dir.y < 0)
 	{
@@ -32,7 +32,7 @@ static inline void	ft_steps(const t_game *g, t_render *r)
 	else
 	{
 		r->step.y = 1;
-		r->side_dist.y = (r->map.y + 1.0f - g->p.pos.y) * r->delta_dist.y;
+		r->side_dist.y = (r->map.y + 1.0 - g->p.pos.y) * r->delta_dist.y;
 	}
 }
 
@@ -64,16 +64,16 @@ static inline void	ft_dda(const t_game *g, t_render *r)
 
 static inline void	ft_rays(const t_game *g, t_render *r, const int x)
 {
-	r->camera_x = 2.0f * x / ((float)WIDTH) - 1.0f;
+	r->camera_x = 2.0 * x / ((double)WIDTH) - 1.0;
 	r->pos = g->p.pos;
 	r->ray_dir = (t_vec){-(g->p.dir.x + g->p.p.x * r->camera_x), g->p.dir.y
 		+ g->p.p.y * r->camera_x};
 	r->map = (t_intvec){(int)g->p.pos.x, (int)g->p.pos.y};
-	r->delta_dist = (t_vec){1e30f, 1e30f};
+	r->delta_dist = (t_vec){1e30, 1e30};
 	if (r->ray_dir.x)
-		r->delta_dist.x = fabsf(1.0f / r->ray_dir.x);
+		r->delta_dist.x = fabs(1.0 / r->ray_dir.x);
 	if (r->ray_dir.y)
-		r->delta_dist.y = fabsf(1.0f / r->ray_dir.y);
+		r->delta_dist.y = fabs(1.0 / r->ray_dir.y);
 	r->hit = 0;
 	ft_steps(g, r);
 	ft_dda(g, r);

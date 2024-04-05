@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 14:25:17 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/05 10:00:59 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ void	ft_start(t_game *game)
 		return ;
 	pthread_mutex_init(&game->state_m, NULL);
 	i = 0;
-	game->state = RENDERING;
 	while (i < THREADS)
 	{
 		pthread_mutex_init(&game->rendered_m[i], NULL);

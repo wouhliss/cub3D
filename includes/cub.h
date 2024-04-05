@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 09:06:48 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:26:25 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 # include <time.h>
 # include <unistd.h>
 
-# define PI 3.141592653589793f
-# define HALF_PI 1.57079632679f
+# define PI 3.141592653589793
+# define HALF_PI 1.57079632679
 
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3
@@ -74,14 +74,20 @@
 # define MISSING_ERR "Invalid or no map was found in file."
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
-# define THREADS 4
+# ifndef THREADS
+	# define THREADS 2
+# endif
 # define WIDTH 1280
 # define HW WIDTH / 2
 # define T_WIDTH WIDTH / THREADS
 # define HEIGHT 720
 # define HALF_HEIGHT HEIGHT / 2
-# define MINIMAP_WIDTH 200
-# define MINIMAP_HEIGHT 100
+# define MW 300
+# define MH 200
+# define MX 60
+# define MY 30
+# define MS 3
+# define MPR 10
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -153,8 +159,8 @@ typedef struct s_buffer
 
 typedef struct s_vec
 {
-	float					x;
-	float					y;
+	double					x;
+	double					y;
 }							t_vec;
 
 typedef struct s_intvec
@@ -169,7 +175,7 @@ typedef struct s_door
 {
 	t_intvec				pos;
 	int						state;
-	float					frame;
+	double					frame;
 	t_door					*next;
 }							t_door;
 
@@ -202,20 +208,20 @@ typedef struct s_render
 	t_intvec				dtex;
 	t_intvec				pwtex;
 	t_intvec				pixel;
-	float					camera_x;
-	float					pdist;
-	float					ppdist;
-	float					tpdist;
-	float					dpdist;
-	float					texpos;
-	float					dtexpos;
-	float					ptexpos;
-	float					pwtexpos;
-	float					mystep;
-	float					dmystep;
-	float					pmystep;
-	float					pwmystep;
-	float					invdet;
+	double					camera_x;
+	double					pdist;
+	double					ppdist;
+	double					tpdist;
+	double					dpdist;
+	double					texpos;
+	double					dtexpos;
+	double					ptexpos;
+	double					pwtexpos;
+	double					mystep;
+	double					dmystep;
+	double					pmystep;
+	double					pwmystep;
+	double					invdet;
 	t_door					*door;
 	int						spritewidth;
 	int						sph;
@@ -281,10 +287,10 @@ typedef struct s_player
 	t_intvec				look_pos;
 	t_intvec				step;
 	t_intvec				map;
-	float					pdist;
+	double					pdist;
 	bool					looking;
 	int						looking_side;
-	float					jump;
+	double					jump;
 	int						jumping;
 	int						y;
 }							t_player;
@@ -327,7 +333,7 @@ typedef struct s_sprite
 	int						vr;
 	int						hr;
 	int						vpos;
-	float					vdiff;
+	double					vdiff;
 	int						hide;
 	int						delete;
 	t_sprite				*next;
@@ -344,7 +350,7 @@ typedef struct s_projectile
 	t_vec					side_dist;
 	t_intvec				map;
 	t_intvec				step;
-	float					pdist;
+	double					pdist;
 	int						side;
 	t_projectile			*next;
 }							t_projectile;
@@ -359,8 +365,8 @@ typedef struct s_portal
 
 typedef struct s_game
 {
-	float					zbuffer[WIDTH][HEIGHT];
-	float					ztbuffer[WIDTH][HEIGHT];
+	double					zbuffer[WIDTH][HEIGHT];
+	double					ztbuffer[WIDTH][HEIGHT];
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
@@ -384,8 +390,8 @@ typedef struct s_game
 	int						rendered[THREADS];
 	t_portal				portal_l;
 	t_portal				portal_r;
-	float					speed;
-	float					sens;
+	double					speed;
+	double					sens;
 	time_t					now;
 	time_t					last;
 	time_t					a;
@@ -509,16 +515,8 @@ int							max(int a, int b);
 char						**ft_split(char const *s, char c);
 int							create_trgb(int t, int r, int g, int b);
 void						put_colors(t_game *game);
-void						my_mlx_pixel_put(const t_screen *data, const int x,
-								const int y, const int color);
-void						my_mlx_pixel_tput(const t_screen *data, const int x,
-								const int y, unsigned int color);
-void						my_mlx_pixel_fput(const t_screen *data, const int x,
-								const int y, unsigned int color);
-void						my_mlx_pixel_hput(t_screen *data, int x, int y,
-								int color);
 void						ft_swapi(int *a, int *b);
-void						ft_swapd(float *a, float *b);
+void						ft_swapd(double *a, double *b);
 int							ft_outside(const t_game *game, const int x,
 								const int y);
 // int						first_last_line(t_game *game);

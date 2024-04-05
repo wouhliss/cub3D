@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 09:07:57 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:29:50 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,5 @@ int	on_key_release(int k, void *param)
 		game->down = 0;
 	else if (k == XK_Shift_L)
 		game->shift = 0;
-	else if (k == XK_space)
-		game->p.jump = 0;
 	return (0);
 }

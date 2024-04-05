@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 19:03:45 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 19:38:38 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:22:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static inline void	ft_aim_h(t_game *game)
 {
-	float	x;
+	double	x;
 
 	if (game->turn_r)
 	{

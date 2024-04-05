@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 19:23:12 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/03/17 17:05:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:46:12 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	ft_align(t_buffer *buffer)
 
 	if (buffer->size == buffer->pos)
 	{
-		free(buffer->line);
 		buffer->line = 0;
 		buffer->size = 0;
 		return ;
@@ -40,7 +39,6 @@ char	*ft_strndup(t_buffer *buffer)
 	res = malloc(buffer->pos + 1);
 	if (!res)
 	{
-		free(buffer->line);
 		buffer->line = 0;
 		buffer->size = 0;
 		return (NULL);
@@ -62,7 +60,7 @@ char	*ft_strnjoin(t_buffer *buffer)
 	int		i;
 	int		j;
 
-	res = malloc(buffer->size + buffer->read + 1);
+	res = gc(malloc(buffer->size + buffer->read + 1), ADD);
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -71,7 +69,6 @@ char	*ft_strnjoin(t_buffer *buffer)
 		res[i] = buffer->line[i];
 		++i;
 	}
-	free(buffer->line);
 	j = 0;
 	while (j < buffer->read)
 	{
@@ -111,7 +108,6 @@ char	*get_next_line(int fd)
 
 	if (fd == EMPTY_BUFFER)
 	{
-		free(buffer.line);
 		buffer.line = 0;
 		buffer.size = 0;
 		return (NULL);
@@ -119,7 +115,6 @@ char	*get_next_line(int fd)
 	i = read_next_line(fd, &buffer);
 	if (!i)
 	{
-		free(buffer.line);
 		buffer.line = 0;
 		buffer.size = 0;
 		return (NULL);

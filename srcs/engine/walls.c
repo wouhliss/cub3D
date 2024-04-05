@@ -6,15 +6,15 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 13:31:20 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 11:22:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline float	get_wall_x(t_render *r)
+static inline double	get_wall_x(t_render *r)
 {
-	float	wallx;
+	double	wallx;
 
 	if (r->side < 0)
 		wallx = r->pos.y + r->pdist * r->ray_dir.y;
@@ -24,7 +24,7 @@ static inline float	get_wall_x(t_render *r)
 	return (wallx);
 }
 
-static inline int	get_tex_x(t_render *r, const float wallx)
+static inline int	get_tex_x(t_render *r, const double wallx)
 {
 	int	val;
 
@@ -38,7 +38,7 @@ static inline int	get_tex_x(t_render *r, const float wallx)
 
 void	ft_wall(const t_game *game, t_render *r)
 {
-	float	wallx;
+	double	wallx;
 
 	if (r->side == -1)
 		r->id = TEA;
@@ -52,7 +52,7 @@ void	ft_wall(const t_game *game, t_render *r)
 	r->s = game->wtextures[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx);
-	r->mystep = (float)r->twidth / r->lh;
+	r->mystep = (double)r->twidth / r->lh;
 	r->texpos = (r->draw.x - HALF_HEIGHT + r->lh / 2 - game->p.y
 			- (int)(game->p.jump) / r->pdist) * r->mystep;
 }
