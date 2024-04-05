@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 10:00:59 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:54:14 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,32 +72,6 @@ int	ft_init_mlx(t_game *g)
 		mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g), 0);
 }
 
-static inline int	ft_load_sprites(t_game *game)
-{
-	t_sprite	*sprite;
-
-	sprite = game->sprites;
-	while (sprite)
-	{
-		if (!game->stextures[sprite->type].addr)
-		{
-			game->stextures[sprite->type].img = mlx_xpm_file_to_image(game->mlx.mlx,
-					game->sfiles[sprite->type],
-					&game->stextures[sprite->type].width,
-					&game->stextures[sprite->type].height);
-			if (!game->stextures[sprite->type].img)
-				return (1);
-			game->stextures[sprite->type].addr = mlx_get_data_addr(game->stextures[sprite->type].img,
-					&game->stextures[sprite->type].bpp,
-					&game->stextures[sprite->type].ll,
-					&game->stextures[sprite->type].endian);
-		}
-		sprite->t = &game->stextures[sprite->type];
-		sprite = sprite->next;
-	}
-	return (0);
-}
-
 static inline int	ft_check_textures(t_game *game)
 {
 	int	i;
@@ -113,8 +87,6 @@ static inline int	ft_check_textures(t_game *game)
 		game->wtextures[i].frames = game->wtextures[i].height
 			/ game->wtextures[i].width;
 	}
-	if (ft_load_sprites(game))
-		err = 2;
 	i = STEXTURES;
 	while (i--)
 	{

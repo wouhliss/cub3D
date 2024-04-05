@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 11:26:25 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:53:09 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # ifndef THREADS
-	# define THREADS 2
+#  define THREADS 2
 # endif
 # define WIDTH 1280
 # define HW WIDTH / 2
@@ -134,6 +134,32 @@
 
 # define PARAMS 8
 
+# define DOOR 0
+# define PROJECTILE 1
+# define SPRITE 2
+# define HIT 3
+
+# define DFL_SIZE 20
+
+typedef struct s_texture
+{
+	void					*img;
+	char					*addr;
+	int						bpp;
+	int						ll;
+	int						endian;
+	int						height;
+	int						width;
+	int						frames;
+	int						f;
+	int						s;
+}							t_texture;
+
+typedef struct s_hit
+{
+	// info sur la case / l'element touche par le rayon
+}							t_hit;
+
 typedef union u_trgb
 {
 	u_int32_t				hex;
@@ -179,8 +205,58 @@ typedef struct s_door
 	t_door					*next;
 }							t_door;
 
+typedef struct s_sprite		t_sprite;
+
+typedef struct s_sprite
+{
+	t_vec					pos;
+	t_vec					dir;
+	t_vec					plane;
+	t_texture				*t;
+	int						type;
+	int						vr;
+	int						hr;
+	int						vpos;
+	double					vdiff;
+	int						hide;
+	int						delete;
+}							t_sprite;
+
+typedef struct s_projectile	t_projectile;
+
+typedef struct s_projectile
+{
+	t_sprite				*sprite;
+	int						type;
+	int						delete;
+	t_vec					delta_dist;
+	t_vec					side_dist;
+	t_intvec				map;
+	t_intvec				step;
+	double					pdist;
+	int						side;
+}							t_projectile;
+
+typedef struct s_vector
+{
+	int						type;
+	size_t					size;
+	size_t					bsize;
+	size_t					index;
+	union
+	{
+		t_door				*d;
+		t_projectile		*p;
+		t_sprite			*s;
+		t_hit				*h;
+		size_t				*ul;
+		void				*ptr;
+	} ptr;
+}							t_vector;
+
 typedef struct s_render
 {
+	t_vector				rhit;
 	t_vec					ray_dir;
 	t_vec					pray_dir;
 	t_vec					side_dist;
@@ -254,20 +330,6 @@ typedef struct s_render
 	int						vpos;
 }							t_render;
 
-typedef struct s_texture
-{
-	void					*img;
-	char					*addr;
-	int						bpp;
-	int						ll;
-	int						endian;
-	int						height;
-	int						width;
-	int						frames;
-	int						f;
-	int						s;
-}							t_texture;
-
 typedef struct s_weapon
 {
 	int						type;
@@ -321,40 +383,6 @@ typedef struct s_mlx
 	int						height;
 }							t_mlx;
 
-typedef struct s_sprite		t_sprite;
-
-typedef struct s_sprite
-{
-	t_vec					pos;
-	t_vec					dir;
-	t_vec					plane;
-	t_texture				*t;
-	int						type;
-	int						vr;
-	int						hr;
-	int						vpos;
-	double					vdiff;
-	int						hide;
-	int						delete;
-	t_sprite				*next;
-}							t_sprite;
-
-typedef struct s_projectile	t_projectile;
-
-typedef struct s_projectile
-{
-	t_sprite				*sprite;
-	int						type;
-	int						delete;
-	t_vec					delta_dist;
-	t_vec					side_dist;
-	t_intvec				map;
-	t_intvec				step;
-	double					pdist;
-	int						side;
-	t_projectile			*next;
-}							t_projectile;
-
 typedef struct s_portal
 {
 	t_intvec				pos;
@@ -374,17 +402,16 @@ typedef struct s_game
 	t_texture				stextures[STEXTURES];
 	t_texture				ptextures[PTEXTURES];
 	t_screen				screen;
-	t_render				r;
+	// t_render				r;
+	t_vector				sprites;
+	t_vector				doors;
+	t_vector				projectiles;
 	char					*files[WTEXTURES];
 	int						timeframes[WTEXTURES];
 	char					*sfiles[STEXTURES];
 	char					*pfiles[PTEXTURES];
 	int						colors_c[4];
 	int						colors_f[4];
-	t_sprite				*sprites;
-	t_sprite				*psprite;
-	t_projectile			*projectiles;
-	t_door					*doors;
 	pthread_mutex_t			state_m;
 	pthread_mutex_t			rendered_m[THREADS];
 	int						rendered[THREADS];
@@ -445,7 +472,8 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
-void						ft_draw(t_game *game, const int w, const int dx, t_render *r);
+void						ft_draw(t_game *game, const int w, const int dx,
+								t_render *r);
 void						ft_drawmap(t_game *game);
 void						ft_drawsprites(t_game *game, const int x,
 								const int dx);
@@ -519,6 +547,9 @@ void						ft_swapi(int *a, int *b);
 void						ft_swapd(double *a, double *b);
 int							ft_outside(const t_game *game, const int x,
 								const int y);
+int							ft_create_vector(t_vector *vector, int type,
+								size_t size);
+void						ft_add_to_vector(t_vector *vec, void *ptr);
 // int						first_last_line(t_game *game);
 // void					display_tab(char **tab);
 // int						check_line(t_game *game);
