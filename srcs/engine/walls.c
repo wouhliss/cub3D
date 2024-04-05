@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 11:22:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:58:43 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	ft_wall(const t_game *game, t_render *r)
 		r->id = TSO;
 	else if (r->side == 2)
 		r->id = TNO;
-	r->twidth = game->wtextures[r->id].width;
-	r->s = game->wtextures[r->id].s;
+	r->twidth = game->wt[r->id].width;
+	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx);
 	r->mystep = (double)r->twidth / r->lh;
@@ -64,7 +64,7 @@ void	ft_drawwallpixel(const t_game *game, const int x, const int y,
 
 	r->tex.y = (int)r->texpos & (r->twidth - 1);
 	r->texpos += r->mystep;
-	color = ((int *)game->wtextures[r->id].addr)[r->s + r->twidth * r->tex.y
+	color = ((int *)game->wt[r->id].addr)[r->s + r->twidth * r->tex.y
 		+ r->tex.x];
 	if (game->p.looking && game->p.look_pos.x == r->map.x
 		&& game->p.look_pos.y == r->map.y && (!r->tex.y || r->tex.y == r->twidth

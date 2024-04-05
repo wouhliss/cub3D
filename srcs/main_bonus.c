@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 11:33:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:58:49 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,11 @@ int	main(int ac, char **av)
 	mlx_destroy_image(game.mlx.mlx, game.screen.img);
 	i = -1;
 	while (++i < WTEXTURES)
-		mlx_destroy_image(game.mlx.mlx, game.wtextures[i].img);
+		mlx_destroy_image(game.mlx.mlx, game.wt[i].img);
 	i = -1;
 	while (++i < STEXTURES)
-		if (game.stextures[i].img)
-			mlx_destroy_image(game.mlx.mlx, game.stextures[i].img);
+		if (game.st[i].img)
+			mlx_destroy_image(game.mlx.mlx, game.st[i].img);
 	return (mlx_destroy_window(game.mlx.mlx, game.mlx.win),
 		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx),
 		0);

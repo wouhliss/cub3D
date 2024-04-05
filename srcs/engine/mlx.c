@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 14:54:14 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 15:05:56 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,17 +23,16 @@ static inline int	ft_import_textures(t_game *g)
 	exit = 0;
 	while (i--)
 	{
-		if (!g->wtextures[i].img)
+		if (!g->wt[i].img)
 			exit = 1;
 		else
-			g->wtextures[i].addr = mlx_get_data_addr(g->wtextures[i].img,
-					&g->wtextures[i].bpp, &g->wtextures[i].ll,
-					&g->wtextures[i].endian);
+			g->wt[i].addr = mlx_get_data_addr(g->wt[i].img, &g->wt[i].bpp,
+					&g->wt[i].ll, &g->wt[i].endian);
 	}
 	i = WTEXTURES;
 	while (exit && i--)
-		if (g->wtextures[i].img)
-			mlx_destroy_image(g->mlx.mlx, g->wtextures[i].img);
+		if (g->wt[i].img)
+			mlx_destroy_image(g->mlx.mlx, g->wt[i].img);
 	if (exit)
 		return (mlx_destroy_image(g->mlx.mlx, g->screen.img),
 			mlx_destroy_window(g->mlx.mlx, g->mlx.win),
@@ -59,8 +58,8 @@ int	ft_init_mlx(t_game *g)
 	i = -1;
 	while (++i < WTEXTURES)
 	{
-		g->wtextures[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->files[i],
-				&g->wtextures[i].width, &g->wtextures[i].height);
+		g->wt[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->files[i],
+				&g->wt[i].width, &g->wt[i].height);
 	}
 	if (ft_import_textures(g))
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, IMPORT_ERR), 1);
@@ -81,23 +80,18 @@ static inline int	ft_check_textures(t_game *game)
 	i = WTEXTURES;
 	while (i--)
 	{
-		if (!game->wtextures[i].width || game->wtextures[i].height
-			% game->wtextures[i].width)
+		if (!game->wt[i].width || game->wt[i].height % game->wt[i].width)
 			err = 1;
-		game->wtextures[i].frames = game->wtextures[i].height
-			/ game->wtextures[i].width;
+		game->wt[i].frames = game->wt[i].height / game->wt[i].width;
 	}
 	i = STEXTURES;
 	while (i--)
 	{
-		if (!game->stextures[i].addr)
+		if (!game->st[i].addr)
 			continue ;
-		if (!game->stextures[i].width
-			|| game->stextures[i].height
-			% game->stextures[i].width)
+		if (!game->st[i].width || game->st[i].height % game->st[i].width)
 			return (1);
-		game->stextures[i].frames = game->stextures[i].height
-			/ game->stextures[i].width;
+		game->st[i].frames = game->st[i].height / game->st[i].width;
 	}
 	if (err)
 		return (ft_dprintf(2, ERR_FORMAT, NAME, TEXTURE_SIZE), err);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 14:53:09 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 14:58:49 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -398,8 +398,8 @@ typedef struct s_game
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
-	t_texture				wtextures[WTEXTURES];
-	t_texture				stextures[STEXTURES];
+	t_texture				wt[WTEXTURES];
+	t_texture				st[STEXTURES];
 	t_texture				ptextures[PTEXTURES];
 	t_screen				screen;
 	// t_render				r;
