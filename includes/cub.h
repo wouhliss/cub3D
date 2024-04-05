@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 08:24:35 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 09:06:48 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 # define POINTERMOTION_MASK 64L
 # define CURSOR_RADIUS 10
 
-# define WTEXTURES 4
+# define WTEXTURES 6
 # define STEXTURES 7
 # define PTEXTURES 4
 
@@ -50,6 +50,8 @@
 # define TSO 1
 # define TWE 2
 # define TEA 3
+# define TD 4
+# define TB 5
 
 # define ERR_FORMAT "%s: %s\n"
 # define NAME "cub3D"
@@ -124,7 +126,7 @@
 # define G 2
 # define B 3
 
-# define PARAMS 6
+# define PARAMS 8
 
 typedef union u_trgb
 {
@@ -368,7 +370,9 @@ typedef struct s_game
 	t_screen				screen;
 	t_render				r;
 	char					*files[WTEXTURES];
+	int						timeframes[WTEXTURES];
 	char					*sfiles[STEXTURES];
+	char					*pfiles[PTEXTURES];
 	int						colors_c[4];
 	int						colors_f[4];
 	t_sprite				*sprites;
@@ -500,6 +504,7 @@ void						*ft_calloc(size_t nmemb, size_t size);
 void						skip_spaces(char *line, int *i);
 int							plen(char **map);
 int							ft_atoc(const char *str);
+long						ft_atoi(const char *str);
 int							max(int a, int b);
 char						**ft_split(char const *s, char c);
 int							create_trgb(int t, int r, int g, int b);

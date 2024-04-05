@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:06:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 17:00:41 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 19:04:17 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,17 @@ int	set_texture_color(char *line, int *c, t_game *game)
 		return ((*c)++, set_texture(line, game));
 	else if (!ft_strncmp(line, "EA ", 3))
 		return ((*c)++, set_texture(line, game));
+	else if (!ft_strncmp(line, "D ", 2))
+		return ((*c)++, set_texture(line, game));
+	else if (!ft_strncmp(line, "B ", 2))
+		return ((*c)++, set_texture(line, game));
 	else if (!ft_strncmp(line, "F ", 2))
 		return ((*c)++, set_colors(line, game));
 	else if (!ft_strncmp(line, "C ", 2))
 		return ((*c)++, set_colors(line, game));
 	else if (!(*line))
 		return (1);
-	return (0);
+	return (printf("test %s\n", line), 0);
 }
 
 void	get_info_map(t_game *game)
