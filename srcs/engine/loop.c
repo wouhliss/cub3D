@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 13:19:39 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 19:38:23 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int	ft_loop(void *param)
 	game = param;
 	clock_gettime(CLOCK_MONOTONIC_RAW, &t);
 	game->now = t.tv_nsec + t.tv_sec * 1000000000;
+	game->delta = game->now - game->last;
 	if (game->now - game->f > 1000000000)
 	{
 		printf("%d\n", game->frames);
@@ -56,6 +57,9 @@ int	ft_loop(void *param)
 	}
 	++game->frames;
 	ft_set_state(game, COMPUTING);
+	ft_handle_movement(game);
+	ft_handle_aim(game);
+	game->last = game->now;
 	ft_set_state(game, RENDERING);
 	i = 0;
 	while (i < THREADS)
@@ -67,6 +71,7 @@ int	ft_loop(void *param)
 	}
 	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img, 0,
 		0);
+	ft_set_state(game, DRAWN);
 	i = -1;
 	while (++i < THREADS)
 	{

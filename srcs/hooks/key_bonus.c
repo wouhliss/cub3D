@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 13:16:43 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/04 19:27:51 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	on_key_press(int k, void *param)
 		game->up = 1;
 	else if (k == XK_Down)
 		game->down = 1;
+	else if (k == XK_Shift_L)
+		game->shift = 1;
 	return (0);
 }
 

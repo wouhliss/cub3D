@@ -15,7 +15,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = mlx render loop walls thread
+ENGINE = mlx render loop walls thread movement aim
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 18:59:22 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 13:24:43 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 08:24:28 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	*ft_thread(void *arg)
 {
 	t_thread	*t;
 	t_game		*game;
+	t_render	r;
 	int			state;
 
 	t = arg;
@@ -61,7 +62,7 @@ void	*ft_thread(void *arg)
 			else if (state == ENDED)
 				return (NULL);
 		}
-		ft_draw(game, (t->id + 1) * T_WIDTH, t->id * T_WIDTH);
+		ft_draw(game, (t->id + 1) * T_WIDTH, t->id * T_WIDTH, &r);
 		ft_change_rstate(game, t->id, COMPLETED);
 	}
 	return (NULL);

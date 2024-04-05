@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/04 13:31:27 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 08:24:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@
 # define MISSING_ERR "Invalid or no map was found in file."
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
-# define THREADS 18
+# define THREADS 4
 # define WIDTH 1280
 # define HW WIDTH / 2
 # define T_WIDTH WIDTH / THREADS
@@ -435,7 +435,7 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
-void						ft_draw(t_game *game, const int w, const int dx);
+void						ft_draw(t_game *game, const int w, const int dx, t_render *r);
 void						ft_drawmap(t_game *game);
 void						ft_drawsprites(t_game *game, const int x,
 								const int dx);
@@ -468,6 +468,8 @@ void						ft_pdrawpixel(t_game *game, const int x,
 int							ft_loop(void *param);
 int							ft_init_mlx(t_game *g);
 void						ft_start(t_game *game);
+void						ft_handle_movement(t_game *g);
+void						ft_handle_aim(t_game *g);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);

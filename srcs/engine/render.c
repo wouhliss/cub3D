@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 13:33:44 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/05 08:24:20 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,20 +107,16 @@ static inline void	ft_drawpixel(t_game *g, const int x, const int y,
 	}
 }
 
-void	ft_draw(t_game *game, const int w, const int dx)
+void	ft_draw(t_game *game, const int w, const int dx, t_render *r)
 {
-	t_render	r;
-
-	if (game->p.y >= HEIGHT)
-		return ;
-	r.side = 0;
-	r.pixel.x = dx - 1;
-	while (++r.pixel.x < w)
+	r->side = 0;
+	r->pixel.x = dx - 1;
+	while (++r->pixel.x < w)
 	{
-		ft_rays(game, &r, r.pixel.x);
-		ft_wall(game, &r);
-		r.pixel.y = -1;
-		while (++r.pixel.y < HEIGHT)
-			ft_drawpixel(game, r.pixel.x, r.pixel.y, &r);
+		ft_rays(game, r, r->pixel.x);
+		ft_wall(game, r);
+		r->pixel.y = -1;
+		while (++r->pixel.y < HEIGHT)
+			ft_drawpixel(game, r->pixel.x, r->pixel.y, r);
 	}
 }
