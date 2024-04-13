@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:30:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 14:53:38 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:34:33 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static inline void	*ft_resize_vector(t_vector *vector)
 	if (!res)
 		return (NULL);
 	i = -1;
-	j = vector->size * vector->bsize;
+	j = vector->size * vector->bsize / sizeof(u_int64_t);
 	while (++i < j)
 		res[i] = vector->ptr.ul[i];
 	free(vector->ptr.ptr);
@@ -55,13 +55,13 @@ void	ft_add_to_vector(t_vector *vec, void *ptr)
 	}
 }
 
-int	ft_create_vector(t_vector *vector, int type, size_t size)
+void	ft_create_vector(t_vector *vector, int type, size_t size)
 {
 	vector->type = type;
 	vector->size = DFL_SIZE;
 	vector->bsize = size;
 	vector->ptr.ptr = malloc(vector->size * size);
+	vector->index = 0;
 	if (!vector->ptr.ptr)
-		return (0);
-	return (1);
+		vector->size = 0;
 }

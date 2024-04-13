@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/04 13:40:34 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:09:19 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	ft_in_charset(char *charset, char c)
 
 void	set_player(char c, int i, int j, t_game *game)
 {
-	//t_sprite	sprite;
+	t_sprite	sprite;
 
 	game->map.s_dir = c;
 	game->map.s_pos = (t_vec){j + 0.5, i + 0.5};
@@ -53,9 +53,9 @@ void	set_player(char c, int i, int j, t_game *game)
 		game->p.dir = (t_vec){-1, 0};
 		game->p.p = (t_vec){0, 0.66};
 	}
-	//sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 0};
-	//sprite.pos = game->map.s_pos;
-	//game->psprite = ft_addsprite(game, &sprite);
+	sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 0};
+	sprite.pos = game->map.s_pos;
+	ft_add_to_vector(&game->sprites, &sprite);
 	game->map.map[i][j] = '0';
 }
 
@@ -84,11 +84,13 @@ static inline void	ft_setsprite(t_game *game, int i, int j)
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		game->map.map[i][j] = '0';
 	}
-	ft_addsprite(game, &sprite);
+	ft_add_to_vector(&game->sprites, &sprite);
 }
 
 int	check_one(t_game *game, int i, int j, int *player_count)
 {
+	t_door	door;
+
 	if (i == 0 || i == game->length - 1 || j == 0 || j == game->width - 1)
 		return (ft_in_charset("12 ", game->map.map[i][j]));
 	if (game->map.map[i][j] == '2')
@@ -99,6 +101,14 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 			&& ft_in_charset("01NSEWPbBtD", game->map.map[i][j + 1]));
 	else if (ft_in_charset("PbB", game->map.map[i][j]))
 	{
+		ft_setsprite(game, i, j);
+		return (ft_in_charset("01NSEWPbBtD", game->map.map[i + 1][j])
+			&& ft_in_charset("01NSEWPbBtD", game->map.map[i][j + 1]));
+	}
+	else if (ft_in_charset("D", game->map.map[i][j]))
+	{
+		door = (t_door){.frame = 0, .pos = (t_intvec){j, i}, .state = 0};
+		ft_add_to_vector(&game->doors, &door);
 		return (ft_in_charset("01NSEWPbBtD", game->map.map[i + 1][j])
 			&& ft_in_charset("01NSEWPbBtD", game->map.map[i][j + 1]));
 	}

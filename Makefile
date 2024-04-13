@@ -1,5 +1,5 @@
 CC = gcc-12 
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -g3 -march=native -DTHREADS=$(shell grep -c ^processor /proc/cpuinfo)
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -march=native -DTHREADS=18
 MLXPATH = minilibx-linux/
 MLXFLAGS = -L $(MLXPATH) -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
@@ -15,7 +15,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = mlx render loop walls thread movement aim minimap
+ENGINE = mlx render loop walls movement aim minimap
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

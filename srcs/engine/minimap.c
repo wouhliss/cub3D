@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 11:10:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 11:07:28 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ static inline void	my_mlx_pixel_tput(const t_screen *data, const int x, const in
 	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
 	scolor.hex = *(unsigned int *)dst;
 	tcolor.hex = color;
-	dcolor.t = (0.25 * scolor.t) + (0.75 * tcolor.t);
-	dcolor.red = (0.25 * scolor.red) + (0.75 * tcolor.red);
-	dcolor.green = (0.25 * scolor.green) + (0.75 * tcolor.green);
-	dcolor.blue = (0.25 * scolor.blue) + (0.75 * tcolor.blue);
+	dcolor.t = (0.35 * scolor.t) + (0.65 * tcolor.t);
+	dcolor.red = (0.35 * scolor.red) + (0.65 * tcolor.red);
+	dcolor.green = (0.35 * scolor.green) + (0.65 * tcolor.green);
+	dcolor.blue = (0.35 * scolor.blue) + (0.65 * tcolor.blue);
 	*(unsigned int *)dst = dcolor.hex;
 }
 

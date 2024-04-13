@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   textures.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 07:49:28 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/04 19:01:51 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/12 13:58:39 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
 /*
-	TODO add parsing for texture animation "/assets/text/text.xpm:100" and 100 is the number of ms per frame
+	TODO add parsinfg for texture animation "/assets/text/text.xpm:100" and 100 is the number of ms per frame
 */
 
 static int	only_num(const char *color)

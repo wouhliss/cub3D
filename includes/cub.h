@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 14:58:49 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 11:11:49 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@
 # include <time.h>
 # include <unistd.h>
 
-# define PI 3.141592653589793
-# define HALF_PI 1.57079632679
+# define PI 3.141592653589793f
+# define HALF_PI 1.57079632679f
 
 # define ON_KEYDOWN 2
 # define ON_KEYUP 3
@@ -155,11 +155,6 @@ typedef struct s_texture
 	int						s;
 }							t_texture;
 
-typedef struct s_hit
-{
-	// info sur la case / l'element touche par le rayon
-}							t_hit;
-
 typedef union u_trgb
 {
 	u_int32_t				hex;
@@ -201,8 +196,8 @@ typedef struct s_door
 {
 	t_intvec				pos;
 	int						state;
+	time_t					last;
 	double					frame;
-	t_door					*next;
 }							t_door;
 
 typedef struct s_sprite		t_sprite;
@@ -237,6 +232,8 @@ typedef struct s_projectile
 	int						side;
 }							t_projectile;
 
+typedef struct s_hit		t_hit;
+
 typedef struct s_vector
 {
 	int						type;
@@ -256,79 +253,42 @@ typedef struct s_vector
 
 typedef struct s_render
 {
-	t_vector				rhit;
 	t_vec					ray_dir;
-	t_vec					pray_dir;
 	t_vec					side_dist;
-	t_vec					pside_dist;
-	t_vec					tside_dist;
-	t_vec					dside_dist;
 	t_vec					delta_dist;
 	t_vec					transform;
 	t_vec					sprite;
 	t_vec					pos;
-	t_vec					ppos;
 	t_intvec				draw_x;
 	t_intvec				draw_y;
 	t_intvec				map;
-	t_vec					dmap;
-	t_vec					pmap;
 	t_intvec				step;
-	t_vec					dstep;
 	t_intvec				draw;
-	t_intvec				pdraw;
-	t_intvec				tdraw;
-	t_intvec				ddraw;
 	t_intvec				tex;
-	t_intvec				ptex;
-	t_intvec				dtex;
-	t_intvec				pwtex;
 	t_intvec				pixel;
 	double					camera_x;
 	double					pdist;
-	double					ppdist;
-	double					tpdist;
-	double					dpdist;
 	double					texpos;
-	double					dtexpos;
-	double					ptexpos;
-	double					pwtexpos;
 	double					mystep;
-	double					dmystep;
-	double					pmystep;
-	double					pwmystep;
 	double					invdet;
-	t_door					*door;
+	double					shift;
 	int						spritewidth;
 	int						sph;
 	int						spsx;
-	bool					hit;
-	int						phit;
-	bool					thit;
-	bool					dhit;
+	int						hit;
 	int						side;
-	int						pside;
-	int						tside;
-	int						dside;
 	int						lh;
-	int						plh;
-	int						tlh;
-	int						dlh;
 	int						id;
-	int						did;
-	int						pid;
-	int						pwid;
 	int						twidth;
-	int						dtwidth;
-	int						ptwidth;
-	int						pwtwidth;
 	int						s;
-	int						ds;
-	int						ps;
-	int						pws;
 	int						portal;
 	int						vpos;
 }							t_render;
+
+typedef struct s_hit
+{
+	t_render				render;
+}							t_hit;
 
 typedef struct s_weapon
 {
@@ -354,7 +314,7 @@ typedef struct s_player
 	int						looking_side;
 	double					jump;
 	int						jumping;
-	int						y;
+	double					y;
 }							t_player;
 
 typedef struct s_map
@@ -391,6 +351,16 @@ typedef struct s_portal
 	int						side;
 }							t_portal;
 
+typedef struct s_game		t_game;
+
+typedef struct s_thread
+{
+	t_game					*game;
+	int						id;
+	pthread_t				tid;
+	t_vector				hit;
+}							t_thread;
+
 typedef struct s_game
 {
 	double					zbuffer[WIDTH][HEIGHT];
@@ -402,18 +372,16 @@ typedef struct s_game
 	t_texture				st[STEXTURES];
 	t_texture				ptextures[PTEXTURES];
 	t_screen				screen;
-	// t_render				r;
 	t_vector				sprites;
 	t_vector				doors;
 	t_vector				projectiles;
+	t_thread				threads[THREADS];
 	char					*files[WTEXTURES];
 	int						timeframes[WTEXTURES];
 	char					*sfiles[STEXTURES];
 	char					*pfiles[PTEXTURES];
 	int						colors_c[4];
 	int						colors_f[4];
-	pthread_mutex_t			state_m;
-	pthread_mutex_t			rendered_m[THREADS];
 	int						rendered[THREADS];
 	t_portal				portal_l;
 	t_portal				portal_r;
@@ -448,13 +416,6 @@ typedef struct s_game
 	bool					space;
 }							t_game;
 
-typedef struct s_thread
-{
-	t_game					*game;
-	int						id;
-	pthread_t				tid;
-}							t_thread;
-
 typedef struct s_garbage
 {
 	void					*content;
@@ -472,14 +433,13 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
-void						ft_draw(t_game *game, const int w, const int dx,
-								t_render *r);
+void						*ft_draw(void *p);
 void						ft_drawmap(t_game *game);
 void						ft_drawsprites(t_game *game, const int x,
 								const int dx);
 void						ft_wall(const t_game *game, t_render *r);
 void						ft_dwall(const t_game *game, t_render *r);
-void						ft_drawwallpixel(const t_game *game, const int x,
+void						ft_drawwallpixel(t_game *game, const int x,
 								const int y, t_render *r);
 void						ft_ddrawpixel(t_game *game, const int x,
 								const int y, t_render *r);
@@ -498,7 +458,7 @@ void						ft_aim(t_game *game);
 void						ft_handle_projectiles(t_game *game);
 t_door						*ft_getdoor(const t_game *game, const int x,
 								const int y);
-void						ft_floorceil(t_game *game, const int w,
+void						ft_floorfceil(t_game *game, const int w,
 								const int xx);
 void						ft_pwall(const t_game *game, t_render *r);
 void						ft_pdrawpixel(t_game *game, const int x,
@@ -508,7 +468,7 @@ int							ft_init_mlx(t_game *g);
 void						ft_start(t_game *game);
 void						ft_handle_movement(t_game *g);
 void						ft_handle_aim(t_game *g);
-/*Parsing*/
+/*Parsinfg*/
 
 void						init_map(char *path, t_game *game);
 void						get_info_map(t_game *game);
@@ -517,7 +477,6 @@ void						pre_format_map(t_game *game);
 void						format_map(t_game *game);
 int							check_map(t_game *game);
 int							set_texture(char *line, t_game *game);
-t_sprite					*ft_addsprite(t_game *game, t_sprite *sprite);
 void						ft_spritesclear(t_game *game);
 /*Utils*/
 
@@ -547,7 +506,7 @@ void						ft_swapi(int *a, int *b);
 void						ft_swapd(double *a, double *b);
 int							ft_outside(const t_game *game, const int x,
 								const int y);
-int							ft_create_vector(t_vector *vector, int type,
+void						ft_create_vector(t_vector *vector, int type,
 								size_t size);
 void						ft_add_to_vector(t_vector *vec, void *ptr);
 // int						first_last_line(t_game *game);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 14:58:49 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:03:39 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,9 @@ void	init_map(char *path, t_game *game)
 {
 	int	i;
 
+	ft_create_vector(&game->doors, DOOR, sizeof(t_door));
+	ft_create_vector(&game->sprites, SPRITE, sizeof(t_sprite));
+	ft_create_vector(&game->projectiles, PROJECTILE, sizeof(t_projectile));
 	game->fd = open(path, O_RDONLY);
 	if (game->fd == -1)
 		panic(FILE_ERR);

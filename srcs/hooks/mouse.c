@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 11:27:11 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/12 14:27:22 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,14 @@ int	on_mouse_move(int w, int h, void *param)
 	g = param;
 	x = g->p.dir.x;
 	y = g->p.dir.y;
-	g->p.dir.x = x * cos((HW - w) * 0.0015) - y * sin((HW - w) * 0.0015);
-	g->p.dir.y = x * sin((HW - w) * 0.0015) + y * cos((HW - w) * 0.0015);
+	g->p.dir.x = x * cos((HW - w) * 0.00065) - y * sin((HW - w) * 0.00065);
+	g->p.dir.y = x * sin((HW - w) * 0.00065) + y * cos((HW - w) * 0.00065);
 	x = g->p.p.x;
 	y = g->p.p.y;
-	g->p.p.x = x * cos((HW - w) * 0.0015) - y * sin((HW - w) * 0.0015);
-	g->p.p.y = x * sin((HW - w) * 0.0015) + y * cos((HW - w) * 0.0015);
+	g->p.p.x = x * cos((HW - w) * 0.00065) - y * sin((HW - w) * 0.00065);
+	g->p.p.y = x * sin((HW - w) * 0.00065) + y * cos((HW - w) * 0.00065);
 	if (h != HALF_HEIGHT)
-		g->p.y -= h - HALF_HEIGHT;
+		g->p.y -= (h - HALF_HEIGHT) * 0.65;
 	if (g->p.y > HEIGHT)
 		g->p.y = HEIGHT;
 	if (g->p.y < -HEIGHT)

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 15:05:56 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:36:57 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,25 +100,15 @@ static inline int	ft_check_textures(t_game *game)
 
 void	ft_start(t_game *game)
 {
-	int			i;
-	t_thread	threads[THREADS];
+	int	i;
 
 	if (ft_check_textures(game))
 		return ;
-	pthread_mutex_init(&game->state_m, NULL);
-	i = 0;
-	while (i < THREADS)
-	{
-		pthread_mutex_init(&game->rendered_m[i], NULL);
-		threads[i].id = i;
-		threads[i].game = game;
-		pthread_create(&threads[i].tid, NULL, ft_thread, &threads[i]);
-		++i;
-	}
 	mlx_loop(game->mlx.mlx);
-	pthread_mutex_lock(&game->state_m);
-	game->state = ENDED;
-	pthread_mutex_unlock(&game->state_m);
+	free(game->doors.ptr.ptr);
+	free(game->sprites.ptr.ptr);
+	free(game->projectiles.ptr.ptr);
+	i = THREADS;
 	while (i--)
-		pthread_join(threads[i].tid, NULL);
+		free(game->threads[i].hit.ptr.ptr);
 }

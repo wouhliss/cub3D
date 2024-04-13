@@ -6,11 +6,33 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/05 11:29:50 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 11:17:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+static inline void	ft_interact(t_game *g)
+{
+	size_t	i;
+
+	if (g->p.looking)
+	{
+		i = 0;
+		while (i < g->doors.index)
+		{
+			if (g->doors.ptr.d[i].state == CLOSED
+				&& g->doors.ptr.d[i].pos.x == g->p.look_pos.x
+				&& g->doors.ptr.d[i].pos.y == g->p.look_pos.y)
+				g->doors.ptr.d[i].state = OPENING;
+			else if (g->doors.ptr.d[i].state == OPEN
+				&& g->doors.ptr.d[i].pos.x == g->p.look_pos.x
+				&& g->doors.ptr.d[i].pos.y == g->p.look_pos.y)
+				g->doors.ptr.d[i].state = CLOSING;
+			++i;
+		}
+	}
+}
 
 int	on_key_press(int k, void *param)
 {
@@ -37,6 +59,8 @@ int	on_key_press(int k, void *param)
 		game->down = 1;
 	else if (k == XK_Shift_L)
 		game->shift = 1;
+	else if (k == XK_E || k == XK_e)
+		ft_interact(game);
 	return (0);
 }
 
