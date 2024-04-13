@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/12 15:36:57 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 12:32:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ static inline int	ft_import_textures(t_game *g)
 	int	exit;
 	int	i;
 
-	g->screen.addr = mlx_get_data_addr(g->screen.img, &g->screen.bpp,
-			&g->screen.ll, &g->screen.endian);
+	g->s.a = mlx_get_data_addr(g->s.img, &g->s.bpp,
+			&g->s.ll, &g->s.endian);
 	i = WTEXTURES;
 	exit = 0;
 	while (i--)
@@ -26,7 +26,7 @@ static inline int	ft_import_textures(t_game *g)
 		if (!g->wt[i].img)
 			exit = 1;
 		else
-			g->wt[i].addr = mlx_get_data_addr(g->wt[i].img, &g->wt[i].bpp,
+			g->wt[i].a = mlx_get_data_addr(g->wt[i].img, &g->wt[i].bpp,
 					&g->wt[i].ll, &g->wt[i].endian);
 	}
 	i = WTEXTURES;
@@ -34,7 +34,7 @@ static inline int	ft_import_textures(t_game *g)
 		if (g->wt[i].img)
 			mlx_destroy_image(g->mlx.mlx, g->wt[i].img);
 	if (exit)
-		return (mlx_destroy_image(g->mlx.mlx, g->screen.img),
+		return (mlx_destroy_image(g->mlx.mlx, g->s.img),
 			mlx_destroy_window(g->mlx.mlx, g->mlx.win),
 			mlx_destroy_display(g->mlx.mlx), free(g->mlx.mlx), 1);
 	return (0);
@@ -47,11 +47,11 @@ int	ft_init_mlx(t_game *g)
 	g->mlx.mlx = mlx_init();
 	if (!g->mlx.mlx)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, MLX_ERR), 1);
-	g->mlx.win = mlx_new_window(g->mlx.mlx, WIDTH, HEIGHT, NAME);
+	g->mlx.win = mlx_new_window(g->mlx.mlx, W, HEIGHT, NAME);
 	if (!g->mlx.win)
 		return (ft_dprintf(2, ERR_FORMAT, NAME, WIN_ERR), free(g->mlx.mlx), 1);
-	g->screen.img = mlx_new_image(g->mlx.mlx, WIDTH, HEIGHT);
-	if (!g->screen.img)
+	g->s.img = mlx_new_image(g->mlx.mlx, W, HEIGHT);
+	if (!g->s.img)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, SCREEN_ERR),
 			mlx_destroy_window(g->mlx.mlx, g->mlx.win),
 			mlx_destroy_display(g->mlx.mlx), free(g->mlx.mlx), 1);
@@ -87,7 +87,7 @@ static inline int	ft_check_textures(t_game *game)
 	i = STEXTURES;
 	while (i--)
 	{
-		if (!game->st[i].addr)
+		if (!game->st[i].a)
 			continue ;
 		if (!game->st[i].width || game->st[i].height % game->st[i].width)
 			return (1);

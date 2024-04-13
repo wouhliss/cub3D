@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 11:07:28 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 12:32:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static inline void	my_mlx_pixel_tput(const t_screen *data, const int x, const in
 	t_color			scolor;
 	t_color			dcolor;
 
-	dst = data->addr + (y * data->ll + x * (data->bpp / 8));
+	dst = data->a + (y * data->ll + x * (data->bpp / 8));
 	scolor.hex = *(unsigned int *)dst;
 	tcolor.hex = color;
 	dcolor.t = (0.35 * scolor.t) + (0.65 * tcolor.t);
@@ -49,11 +49,11 @@ void	ft_drawmap(t_game *g)
 		{
 			pos.y = sp.y + ((draw.y - MY) >> MS);
 			if (g->map.map[pos.y][pos.x] == '1')
-				my_mlx_pixel_tput(&g->screen, draw.x, draw.y, 0x00000000);
+				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00000000);
 			else
-				my_mlx_pixel_tput(&g->screen, draw.x, draw.y, 0x00FFFFFF);
+				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00FFFFFF);
 			if ((int)g->p.pos.x == pos.x && (int)g->p.pos.y == pos.y)
-				my_mlx_pixel_tput(&g->screen, draw.x, draw.y, 0x00FF0000);
+				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00FF0000);
 		}
 	}
 }

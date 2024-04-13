@@ -6,13 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 19:00:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 11:25:26 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:28:18 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-bool	ft_check_doors(t_game *g)
+bool	ft_check_doors(t_game *g, const double x, const double y)
 {
 	size_t	i;
 
@@ -20,32 +20,34 @@ bool	ft_check_doors(t_game *g)
 	while (i < g->doors.index)
 	{
 		if (g->doors.ptr.d[i].state != OPEN
-			&& g->doors.ptr.d[i].pos.x >= (int)(g->p.pos.x - 0.1)
-			&& g->doors.ptr.d[i].pos.x <= (int)(g->p.pos.x + 0.1)
-			&& g->doors.ptr.d[i].pos.y >= (int)(g->p.pos.y - 0.1)
-			&& g->doors.ptr.d[i].pos.y <= (int)(g->p.pos.y + 0.1))
-				return (true);
-			++i;
+			&& g->doors.ptr.d[i].pos.x >= (int)((g->p.pos.x + x) - 0.1)
+			&& g->doors.ptr.d[i].pos.x <= (int)((g->p.pos.x + x) + 0.1)
+			&& g->doors.ptr.d[i].pos.y >= (int)((g->p.pos.y + y) - 0.1)
+			&& g->doors.ptr.d[i].pos.y <= (int)((g->p.pos.y + y) + 0.1))
+			return (true);
+		++i;
 	}
 	return (false);
 }
 
-bool	ft_can_move(t_game *g, double x, double y)
+bool	ft_can_move(t_game *g, const double x, const double y)
 {
-	g->p.pos.x += x;
-	g->p.pos.y += y;
-	if (g->p.pos.x <= 1.1 || g->p.pos.x >= g->width - 1.1 || g->p.pos.y <= 1.1
-		|| g->p.pos.y >= g->length - 1.1)
+	if ((g->p.pos.x + x) <= 1.1 || (g->p.pos.x + x) >= g->width - 1.1
+		|| (g->p.pos.y + y) <= 1.1 || (g->p.pos.y + y) >= g->length - 1.1)
 		return (false);
-	if (x < 0.0 && g->map.map[(int)g->p.pos.y][(int)(g->p.pos.x - 0.1)] == '1')
+	if (x < 0.0 && g->map.map[(int)(g->p.pos.y + y)][(int)((g->p.pos.x + x)
+			- 0.1)] == '1')
 		return (false);
-	if (x > 0.0 && g->map.map[(int)g->p.pos.y][(int)(g->p.pos.x + 0.1)] == '1')
+	if (x > 0.0 && g->map.map[(int)(g->p.pos.y + y)][(int)((g->p.pos.x + x)
+			+ 0.1)] == '1')
 		return (false);
-	if (y < 0.0 && g->map.map[(int)(g->p.pos.y - 0.1)][(int)g->p.pos.x] == '1')
+	if (y < 0.0 && g->map.map[(int)((g->p.pos.y + y) - 0.1)][(int)(g->p.pos.x
+			+ x)] == '1')
 		return (false);
-	if (y > 0.0 && g->map.map[(int)(g->p.pos.y + 0.1)][(int)g->p.pos.x] == '1')
+	if (y > 0.0 && g->map.map[(int)((g->p.pos.y + y) + 0.1)][(int)(g->p.pos.x
+			+ x)] == '1')
 		return (false);
-	if (ft_check_doors(g))
+	if (ft_check_doors(g, x, y))
 		return (false);
 	return (true);
 }
@@ -55,13 +57,9 @@ static inline void	ft_move_x(t_game *g, int ms)
 	double	speed;
 
 	speed = g->p.speed.x;
-	while (speed && ms > 0)
+	while (speed && ms > 0 && ft_can_move(g, speed * 0.01, 0))
 	{
-		if (!ft_can_move(g, speed * 0.01, 0))
-		{
-			g->p.pos.x -= speed * 0.02;
-			break ;
-		}
+		g->p.pos.x += speed * 0.01;
 		speed *= 0.99;
 		--ms;
 	}
@@ -72,22 +70,29 @@ static inline void	ft_move_y(t_game *g, int ms)
 	double	speed;
 
 	speed = g->p.speed.y;
-	while (speed && ms > 0)
+	while (speed && ms > 0 && ft_can_move(g, 0, speed * 0.01))
 	{
-		if (!ft_can_move(g, 0, speed * 0.01))
-		{
-			g->p.pos.y -= speed * 0.02;
-			break ;
-		}
+		g->p.pos.y += speed * 0.01;
 		speed *= 0.99;
 		--ms;
 	}
 }
 
-static inline void	ft_move_player(t_game *g)
+static inline void	ft_move_player(t_game *g, const double speed,
+		const double sangle)
 {
 	float	ms;
 
+	if (g->left && !g->right)
+	{
+		g->p.speed.x -= speed * 0.5 * cos(sangle);
+		g->p.speed.y -= speed * 0.5 * sin(sangle);
+	}
+	if (g->right && !g->left)
+	{
+		g->p.speed.x += speed * 0.5 * cos(sangle);
+		g->p.speed.y += speed * 0.5 * sin(sangle);
+	}
 	ms = g->delta / 1000000.0;
 	if (ms < 1.0)
 		ms = 1.0;
@@ -119,15 +124,5 @@ void	ft_handle_movement(t_game *g)
 		g->p.speed.x -= speed * 0.4 * cos(angle);
 		g->p.speed.y -= speed * 0.4 * sin(angle);
 	}
-	if (g->left && !g->right)
-	{
-		g->p.speed.x -= speed * 0.5 * cos(sangle);
-		g->p.speed.y -= speed * 0.5 * sin(sangle);
-	}
-	if (g->right && !g->left)
-	{
-		g->p.speed.x += speed * 0.5 * cos(sangle);
-		g->p.speed.y += speed * 0.5 * sin(sangle);
-	}
-	ft_move_player(g);
+	ft_move_player(g, speed, sangle);
 }

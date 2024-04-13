@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/13 11:11:49 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:56:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "mlx.h"
 # include <fcntl.h>
+# include <ft_dprintf.h>
 # include <limits.h>
 # include <math.h>
 # include <mlx_int.h>
@@ -77,9 +78,9 @@
 # ifndef THREADS
 #  define THREADS 2
 # endif
-# define WIDTH 1280
-# define HW WIDTH / 2
-# define T_WIDTH WIDTH / THREADS
+# define W 1280
+# define HW W / 2
+# define T_WIDTH W / THREADS
 # define HEIGHT 720
 # define HALF_HEIGHT HEIGHT / 2
 # define MW 300
@@ -141,10 +142,12 @@
 
 # define DFL_SIZE 20
 
+typedef unsigned int		t_ui;
+
 typedef struct s_texture
 {
 	void					*img;
-	char					*addr;
+	char					*a;
 	int						bpp;
 	int						ll;
 	int						endian;
@@ -265,7 +268,7 @@ typedef struct s_render
 	t_intvec				step;
 	t_intvec				draw;
 	t_intvec				tex;
-	t_intvec				pixel;
+	t_intvec				p;
 	double					camera_x;
 	double					pdist;
 	double					texpos;
@@ -322,14 +325,14 @@ typedef struct s_map
 	t_vec					s_pos;
 	char					**map;
 	char					s_dir;
-	t_color					c_color;
-	t_color					f_color;
+	t_color					cc;
+	t_color					fc;
 }							t_map;
 
 typedef struct s_screen
 {
 	void					*img;
-	char					*addr;
+	char					*a;
 	int						bpp;
 	int						ll;
 	int						endian;
@@ -355,23 +358,24 @@ typedef struct s_game		t_game;
 
 typedef struct s_thread
 {
-	t_game					*game;
+	t_game					*g;
 	int						id;
 	pthread_t				tid;
 	t_vector				hit;
+	int						dx;
+	int						x;
+	double					zbuffer[T_WIDTH][HEIGHT];
 }							t_thread;
 
 typedef struct s_game
 {
-	double					zbuffer[WIDTH][HEIGHT];
-	double					ztbuffer[WIDTH][HEIGHT];
 	t_map					map;
 	t_player				p;
 	t_mlx					mlx;
 	t_texture				wt[WTEXTURES];
 	t_texture				st[STEXTURES];
 	t_texture				ptextures[PTEXTURES];
-	t_screen				screen;
+	t_screen				s;
 	t_vector				sprites;
 	t_vector				doors;
 	t_vector				projectiles;
@@ -433,41 +437,25 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
+void						ft_drawsprites(t_thread *t);
+void						ft_drawpsprites(t_thread *t, t_vec *pos, t_vec *dir);
+void						ft_hitcalc(const t_game *g, t_render *r,
+								const int type);
+void						ft_drawhit(t_thread *t, const int x);
 void						*ft_draw(void *p);
 void						ft_drawmap(t_game *game);
-void						ft_drawsprites(t_game *game, const int x,
-								const int dx);
 void						ft_wall(const t_game *game, t_render *r);
-void						ft_dwall(const t_game *game, t_render *r);
+void						ft_door(const t_game *game, t_render *r);
 void						ft_drawwallpixel(t_game *game, const int x,
 								const int y, t_render *r);
-void						ft_ddrawpixel(t_game *game, const int x,
-								const int y, t_render *r);
-void						*ft_thread(void *arg);
-t_projectile				*ft_addprojectile(t_game *game, t_vec pos,
-								t_vec dir, int type);
-t_door						*ft_adddoor(t_game *game, t_intvec pos);
-void						ft_doorsclear(t_game *game);
-void						ft_delete_projectile(t_game *game);
-void						ft_deletesprite(t_game *game);
-void						ft_projectilesclear(t_game *game);
-void						ft_pdraw(t_game *game, int x, int w, int y, int h,
-								t_portal *p);
-void						ft_move(t_game *game);
-void						ft_aim(t_game *game);
-void						ft_handle_projectiles(t_game *game);
-t_door						*ft_getdoor(const t_game *game, const int x,
-								const int y);
-void						ft_floorfceil(t_game *game, const int w,
-								const int xx);
-void						ft_pwall(const t_game *game, t_render *r);
-void						ft_pdrawpixel(t_game *game, const int x,
+void						ft_drawdoorpixel(t_thread *t, const int x,
 								const int y, t_render *r);
 int							ft_loop(void *param);
 int							ft_init_mlx(t_game *g);
 void						ft_start(t_game *game);
 void						ft_handle_movement(t_game *g);
 void						ft_handle_aim(t_game *g);
+bool						ft_check_doors(t_game *g, double x, double y);
 /*Parsinfg*/
 
 void						init_map(char *path, t_game *game);
@@ -477,7 +465,6 @@ void						pre_format_map(t_game *game);
 void						format_map(t_game *game);
 int							check_map(t_game *game);
 int							set_texture(char *line, t_game *game);
-void						ft_spritesclear(t_game *game);
 /*Utils*/
 
 char						*get_next_line(int fd);
@@ -509,12 +496,6 @@ int							ft_outside(const t_game *game, const int x,
 void						ft_create_vector(t_vector *vector, int type,
 								size_t size);
 void						ft_add_to_vector(t_vector *vec, void *ptr);
-// int						first_last_line(t_game *game);
-// void					display_tab(char **tab);
-// int						check_line(t_game *game);
-// int						first_last_inline(char *line);
-// int						valid_char(char *line, int *player_count);
-// int						no_dups(t_game *game);
 
 /*Garbage collector*/
 

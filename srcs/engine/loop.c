@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 10:59:34 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/13 14:36:29 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,24 +89,24 @@ int	ft_loop(void *param)
 	game = param;
 	clock_gettime(CLOCK_MONOTONIC_RAW, &t);
 	game->now = t.tv_nsec + t.tv_sec * 1000000000;
-	game->delta = game->now - game->last;
 	if (game->now - game->f > 1000000000)
 	{
-		printf("\nfps: %d\n", game->frames);
+		printf("fps: %d\n", game->frames);
 		game->frames = 0;
 		game->f = game->now;
 	}
+	game->delta = game->now - game->last;
 	for (size_t i = 0; i < game->doors.index; ++i)
 	{
 		if (game->now - game->doors.ptr.d[i].last < 5000000)
 			continue ;
 		if (game->doors.ptr.d[i].state == OPENING)
-			game->doors.ptr.d[i].frame += 0.01;
+			game->doors.ptr.d[i].frame += 0.01 * (game->now - game->doors.ptr.d[i].last) / 5000000;
 		if (game->doors.ptr.d[i].frame >= 1.0
 			&& game->doors.ptr.d[i].state == OPENING)
 			game->doors.ptr.d[i].state = OPEN;
 		if (game->doors.ptr.d[i].state == CLOSING)
-			game->doors.ptr.d[i].frame -= 0.01;
+			game->doors.ptr.d[i].frame -= 0.01 * (game->now - game->doors.ptr.d[i].last) / 5000000;
 		if (game->doors.ptr.d[i].frame <= 0.0
 			&& game->doors.ptr.d[i].state == CLOSING)
 			game->doors.ptr.d[i].state = CLOSED;
@@ -121,7 +121,7 @@ int	ft_loop(void *param)
 	while (++i < THREADS)
 	{
 		game->threads[i].id = i;
-		game->threads[i].game = game;
+		game->threads[i].g = game;
 		if (!game->last)
 			ft_create_vector(&game->threads[i].hit, HIT, sizeof(t_hit));
 		pthread_create(&game->threads[i].tid, NULL, ft_draw, &game->threads[i]);
@@ -131,7 +131,7 @@ int	ft_loop(void *param)
 		pthread_join(game->threads[i].tid, NULL);
 	ft_drawmap(game);
 	if (game->last)
-		mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->screen.img,
+		mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->s.img,
 			0, 0);
 	game->last = game->now;
 	++game->frames;
