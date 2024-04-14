@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 14:07:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 10:30:41 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ int	on_key_press(int k, void *param)
 		game->shift = 1;
 	else if (k == XK_E || k == XK_e)
 		ft_interact(game);
+	else if (k == XK_space)
+		game->space = 1;
 	return (0);
 }
 
@@ -87,5 +89,7 @@ int	on_key_release(int k, void *param)
 		game->down = 0;
 	else if (k == XK_Shift_L)
 		game->shift = 0;
+	else if (k == XK_space)
+		game->space = 0;
 	return (0);
 }

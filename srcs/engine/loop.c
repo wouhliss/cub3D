@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 14:36:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 11:52:08 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,8 @@ static inline void	ft_dda(t_game *game)
 			if (game->p.step.y < 0)
 				game->p.looking_side = 2;
 		}
-		if (game->p.pdist > 3 || (int)(HEIGHT / game->p.pdist) <= fabs(game->p.y)
-			* 2)
+		if (game->p.pdist > 3 || (int)(HEIGHT
+				/ game->p.pdist) <= fabs(game->p.y) * 2)
 			break ;
 		if (!ft_outside(game, game->p.map.x, game->p.map.y)
 			&& game->map.map[game->p.map.y][game->p.map.x] != '0')
@@ -96,17 +96,21 @@ int	ft_loop(void *param)
 		game->f = game->now;
 	}
 	game->delta = game->now - game->last;
+	if (game->delta < 8000000)
+		return (0);
 	for (size_t i = 0; i < game->doors.index; ++i)
 	{
 		if (game->now - game->doors.ptr.d[i].last < 5000000)
 			continue ;
 		if (game->doors.ptr.d[i].state == OPENING)
-			game->doors.ptr.d[i].frame += 0.01 * (game->now - game->doors.ptr.d[i].last) / 5000000;
+			game->doors.ptr.d[i].frame += 0.01 * (game->now
+					- game->doors.ptr.d[i].last) / 5000000;
 		if (game->doors.ptr.d[i].frame >= 1.0
 			&& game->doors.ptr.d[i].state == OPENING)
 			game->doors.ptr.d[i].state = OPEN;
 		if (game->doors.ptr.d[i].state == CLOSING)
-			game->doors.ptr.d[i].frame -= 0.01 * (game->now - game->doors.ptr.d[i].last) / 5000000;
+			game->doors.ptr.d[i].frame -= 0.01 * (game->now
+					- game->doors.ptr.d[i].last) / 5000000;
 		if (game->doors.ptr.d[i].frame <= 0.0
 			&& game->doors.ptr.d[i].state == CLOSING)
 			game->doors.ptr.d[i].state = CLOSED;
@@ -131,8 +135,8 @@ int	ft_loop(void *param)
 		pthread_join(game->threads[i].tid, NULL);
 	ft_drawmap(game);
 	if (game->last)
-		mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->s.img,
-			0, 0);
+		mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->s.img, 0,
+			0);
 	game->last = game->now;
 	++game->frames;
 	return (0);

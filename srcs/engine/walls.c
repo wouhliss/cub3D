@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 13:13:43 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 12:06:20 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,15 @@ void	ft_wall(const t_game *game, t_render *r)
 void	ft_drawwallpixel(t_game *game, const int x, const int y,
 		t_render *r)
 {
-	int	color;
+	unsigned int	color;
 
-	r->tex.y = (int)r->texpos & (r->twidth - 1);
-	r->texpos += r->mystep;
+	r->tex.y = (int)(r->texpos + r->mystep * x * y) & (r->twidth - 1);
 	color = ((int *)game->wt[r->id].a)[r->s + r->twidth * r->tex.y
 		+ r->tex.x];
 	if (game->p.looking && game->p.look_pos.x == r->map.x
 		&& game->p.look_pos.y == r->map.y && (!r->tex.y || r->tex.y == r->twidth
 			- 1 || !r->tex.x || r->tex.x == r->twidth - 1))
 		color = 0x00FF0000;
-	*(((unsigned int *)game->s.a) + (y * W) + x) = color;
+	if (*(((unsigned int *)game->s.a) + (y * W) + x) != color)
+		*(((unsigned int *)game->s.a) + (y * W) + x) = color;
 }

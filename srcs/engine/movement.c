@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 19:00:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 14:28:18 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 11:53:25 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,13 @@ static inline void	ft_move_x(t_game *g, int ms)
 {
 	double	speed;
 
+	if (g->p.jumping == FALLING)
+		g->p.jump -= 1.8 * ms;
+	if (g->p.jump <= 0.0)
+	{
+		g->p.jump = 0.0;
+		g->p.jumping = GROUND;
+	}
 	speed = g->p.speed.x;
 	while (speed && ms > 0 && ft_can_move(g, speed * 0.01, 0))
 	{
@@ -83,21 +90,25 @@ static inline void	ft_move_player(t_game *g, const double speed,
 {
 	float	ms;
 
-	if (g->left && !g->right)
-	{
-		g->p.speed.x -= speed * 0.5 * cos(sangle);
-		g->p.speed.y -= speed * 0.5 * sin(sangle);
-	}
 	if (g->right && !g->left)
 	{
-		g->p.speed.x += speed * 0.5 * cos(sangle);
-		g->p.speed.y += speed * 0.5 * sin(sangle);
+		g->p.speed.x += speed * 0.4 * cos(sangle);
+		g->p.speed.y += speed * 0.4 * sin(sangle);
 	}
 	ms = g->delta / 1000000.0;
 	if (ms < 1.0)
 		ms = 1.0;
 	if (ms > 50.0)
 		ms = 50.0;
+	if (g->space && g->p.jumping == GROUND)
+		g->p.jumping = JUMPING;
+	if (g->p.jumping == JUMPING)
+		g->p.jump += 1.5 * ms;
+	if (g->p.jump >= 300.0)
+	{
+		g->p.jump = 300.0;
+		g->p.jumping = FALLING;
+	}
 	ft_move_x(g, ms);
 	g->p.speed.x *= 1.0 - ms / 50.0;
 	ft_move_y(g, ms);
@@ -123,6 +134,11 @@ void	ft_handle_movement(t_game *g)
 	{
 		g->p.speed.x -= speed * 0.4 * cos(angle);
 		g->p.speed.y -= speed * 0.4 * sin(angle);
+	}
+	if (g->left && !g->right)
+	{
+		g->p.speed.x -= speed * 0.4 * cos(sangle);
+		g->p.speed.y -= speed * 0.4 * sin(sangle);
 	}
 	ft_move_player(g, speed, sangle);
 }

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/13 14:56:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 09:53:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,14 @@
 # ifndef THREADS
 #  define THREADS 2
 # endif
-# define W 1280
+# ifndef W
+#  define W 640
+# endif
 # define HW W / 2
 # define T_WIDTH W / THREADS
-# define HEIGHT 720
+# ifndef HEIGHT
+#  define HEIGHT 480
+# endif
 # define HALF_HEIGHT HEIGHT / 2
 # define MW 300
 # define MH 200
@@ -438,7 +442,8 @@ int							on_mouse_click(int button, int x, int y,
 
 /*Engine*/
 void						ft_drawsprites(t_thread *t);
-void						ft_drawpsprites(t_thread *t, t_vec *pos, t_vec *dir);
+void						ft_drawpsprites(t_thread *t, t_vec *pos,
+								t_vec *dir);
 void						ft_hitcalc(const t_game *g, t_render *r,
 								const int type);
 void						ft_drawhit(t_thread *t, const int x);

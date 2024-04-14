@@ -1,5 +1,5 @@
 CC = gcc-12 
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -g3 -march=native -DTHREADS=8
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -march=native $(EXTRAFLAGS)
 MLXPATH = minilibx-linux/
 MLXFLAGS = -L $(MLXPATH) -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux

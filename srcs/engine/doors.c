@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 13:42:50 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 11:42:54 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	ft_door(const t_game *game, t_render *r)
 
 void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 {
-	int	color;
+	unsigned int	color;
 
 	r->tex.y = (int)r->texpos & (r->twidth - 1);
 	r->texpos += r->mystep;
@@ -64,12 +64,12 @@ void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 		return ;
 	}
-	if (r->hit == 2 && r->tex.x > r->twidth * (1 - r->shift))
+	if (r->tex.x > r->twidth * (1 - r->shift))
 		return ;
-	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
-	if (r->hit == 2)
-		color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y
-			+ r->tex.x + (int)(r->twidth * r->shift)];
-	t->zbuffer[x - t->dx][y] = r->pdist;
-	*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
+	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y
+		+ r->tex.x + (int)(r->twidth * r->shift)];
+	// if (t->zbuffer[x - t->dx][y] != r->pdist)
+		t->zbuffer[x - t->dx][y] = r->pdist;
+	if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
+		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 }

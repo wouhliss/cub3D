@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:43:32 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 15:03:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 10:20:54 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	ft_hitcalc(const t_game *g, t_render *r, const int type)
 
 void	ft_drawhit(t_thread *t, const int x)
 {
+	(void)x;
 	int		y;
 	size_t	i;
 
@@ -52,7 +53,6 @@ void	ft_drawhit(t_thread *t, const int x)
 				&& t->hit.ptr.h[i].render.pdist < t->zbuffer[x - t->dx][y])
 				ft_drawdoorpixel(t, x, y, &t->hit.ptr.h[i].render);
 		}
-		ft_drawpsprites(t, &t->g->p.pos, &t->g->p.dir);
 		++i;
 	}
 }
