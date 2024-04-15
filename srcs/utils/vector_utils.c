@@ -5,63 +5,105 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/05 11:30:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 21:31:01 by wouhliss         ###   ########.fr       */
+/*   Created: 2024/04/16 00:57:58 by wouhliss          #+#    #+#             */
+/*   Updated: 2024/04/16 01:03:47 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline void	*ft_resize_vector(t_vector *vector)
+void	*ft_resize_dvector(t_vector *vector)
 {
-	size_t	*res;
+	t_door	*res;
 	size_t	i;
 	size_t	j;
 
 	res = ft_calloc(vector->size * 2, vector->bsize);
 	if (!res)
 		return (NULL);
-	i = -1;
-	j = vector->size * vector->bsize / sizeof(u_int64_t);
-	while (++i < j)
-		res[i] = vector->u_ptr.ul[i];
-	free(vector->u_ptr.u_ptr);
-	vector->u_ptr.ul = res;
+	i = 0;
+	j = 0;
+	while (i < vector->index)
+	{
+		if (!vector->u_ptr.d[i].delete)
+			res[j++] = vector->u_ptr.d[i];
+		++i;
+	}
+	free(vector->u_ptr.d);
+	vector->u_ptr.d = res;
 	vector->size *= 2;
+	vector->index = j;
 	return (res);
 }
 
-void	ft_add_to_vector(t_vector *vec, void *u_ptr)
+void	*ft_resize_pvector(t_vector *vector)
 {
-	if (vec->type == DOOR)
+	t_projectile	*res;
+	size_t			i;
+	size_t			j;
+
+	res = ft_calloc(vector->size * 2, vector->bsize);
+	if (!res)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < vector->index)
 	{
-		if (vec->index < vec->size || ft_resize_vector(vec))
-			vec->u_ptr.d[vec->index++] = *((t_door *)u_ptr);
+		if (!vector->u_ptr.p[i].delete)
+			res[j++] = vector->u_ptr.p[i];
+		++i;
 	}
-	else if (vec->type == PROJECTILE)
-	{
-		if (vec->index < vec->size || ft_resize_vector(vec))
-			vec->u_ptr.p[vec->index++] = *((t_projectile *)u_ptr);
-	}
-	else if (vec->type == SPRITE)
-	{
-		if (vec->index < vec->size || ft_resize_vector(vec))
-			vec->u_ptr.s[vec->index++] = *((t_sprite *)u_ptr);
-	}
-	else if (vec->type == HIT)
-	{
-		if (vec->index < vec->size || ft_resize_vector(vec))
-			vec->u_ptr.h[vec->index++] = *((t_hit *)u_ptr);
-	}
+	free(vector->u_ptr.p);
+	vector->u_ptr.p = res;
+	vector->size *= 2;
+	vector->index = j;
+	return (res);
 }
 
-void	ft_create_vector(t_vector *vector, int type, size_t size)
+void	*ft_resize_svector(t_vector *vector)
 {
-	vector->type = type;
-	vector->size = DFL_SIZE;
-	vector->bsize = size;
-	vector->u_ptr.u_ptr = gc(malloc(vector->size * size), ADD);
-	vector->index = 0;
-	if (!vector->u_ptr.u_ptr)
-		vector->size = 0;
+	t_sprite	*res;
+	size_t		i;
+	size_t		j;
+
+	res = ft_calloc(vector->size * 2, vector->bsize);
+	if (!res)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < vector->index)
+	{
+		if (!vector->u_ptr.s[i].delete)
+			res[j++] = vector->u_ptr.s[i];
+		++i;
+	}
+	free(vector->u_ptr.s);
+	vector->u_ptr.s = res;
+	vector->size *= 2;
+	vector->index = j;
+	return (res);
+}
+
+void	*ft_resize_hvector(t_vector *vector)
+{
+	t_hit	*res;
+	size_t	i;
+	size_t	j;
+
+	res = ft_calloc(vector->size * 2, vector->bsize);
+	if (!res)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (i < vector->index)
+	{
+		if (!vector->u_ptr.h[i].delete)
+			res[j++] = vector->u_ptr.h[i];
+		++i;
+	}
+	free(vector->u_ptr.h);
+	vector->u_ptr.h = res;
+	vector->size *= 2;
+	vector->index = j;
+	return (res);
 }

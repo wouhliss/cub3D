@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/15 19:53:40 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 23:28:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,11 @@
 
 int	ft_in_charset(char *charset, char c)
 {
-	int	i;
-
-	i = 0;
-	while (charset[i])
+	while (*charset)
 	{
-		if (charset[i] == c)
+		if (*charset == c)
 			return (1);
-		i++;
+		++charset;
 	}
 	return (0);
 }

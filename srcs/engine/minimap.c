@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 22:05:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 23:32:22 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ static inline void	ft_put_pixel_map(t_game *g, t_intvec *sp, t_intvec *pos,
 		if (g->map.map[pos->y][pos->x] == '1')
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00000000);
 		else if (g->map.map[pos->y][pos->x] == 'D')
-			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00444444);
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00333333);
+		else if (g->map.map[pos->y][pos->x] == 't')
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00AAAAAA);
 		else
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FFFFFF);
 		if ((int)g->p.pos.x == pos->x && (int)g->p.pos.y == pos->y)

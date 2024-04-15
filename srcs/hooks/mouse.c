@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 22:20:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 00:00:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,84 @@ static inline void	ft_changestate(t_weapon *w)
 		w->state = 0;
 }
 
+static inline void	ft_break_block(t_game *g)
+{
+	if (g->p.look_pos.x < 1 || g->p.look_pos.y < 1
+		|| g->p.look_pos.x >= g->width - 1 || g->p.look_pos.y >= g->length - 1)
+		return ;
+	if (g->p.look_pos.y == g->portal_l.pos.y
+		&& g->p.look_pos.x == g->portal_l.pos.x)
+		g->portal_l.side = 0;
+	else if (g->p.look_pos.y == g->portal_r.pos.y
+		&& g->p.look_pos.x == g->portal_r.pos.x)
+		g->portal_r.side = 0;
+	if (g->map.map[g->p.look_pos.y][g->p.look_pos.x] == 'D')
+	{
+		ft_remove_door(g, g->p.look_pos.x, g->p.look_pos.y);
+		return ;
+	}
+	g->map.map[g->p.look_pos.y][g->p.look_pos.x] = '0';
+	if (g->map.map[g->p.look_pos.y + 1][g->p.look_pos.x] == 'D')
+		ft_remove_door(g, g->p.look_pos.x, g->p.look_pos.y + 1);
+	else if (g->map.map[g->p.look_pos.y - 1][g->p.look_pos.x] == 'D')
+		ft_remove_door(g, g->p.look_pos.x, g->p.look_pos.y - 1);
+	else if (g->map.map[g->p.look_pos.y][g->p.look_pos.x + 1] == 'D')
+		ft_remove_door(g, g->p.look_pos.x + 1, g->p.look_pos.y);
+	else if (g->map.map[g->p.look_pos.y][g->p.look_pos.x - 1] == 'D')
+		ft_remove_door(g, g->p.look_pos.x - 1, g->p.look_pos.y);
+}
+
+static inline void	ft_place_block(t_game *g)
+{
+	if (g->p.looking_side == -2 && ((int)g->p.pos.x != g->p.look_pos.x + 1
+			|| (int)g->p.pos.y != g->p.look_pos.y))
+		g->map.map[g->p.look_pos.y][g->p.look_pos.x + 1] = ft_get_block(g);
+	else if (g->p.looking_side == -1 && ((int)g->p.pos.x != g->p.look_pos.x - 1
+			|| (int)g->p.pos.y != g->p.look_pos.y))
+		g->map.map[g->p.look_pos.y][g->p.look_pos.x - 1] = ft_get_block(g);
+	else if (g->p.looking_side == 2 && ((int)g->p.pos.x != g->p.look_pos.x
+			|| (int)g->p.pos.y != g->p.look_pos.y + 1))
+		g->map.map[g->p.look_pos.y + 1][g->p.look_pos.x] = ft_get_block(g);
+	else if (g->p.looking_side == 1 && ((int)g->p.pos.x != g->p.look_pos.x
+			|| (int)g->p.pos.y != g->p.look_pos.y - 1))
+		g->map.map[g->p.look_pos.y - 1][g->p.look_pos.x] = ft_get_block(g);
+	if (g->p.looking_side == g->portal_l.side
+		&& g->portal_l.pos.x == g->p.look_pos.x
+		&& g->portal_l.pos.y == g->p.look_pos.y)
+		g->portal_l.side = 0;
+	else if (g->p.looking_side == g->portal_r.side
+		&& g->portal_r.pos.x == g->p.look_pos.x
+		&& g->portal_r.pos.y == g->p.look_pos.y)
+		g->portal_r.side = 0;
+}
+
 int	on_mouse_click(int button, int x, int y, void *param)
 {
 	t_game	*game;
 
 	(void)x;
 	(void)y;
-	(void)button;
 	game = param;
-	(void)game;
+	if (button == 1 && game->p.looking && game->p.weapon.type == 2)
+		ft_break_block(game);
+	else if (button == 3 && game->p.looking && game->p.weapon.type == 2)
+		ft_place_block(game);
+	else if (button == 4)
+	{
+		++game->p.weapon.type;
+		if (game->p.weapon.type > 3)
+			game->p.weapon.type = 0;
+		game->p.weapon.state = 0;
+	}
+	else if (button == 5)
+	{
+		--game->p.weapon.type;
+		if (game->p.weapon.type < 0)
+			game->p.weapon.type = 3;
+		game->p.weapon.state = 0;
+	}
+	else if (button == 2)
+		ft_changestate(&game->p.weapon);
 	return (0);
 }
 

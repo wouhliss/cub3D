@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 14:38:23 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 22:07:31 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 00:17:45 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,22 @@ static inline t_intvec	ft_getx(t_render *r, const t_sprite *s, const int x,
 	return (draw_x);
 }
 
+static inline void	my_mlx_pixel_tput(const t_screen *data, const int x,
+		const int y, unsigned int color)
+{
+	char	*dst;
+	t_color	tcolor;
+	t_color	dcolor;
+
+	dst = data->a + (y * data->ll + x * (data->bpp / 8));
+	tcolor.hex = color;
+	dcolor.t = (0.65 * tcolor.t);
+	dcolor.red = (0.65 * tcolor.red);
+	dcolor.green = (0.65 * tcolor.green);
+	dcolor.blue = (0.65 * tcolor.blue);
+	*(unsigned int *)dst = dcolor.hex;
+}
+
 static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 		const t_render *r, t_thread *t)
 {
@@ -61,7 +77,7 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 			{
 				color = 0x00FF0000;
 				if ((color & 0x00FFFFFF) != 0 && r->t.y < t->zbuffer[d.x
-						- t->dx][d.y])
+					- t->dx][d.y])
 				{
 					*(((t_ui *)t->g->s.a) + (d.y * W) + d.x) = color;
 					t->zbuffer[d.x - t->dx][d.y] = r->t.y;
@@ -89,34 +105,6 @@ void	ft_drawsprites(t_thread *t)
 		r.ind = 1.0 / (t->g->p.p.x * t->g->p.dir.y - t->g->p.dir.x
 				* t->g->p.p.y);
 		r.t.x = r.ind * (t->g->p.dir.y * -r.sp.x - t->g->p.dir.x * r.sp.y);
-		r.t.y = r.ind * (-t->g->p.p.y * -r.sp.x + t->g->p.p.x * r.sp.y);
-		r.spsx = (int)((HW) * (1.0 + r.t.x / r.t.y));
-		r.vpos = (int)(t->g->sprites.u_ptr.s[i].vdiff / r.t.y);
-		r.draw_x = ft_getx(&r, &t->g->sprites.u_ptr.s[i], t->x, t->dx);
-		r.draw_y = ft_gety(t->g, &t->g->sprites.u_ptr.s[i], &r);
-		ft_putsprite(t->g, &t->g->sprites.u_ptr.s[i], &r, t);
-		++i;
-	}
-}
-
-void	ft_drawpsprites(t_thread *t, t_vec *pos, t_vec *dir)
-{
-	t_render	r;
-	size_t		i;
-
-	(void)pos;
-	i = 0;
-	while (i < t->g->sprites.index)
-	{
-		if (t->g->sprites.u_ptr.s[i].hide)
-		{
-			++i;
-			continue ;
-		}
-		r.sp.x = t->g->sprites.u_ptr.s[i].pos.x - t->g->p.pos.x;
-		r.sp.y = t->g->sprites.u_ptr.s[i].pos.y - t->g->p.pos.y;
-		r.ind = 1.0 / (t->g->p.p.x * dir->y - dir->x * t->g->p.p.y);
-		r.t.x = r.ind * (dir->y * -r.sp.x - dir->x * r.sp.y);
 		r.t.y = r.ind * (-t->g->p.p.y * -r.sp.x + t->g->p.p.x * r.sp.y);
 		r.spsx = (int)((HW) * (1.0 + r.t.x / r.t.y));
 		r.vpos = (int)(t->g->sprites.u_ptr.s[i].vdiff / r.t.y);

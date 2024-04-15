@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 21:35:45 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 21:36:06 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 23:30:41 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	ft_check_doors(t_game *g, const double x, const double y)
 	i = 0;
 	while (i < g->doors.index)
 	{
-		if (g->doors.u_ptr.d[i].state != OPEN
+		if (!g->doors.u_ptr.d[i].delete &&g->doors.u_ptr.d[i].state != OPEN
 			&& g->doors.u_ptr.d[i].pos.x >= (int)((g->p.pos.x + x))
 			&& g->doors.u_ptr.d[i].pos.x <= (int)((g->p.pos.x + x))
 			&& g->doors.u_ptr.d[i].pos.y >= (int)((g->p.pos.y + y))
@@ -45,17 +45,17 @@ bool	ft_can_move(t_game *g, const double x, const double y)
 	if ((g->p.pos.x + x) <= 1.1 || (g->p.pos.x + x) >= g->width - 1.1
 		|| (g->p.pos.y + y) <= 1.1 || (g->p.pos.y + y) >= g->length - 1.1)
 		return (false);
-	if (x < 0.0 && g->map.map[(int)(g->p.pos.y + y)][(int)((g->p.pos.x + x)
-			- 0.1)] == '1')
+	if (x < 0.0 && ft_in_charset("1t", g->map.map[(int)(g->p.pos.y
+				+ y)][(int)((g->p.pos.x + x) - 0.1)]))
 		return (false);
-	if (x > 0.0 && g->map.map[(int)(g->p.pos.y + y)][(int)((g->p.pos.x + x)
-			+ 0.1)] == '1')
+	if (x > 0.0 && ft_in_charset("1t", g->map.map[(int)(g->p.pos.y
+				+ y)][(int)((g->p.pos.x + x) + 0.1)]))
 		return (false);
-	if (y < 0.0 && g->map.map[(int)((g->p.pos.y + y) - 0.1)][(int)(g->p.pos.x
-			+ x)] == '1')
+	if (y < 0.0 && ft_in_charset("1t", g->map.map[(int)((g->p.pos.y + y)
+				- 0.1)][(int)(g->p.pos.x + x)]))
 		return (false);
-	if (y > 0.0 && g->map.map[(int)((g->p.pos.y + y) + 0.1)][(int)(g->p.pos.x
-			+ x)] == '1')
+	if (y > 0.0 && ft_in_charset("1t", g->map.map[(int)((g->p.pos.y + y)
+				+ 0.1)][(int)(g->p.pos.x + x)]))
 		return (false);
 	if (ft_check_doors(g, x, y))
 		return (false);

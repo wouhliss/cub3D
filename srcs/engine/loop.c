@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 21:56:34 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:38:24 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,10 @@ static inline void	ft_update_doors(t_game *g)
 {
 	size_t	i;
 
+	if (g->p.looking_side < 0 && g->p.step.x < 0)
+		g->p.looking_side = -2;
+	if (g->p.looking_side > 0 && g->p.step.y < 0)
+		g->p.looking_side = 2;
 	i = 0;
 	while (i < g->doors.index)
 	{

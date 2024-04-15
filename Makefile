@@ -8,14 +8,14 @@ RM = rm -rvf
 NAME = cub3D
 NAME_BONUS = cub3D_bonus
 
-UTILS = utils1 utils2 utils3 utils4 utils5 ft_split vector_utils
+UTILS = utils1 utils2 utils3 utils4 utils5 ft_split vector vector_utils
 PARSING = checkings colors init map format settings textures
 ERROR = panic garbage
 DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
-HOOKSB = key_bonus window mouse
-ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions
+HOOKSB = key_bonus window mouse block_utils
+ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

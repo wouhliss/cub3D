@@ -7,10 +7,8 @@ EA ./assets/textures/walls/bookshelf.xpm
 D ./assets/textures/walls/test.xpm
 B ./assets/textures/walls/bookshelf.xpm
 
-
 F 0,0,0
 C 0,0,127
-
 
         1111111111111111111111111
         1000000000110000000000001
