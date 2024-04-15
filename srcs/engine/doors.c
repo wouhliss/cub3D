@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 21:43:44 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:28:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,6 @@ static inline int	get_tex_x(t_render *r, const double wallx)
 	int	val;
 
 	val = (wallx * r->twidth);
-	if (r->side < 0 && r->ray_dir.x > 0)
-		val = r->twidth - val - 1;
-	if (r->side > 1 && r->ray_dir.y > 0)
-		val = r->twidth - val - 1;
 	return (val);
 }
 
@@ -59,7 +55,7 @@ void	ft_door(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	r->id = 0;
+	r->id = 4;
 	r->twidth = game->wt[r->id].width;
 	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
@@ -83,7 +79,7 @@ void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 		return ;
 	}
-	if (r->tex.x > r->twidth * (1 - r->shift))
+	if (r->tex.x >= r->twidth * fabs(1 - r->shift))
 		return ;
 	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x
 		+ (int)(r->twidth * r->shift)];
