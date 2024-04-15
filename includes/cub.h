@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/14 09:53:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 17:01:45 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,12 @@
 #  define HEIGHT 480
 # endif
 # define HALF_HEIGHT HEIGHT / 2
-# define MW 300
-# define MH 200
-# define MX 60
-# define MY 30
+# define MW W / 4
+# define MH HEIGHT / 4
+# define MX MW / 4
+# define MY MH / 4
 # define MS 3
-# define MPR 10
+# define MPR MX / 2
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -263,8 +263,8 @@ typedef struct s_render
 	t_vec					ray_dir;
 	t_vec					side_dist;
 	t_vec					delta_dist;
-	t_vec					transform;
-	t_vec					sprite;
+	t_vec					t;
+	t_vec					sp;
 	t_vec					pos;
 	t_intvec				draw_x;
 	t_intvec				draw_y;
@@ -277,7 +277,7 @@ typedef struct s_render
 	double					pdist;
 	double					texpos;
 	double					mystep;
-	double					invdet;
+	double					ind;
 	double					shift;
 	int						spritewidth;
 	int						sph;

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/14 11:52:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 19:28:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,13 +107,19 @@ int	ft_loop(void *param)
 					- game->doors.ptr.d[i].last) / 5000000;
 		if (game->doors.ptr.d[i].frame >= 1.0
 			&& game->doors.ptr.d[i].state == OPENING)
+		{
+			game->doors.ptr.d[i].frame = 1.0;
 			game->doors.ptr.d[i].state = OPEN;
+		}
 		if (game->doors.ptr.d[i].state == CLOSING)
 			game->doors.ptr.d[i].frame -= 0.01 * (game->now
 					- game->doors.ptr.d[i].last) / 5000000;
 		if (game->doors.ptr.d[i].frame <= 0.0
 			&& game->doors.ptr.d[i].state == CLOSING)
+		{
+			game->doors.ptr.d[i].frame = 0.0;
 			game->doors.ptr.d[i].state = CLOSED;
+		}
 		game->doors.ptr.d[i].last = game->now;
 	}
 	ft_handle_movement(game);
@@ -134,9 +140,7 @@ int	ft_loop(void *param)
 	while (++i < THREADS)
 		pthread_join(game->threads[i].tid, NULL);
 	ft_drawmap(game);
-	if (game->last)
-		mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->s.img, 0,
-			0);
+	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->s.img, 0, 0);
 	game->last = game->now;
 	++game->frames;
 	return (0);

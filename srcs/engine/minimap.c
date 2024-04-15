@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/14 11:07:02 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 18:00:14 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	ft_drawmap(t_game *g)
 		sp.x = 0;
 	if (sp.y < 0)
 		sp.y = 0;
-	draw.x = MX + (g->frames & 1);
-	while (draw.x < MW + MX && sp.x + ((draw.x - MX) >> MS) < g->width)
+	draw.x = MX;
+	while (++draw.x < MW + MX && sp.x + ((draw.x - MX) >> MS) < g->width)
 	{
 		pos.x = sp.x + ((draw.x - MX) >> MS);
 		draw.y = MY;
@@ -50,11 +50,12 @@ void	ft_drawmap(t_game *g)
 			pos.y = sp.y + ((draw.y - MY) >> MS);
 			if (g->map.map[pos.y][pos.x] == '1')
 				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00000000);
+			else if (g->map.map[pos.y][pos.x] == 'D')
+				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00444444);
 			else
 				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00FFFFFF);
 			if ((int)g->p.pos.x == pos.x && (int)g->p.pos.y == pos.y)
 				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00FF0000);
 		}
-		draw.x += 2;
 	}
 }

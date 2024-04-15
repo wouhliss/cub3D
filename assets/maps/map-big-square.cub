@@ -1,7 +1,10 @@
-NO ./assets/textures/pillar.xpm
-SO ./assets/textures/pillar.xpm
-WE ./assets/textures/pillar.xpm
-EA ./assets/textures/pillar.xpm
+NO ./assets/textures/walls/bookshelf.xpm
+SO ./assets/textures/walls/bookshelf.xpm
+WE ./assets/textures/walls/bookshelf.xpm
+EA ./assets/textures/walls/bookshelf.xpm
+
+D ./assets/textures/walls/bookshelf.xpm
+B ./assets/textures/walls/bookshelf.xpm
 
 F 0,0,0
 C 0,0,0

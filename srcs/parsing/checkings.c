@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/12 15:09:19 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 19:53:40 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ void	set_player(char c, int i, int j, t_game *game)
 		game->p.dir = (t_vec){-1, 0};
 		game->p.p = (t_vec){0, 0.66};
 	}
-	sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 0};
+	sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 1};
 	sprite.pos = game->map.s_pos;
 	ft_add_to_vector(&game->sprites, &sprite);
 	game->map.map[i][j] = '0';
@@ -65,9 +65,10 @@ static inline void	ft_setsprite(t_game *game, int i, int j)
 
 	if (game->map.map[i][j] == 'b')
 	{
-		sprite = (t_sprite){.type = 2, .vdiff = 200.0, .hr = 2, .vr = 2,
+		sprite = (t_sprite){.type = 2, .vdiff = 0.0, .hr = 2, .vr = 2,
 			.hide = 0};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
+		sprite.vdiff = HEIGHT / (sprite.vr * 2);
 		game->map.map[i][j] = '0';
 	}
 	else if (game->map.map[i][j] == 'B')

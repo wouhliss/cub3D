@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/14 12:06:20 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 19:42:09 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,8 @@ void	ft_drawwallpixel(t_game *game, const int x, const int y,
 {
 	unsigned int	color;
 
-	r->tex.y = (int)(r->texpos + r->mystep * x * y) & (r->twidth - 1);
+	r->tex.y = (int)(r->texpos) & (r->twidth - 1);
+	r->texpos += r->mystep;
 	color = ((int *)game->wt[r->id].a)[r->s + r->twidth * r->tex.y
 		+ r->tex.x];
 	if (game->p.looking && game->p.look_pos.x == r->map.x

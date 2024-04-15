@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 19:03:45 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/13 12:51:49 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 13:13:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_handle_aim(t_game *g)
 	float	ysens;
 
 	g->sens = 0.0000000027 * g->delta;
-	ysens = 0.000001 * g->delta;
+	ysens = 0.0000000015 * g->delta * HEIGHT;
 	ft_aim_h(g);
 	if (g->up && g->p.y < HEIGHT)
 	{

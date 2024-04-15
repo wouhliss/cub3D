@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/14 11:42:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 19:42:14 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,7 @@ void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 		return ;
 	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y
 		+ r->tex.x + (int)(r->twidth * r->shift)];
-	// if (t->zbuffer[x - t->dx][y] != r->pdist)
-		t->zbuffer[x - t->dx][y] = r->pdist;
+	t->zbuffer[x - t->dx][y] = r->pdist;
 	if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 }

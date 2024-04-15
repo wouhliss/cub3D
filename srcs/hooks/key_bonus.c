@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/14 10:30:41 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/14 13:07:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static inline void	ft_interact(t_game *g)
 				g->doors.ptr.d[i].state = CLOSING;
 			++i;
 		}
+		if (g->map.map[g->p.look_pos.y][g->p.look_pos.x] == '1' && g->p.look_pos.y > 0 && g->p.look_pos.x > 0 && g->p.look_pos.y < g->length - 1 && g->p.look_pos.x < g->width - 1)
+			g->map.map[g->p.look_pos.y][g->p.look_pos.x] = '0';
 	}
 }
 

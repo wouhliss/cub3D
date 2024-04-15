@@ -1,5 +1,5 @@
 CC = gcc-12 
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -O3 -march=native $(EXTRAFLAGS)
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -march=native -O3 $(EXTRAFLAGS)
 MLXPATH = minilibx-linux/
 MLXFLAGS = -L $(MLXPATH) -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
@@ -71,6 +71,9 @@ fclean: clean
 
 re: fclean
 	make all
+
+rebonus: fclean
+	make -j bonus
 
 $(MLXPATH):
 	wget https://cdn.intra.42.fr/document/document/22794/minilibx-linux.tgz

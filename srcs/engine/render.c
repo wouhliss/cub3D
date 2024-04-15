@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/14 12:03:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:20:39 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ void	*ft_draw(void *p)
 	while (r.p.x < T_WIDTH * (t->id + 1))
 	{
 		ft_rays(t->g, &r, r.p.x, t);
-		r.p.y = 0;
-		while (r.p.y < HEIGHT)
+		r.p.y = -1;
+		while (++r.p.y < HEIGHT)
 		{
 			t->zbuffer[r.p.x - t->dx][r.p.y] = r.pdist;
 			if (r.p.y < r.draw.x)
@@ -134,7 +134,6 @@ void	*ft_draw(void *p)
 				*(((t_ui *)t->g->s.a) + (r.p.y * W) + r.p.x) = t->g->map.fc.hex;
 			else
 				ft_drawwallpixel(t->g, r.p.x, r.p.y, &r);
-			r.p.y += 2;
 		}
 		ft_drawhit(t, r.p.x);
 		r.p.x += 2;
