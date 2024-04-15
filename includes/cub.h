@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/15 17:01:45 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:43:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,8 +231,8 @@ typedef struct s_projectile
 	t_sprite				*sprite;
 	int						type;
 	int						delete;
-	t_vec					delta_dist;
-	t_vec					side_dist;
+	t_vec					dd;
+	t_vec					sd;
 	t_intvec				map;
 	t_intvec				step;
 	double					pdist;
@@ -254,15 +254,15 @@ typedef struct s_vector
 		t_sprite			*s;
 		t_hit				*h;
 		size_t				*ul;
-		void				*ptr;
-	} ptr;
+		void				*u_ptr;
+	} u_ptr;
 }							t_vector;
 
 typedef struct s_render
 {
 	t_vec					ray_dir;
-	t_vec					side_dist;
-	t_vec					delta_dist;
+	t_vec					sd;
+	t_vec					dd;
 	t_vec					t;
 	t_vec					sp;
 	t_vec					pos;
@@ -311,8 +311,8 @@ typedef struct s_player
 	t_vec					dir;
 	t_vec					p;
 	t_vec					speed;
-	t_vec					delta_dist;
-	t_vec					side_dist;
+	t_vec					dd;
+	t_vec					sd;
 	t_intvec				look_pos;
 	t_intvec				step;
 	t_intvec				map;
@@ -441,6 +441,11 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
+bool						ft_can_move(t_game *g, const double x,
+								const double y);
+bool						ft_check_doors(t_game *g, const double x,
+								const double y);
+void						ft_update_door(t_game *g, t_door *door);
 void						ft_drawsprites(t_thread *t);
 void						ft_drawpsprites(t_thread *t, t_vec *pos,
 								t_vec *dir);
@@ -500,11 +505,11 @@ int							ft_outside(const t_game *game, const int x,
 								const int y);
 void						ft_create_vector(t_vector *vector, int type,
 								size_t size);
-void						ft_add_to_vector(t_vector *vec, void *ptr);
+void						ft_add_to_vector(t_vector *vec, void *u_ptr);
 
 /*Garbage collector*/
 
-void						*gc(void *ptr, int i);
+void						*gc(void *u_ptr, int i);
 
 /*Free and exit*/
 

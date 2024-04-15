@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 19:42:14 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:43:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,25 @@ static inline int	get_tex_x(t_render *r, const double wallx)
 	if (r->side > 1 && r->ray_dir.y > 0)
 		val = r->twidth - val - 1;
 	return (val);
+}
+
+void	ft_update_door(t_game *g, t_door *door)
+{
+	if (door->state == OPENING)
+		door->frame += 0.01 * (g->now - door->last) / 5000000;
+	if (door->frame >= 1.0 && door->state == OPENING)
+	{
+		door->frame = 1.0;
+		door->state = OPEN;
+	}
+	if (door->state == CLOSING)
+		door->frame -= 0.01 * (g->now - door->last) / 5000000;
+	if (door->frame <= 0.0 && door->state == CLOSING)
+	{
+		door->frame = 0.0;
+		door->state = CLOSED;
+	}
+	door->last = g->now;
 }
 
 void	ft_door(const t_game *game, t_render *r)
@@ -66,8 +85,8 @@ void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 	}
 	if (r->tex.x > r->twidth * (1 - r->shift))
 		return ;
-	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y
-		+ r->tex.x + (int)(r->twidth * r->shift)];
+	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x
+		+ (int)(r->twidth * r->shift)];
 	t->zbuffer[x - t->dx][y] = r->pdist;
 	if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;

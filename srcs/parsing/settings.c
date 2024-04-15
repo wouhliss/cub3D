@@ -6,13 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 05:07:12 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/13 12:28:25 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:22:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-inline int	create_trgb(int t, int r, int g, int b)
+int	create_trgb(int t, int r, int g, int b)
 {
 	return (t << 24 | r << 16 | g << 8 | b);
 }

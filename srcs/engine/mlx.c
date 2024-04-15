@@ -6,19 +6,18 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 17:57:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:06:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline int	ft_import_textures(t_game *g)
+int	ft_import_textures(t_game *g)
 {
 	int	exit;
 	int	i;
 
-	g->s.a = mlx_get_data_addr(g->s.img, &g->s.bpp,
-			&g->s.ll, &g->s.endian);
+	g->s.a = mlx_get_data_addr(g->s.img, &g->s.bpp, &g->s.ll, &g->s.endian);
 	i = WTEXTURES;
 	exit = 0;
 	while (i--)
@@ -63,15 +62,10 @@ int	ft_init_mlx(t_game *g)
 	}
 	if (ft_import_textures(g))
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, IMPORT_ERR), 1);
-	return (mlx_hook(g->mlx.win, ON_KEYDOWN, KEYPRESS_MASK, on_key_press, g),
-		mlx_hook(g->mlx.win, ON_DESTROY, NO_MASK, on_destroy_event, g),
-		mlx_hook(g->mlx.win, ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse_move,
-			g), mlx_hook(g->mlx.win, ON_MOUSEDOWN, BUTTONPRESS_MASK,
-			on_mouse_click, g), mlx_loop_hook(g->mlx.mlx, ft_loop, g),
-		mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g), 0);
+	return (0);
 }
 
-static inline int	ft_check_textures(t_game *game)
+int	ft_check_textures(t_game *game)
 {
 	int	i;
 	int	err;
@@ -98,17 +92,15 @@ static inline int	ft_check_textures(t_game *game)
 	return (0);
 }
 
-void	ft_start(t_game *game)
+void	ft_start(t_game *g)
 {
-	int	i;
-
-	if (ft_check_textures(game))
+	if (ft_check_textures(g))
 		return ;
-	mlx_loop(game->mlx.mlx);
-	free(game->doors.ptr.ptr);
-	free(game->sprites.ptr.ptr);
-	free(game->projectiles.ptr.ptr);
-	i = THREADS;
-	while (i--)
-		free(game->threads[i].hit.ptr.ptr);
+	mlx_hook(g->mlx.win, ON_KEYDOWN, KEYPRESS_MASK, on_key_press, g);
+	mlx_hook(g->mlx.win, ON_DESTROY, NO_MASK, on_destroy_event, g);
+	mlx_hook(g->mlx.win, ON_MOUSEMOVE, POINTERMOTION_MASK, on_mouse_move, g);
+	mlx_hook(g->mlx.win, ON_MOUSEDOWN, BUTTONPRESS_MASK, on_mouse_click, g);
+	mlx_loop_hook(g->mlx.mlx, ft_loop, g);
+	mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g);
+	mlx_loop(g->mlx.mlx);
 }

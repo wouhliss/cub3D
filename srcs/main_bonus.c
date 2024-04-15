@@ -6,13 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/15 18:06:50 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:35:02 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void __attribute__ ((destructor)) aftermain(void)
+void	__attribute__ ((destructor))	aftermain(void)
 {
 	gc(NULL, EMPTY);
 }

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 19:28:35 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:56:34 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,76 +14,102 @@
 
 static inline void	ft_steps(t_game *game)
 {
-	game->p.delta_dist = (t_vec){1e30, 1e30};
-	if (-game->p.dir.x)
-		game->p.delta_dist.x = fabs(1.0 / -game->p.dir.x);
-	if (game->p.dir.y)
-		game->p.delta_dist.y = fabs(1.0 / game->p.dir.y);
+	game->p.dd.x = fabs(1.0 / -game->p.dir.x);
+	game->p.dd.y = fabs(1.0 / game->p.dir.y);
 	game->p.map = (t_intvec){(int)game->p.pos.x, (int)game->p.pos.y};
 	if (-game->p.dir.x < 0)
 	{
 		game->p.step.x = -1;
-		game->p.side_dist.x = (game->p.pos.x - game->p.map.x)
-			* game->p.delta_dist.x;
+		game->p.sd.x = (game->p.pos.x - game->p.map.x) * game->p.dd.x;
 	}
 	else
 	{
 		game->p.step.x = 1;
-		game->p.side_dist.x = (game->p.map.x + 1.0 - game->p.pos.x)
-			* game->p.delta_dist.x;
+		game->p.sd.x = (game->p.map.x + 1.0 - game->p.pos.x) * game->p.dd.x;
 	}
 	if (game->p.dir.y < 0)
 	{
 		game->p.step.y = -1;
-		game->p.side_dist.y = (game->p.pos.y - game->p.map.y)
-			* game->p.delta_dist.y;
+		game->p.sd.y = (game->p.pos.y - game->p.map.y) * game->p.dd.y;
 	}
 	else
 	{
 		game->p.step.y = 1;
-		game->p.side_dist.y = (game->p.map.y + 1.0 - game->p.pos.y)
-			* game->p.delta_dist.y;
+		game->p.sd.y = (game->p.map.y + 1.0 - game->p.pos.y) * game->p.dd.y;
 	}
 }
 
-static inline void	ft_dda(t_game *game)
+static inline void	ft_dda(t_game *g)
 {
-	while (!game->p.looking && !ft_outside(game, game->p.map.x, game->p.map.y))
+	while (!g->p.looking && !ft_outside(g, g->p.map.x, g->p.map.y))
 	{
-		if (game->p.side_dist.x < game->p.side_dist.y)
+		if (g->p.sd.x < g->p.sd.y)
 		{
-			game->p.side_dist.x += game->p.delta_dist.x;
-			game->p.map.x += game->p.step.x;
-			game->p.pdist = game->p.side_dist.x - game->p.delta_dist.x;
-			game->p.looking_side = -1;
-			if (game->p.step.x < 0)
-				game->p.looking_side = -2;
+			g->p.sd.x += g->p.dd.x;
+			g->p.map.x += g->p.step.x;
+			g->p.pdist = g->p.sd.x - g->p.dd.x;
+			g->p.looking_side = -1;
 		}
 		else
 		{
-			game->p.side_dist.y += game->p.delta_dist.y;
-			game->p.map.y += game->p.step.y;
-			game->p.pdist = game->p.side_dist.y - game->p.delta_dist.y;
-			game->p.looking_side = 1;
-			if (game->p.step.y < 0)
-				game->p.looking_side = 2;
+			g->p.sd.y += g->p.dd.y;
+			g->p.map.y += g->p.step.y;
+			g->p.pdist = g->p.sd.y - g->p.dd.y;
+			g->p.looking_side = 1;
 		}
-		if (game->p.pdist > 3 || (int)(HEIGHT
-				/ game->p.pdist) <= fabs(game->p.y) * 2)
+		if ((g->p.pdist > 3 || (int)(HEIGHT / g->p.pdist) <= fabs(g->p.y) * 2))
 			break ;
-		if (!ft_outside(game, game->p.map.x, game->p.map.y)
-			&& game->map.map[game->p.map.y][game->p.map.x] != '0')
+		if (!ft_outside(g, g->p.map.x, g->p.map.y)
+			&& g->map.map[g->p.map.y][g->p.map.x] != '0')
 		{
-			game->p.look_pos = (t_intvec){game->p.map.x, game->p.map.y};
-			game->p.looking = true;
+			g->p.look_pos = (t_intvec){g->p.map.x, g->p.map.y};
+			g->p.looking = true;
 		}
 	}
+}
+
+static inline void	ft_update_doors(t_game *g)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < g->doors.index)
+	{
+		if (g->now - g->doors.u_ptr.d[i].last < 5000000)
+		{
+			++i;
+			continue ;
+		}
+		ft_update_door(g, &g->doors.u_ptr.d[i]);
+		++i;
+	}
+}
+
+static inline void	ft_render_queue(t_game *g)
+{
+	int	i;
+
+	i = -1;
+	while (++i < THREADS)
+	{
+		g->threads[i].id = i;
+		g->threads[i].g = g;
+		g->threads[i].dx = T_WIDTH * i + (g->frames & 1);
+		g->threads[i].x = T_WIDTH * (i + 1);
+		if (!g->last)
+			ft_create_vector(&g->threads[i].hit, HIT, sizeof(t_hit));
+		pthread_create(&g->threads[i].tid, NULL, ft_draw, &g->threads[i]);
+	}
+	i = -1;
+	while (++i < THREADS)
+		pthread_join(g->threads[i].tid, NULL);
+	ft_drawmap(g);
+	mlx_put_image_to_window(g->mlx.mlx, g->mlx.win, g->s.img, 0, 0);
 }
 
 int	ft_loop(void *param)
 {
 	t_game			*game;
-	int				i;
 	struct timespec	t;
 
 	game = param;
@@ -98,49 +124,13 @@ int	ft_loop(void *param)
 	game->delta = game->now - game->last;
 	if (game->delta < 8000000)
 		return (0);
-	for (size_t i = 0; i < game->doors.index; ++i)
-	{
-		if (game->now - game->doors.ptr.d[i].last < 5000000)
-			continue ;
-		if (game->doors.ptr.d[i].state == OPENING)
-			game->doors.ptr.d[i].frame += 0.01 * (game->now
-					- game->doors.ptr.d[i].last) / 5000000;
-		if (game->doors.ptr.d[i].frame >= 1.0
-			&& game->doors.ptr.d[i].state == OPENING)
-		{
-			game->doors.ptr.d[i].frame = 1.0;
-			game->doors.ptr.d[i].state = OPEN;
-		}
-		if (game->doors.ptr.d[i].state == CLOSING)
-			game->doors.ptr.d[i].frame -= 0.01 * (game->now
-					- game->doors.ptr.d[i].last) / 5000000;
-		if (game->doors.ptr.d[i].frame <= 0.0
-			&& game->doors.ptr.d[i].state == CLOSING)
-		{
-			game->doors.ptr.d[i].frame = 0.0;
-			game->doors.ptr.d[i].state = CLOSED;
-		}
-		game->doors.ptr.d[i].last = game->now;
-	}
 	ft_handle_movement(game);
 	ft_handle_aim(game);
 	game->p.looking = false;
 	ft_steps(game);
 	ft_dda(game);
-	i = -1;
-	while (++i < THREADS)
-	{
-		game->threads[i].id = i;
-		game->threads[i].g = game;
-		if (!game->last)
-			ft_create_vector(&game->threads[i].hit, HIT, sizeof(t_hit));
-		pthread_create(&game->threads[i].tid, NULL, ft_draw, &game->threads[i]);
-	}
-	i = -1;
-	while (++i < THREADS)
-		pthread_join(game->threads[i].tid, NULL);
-	ft_drawmap(game);
-	mlx_put_image_to_window(game->mlx.mlx, game->mlx.win, game->s.img, 0, 0);
+	ft_update_doors(game);
+	ft_render_queue(game);
 	game->last = game->now;
 	++game->frames;
 	return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils4.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 21:11:57 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/04 18:59:11 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:08:57 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	ft_atoc(const char *str)
 long	ft_atoi(const char *str)
 {
 	long	nb;
-	int	sign;
+	int		sign;
 
 	nb = 0;
 	sign = 1;

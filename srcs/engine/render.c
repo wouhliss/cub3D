@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 21:20:39 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:57:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ static inline void	ft_hit(const t_game *g, const t_render *r, t_thread *t)
 	i = 0;
 	while (i < g->doors.index)
 	{
-		if (g->doors.ptr.d[i].pos.x == r->map.x
-			&& g->doors.ptr.d[i].pos.y == r->map.y)
+		if (g->doors.u_ptr.d[i].pos.x == r->map.x
+			&& g->doors.u_ptr.d[i].pos.y == r->map.y)
 		{
 			hit.render = *r;
 			hit.render.hit = 2;
-			hit.render.shift = fabs(g->doors.ptr.d[i].frame);
+			hit.render.shift = fabs(g->doors.u_ptr.d[i].frame);
 			ft_add_to_vector(&t->hit, &hit);
 		}
 		++i;
@@ -37,22 +37,22 @@ static inline void	ft_steps(const t_game *g, t_render *r)
 	if (r->ray_dir.x < 0)
 	{
 		r->step.x = -1;
-		r->side_dist.x = (g->p.pos.x - r->map.x) * r->delta_dist.x;
+		r->sd.x = (g->p.pos.x - r->map.x) * r->dd.x;
 	}
 	else
 	{
 		r->step.x = 1;
-		r->side_dist.x = (r->map.x + 1.0 - g->p.pos.x) * r->delta_dist.x;
+		r->sd.x = (r->map.x + 1.0 - g->p.pos.x) * r->dd.x;
 	}
 	if (r->ray_dir.y < 0)
 	{
 		r->step.y = -1;
-		r->side_dist.y = (g->p.pos.y - r->map.y) * r->delta_dist.y;
+		r->sd.y = (g->p.pos.y - r->map.y) * r->dd.y;
 	}
 	else
 	{
 		r->step.y = 1;
-		r->side_dist.y = (r->map.y + 1.0 - g->p.pos.y) * r->delta_dist.y;
+		r->sd.y = (r->map.y + 1.0 - g->p.pos.y) * r->dd.y;
 	}
 }
 
@@ -61,9 +61,9 @@ static inline void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 	t->hit.index = 0;
 	while (!r->hit && !ft_outside(g, r->map.x, r->map.y))
 	{
-		if (r->side_dist.x < r->side_dist.y)
+		if (r->sd.x < r->sd.y)
 		{
-			r->side_dist.x += r->delta_dist.x;
+			r->sd.x += r->dd.x;
 			r->map.x += r->step.x;
 			r->side = -1;
 			if (r->step.x < 0)
@@ -71,7 +71,7 @@ static inline void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 		}
 		else
 		{
-			r->side_dist.y += r->delta_dist.y;
+			r->sd.y += r->dd.y;
 			r->map.y += r->step.y;
 			r->side = 1;
 			if (r->step.y < 0)
@@ -91,14 +91,14 @@ static inline void	ft_rays(const t_game *g, t_render *r, const int x,
 
 	r->camera_x = 2.0 * x / ((double)W) - 1.0;
 	r->pos = g->p.pos;
-	r->ray_dir = (t_vec){-(g->p.dir.x + g->p.p.x * r->camera_x), g->p.dir.y
+	r->ray_dir = (t_vec){(-g->p.dir.x + -g->p.p.x * r->camera_x), g->p.dir.y
 		+ g->p.p.y * r->camera_x};
 	r->map = (t_intvec){(int)g->p.pos.x, (int)g->p.pos.y};
-	r->delta_dist = (t_vec){1e30, 1e30};
+	r->dd = (t_vec){1e30, 1e30};
 	if (r->ray_dir.x)
-		r->delta_dist.x = fabs(1.0f / r->ray_dir.x);
+		r->dd.x = fabs(1.0f / r->ray_dir.x);
 	if (r->ray_dir.y)
-		r->delta_dist.y = fabs(1.0f / r->ray_dir.y);
+		r->dd.y = fabs(1.0f / r->ray_dir.y);
 	r->hit = 0;
 	ft_steps(g, r);
 	ft_dda(g, r, t);
@@ -106,7 +106,7 @@ static inline void	ft_rays(const t_game *g, t_render *r, const int x,
 	i = 0;
 	while (i < t->hit.index)
 	{
-		ft_hitcalc(g, &t->hit.ptr.h[i].render, 1);
+		ft_hitcalc(g, &t->hit.u_ptr.h[i].render, 1);
 		++i;
 	}
 }
@@ -118,8 +118,6 @@ void	*ft_draw(void *p)
 
 	t = p;
 	r.side = 0;
-	t->dx = T_WIDTH * t->id + (t->g->frames & 1);
-	t->x = T_WIDTH * (t->id + 1);
 	r.p.x = t->dx;
 	while (r.p.x < T_WIDTH * (t->id + 1))
 	{

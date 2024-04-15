@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 19:32:26 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 11:40:50 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:22:13 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	return (*s1 - *s2);
 }
 
-inline void	ft_swapi(int *a, int *b)
+void	ft_swapi(int *a, int *b)
 {
 	int	c;
 

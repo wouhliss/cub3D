@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:43:32 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 19:42:21 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:07:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ void	ft_hitcalc(const t_game *g, t_render *r, const int type)
 {
 	if (type)
 	{
-		r->delta_dist.y /= 2;
-		r->delta_dist.x /= 2;
+		r->dd.y /= 2;
+		r->dd.x /= 2;
 	}
 	if (r->side > 0)
-		r->pdist = r->side_dist.y - r->delta_dist.y;
+		r->pdist = r->sd.y - r->dd.y;
 	else
-		r->pdist = r->side_dist.x - r->delta_dist.x;
+		r->pdist = r->sd.x - r->dd.x;
 	r->lh = (int)(HEIGHT / r->pdist);
 	r->draw.x = -r->lh / 2 + HALF_HEIGHT + g->p.y + (int)(g->p.jump) / r->pdist;
 	if (r->draw.x < 0)
@@ -38,7 +38,6 @@ void	ft_hitcalc(const t_game *g, t_render *r, const int type)
 
 void	ft_drawhit(t_thread *t, const int x)
 {
-	(void)x;
 	int		y;
 	size_t	i;
 
@@ -48,10 +47,10 @@ void	ft_drawhit(t_thread *t, const int x)
 		y = -1;
 		while (++y < HEIGHT)
 		{
-			if (t->hit.ptr.h[i].render.draw.x <= y
-				&& t->hit.ptr.h[i].render.draw.y >= y
-				&& t->hit.ptr.h[i].render.pdist < t->zbuffer[x - t->dx][y])
-				ft_drawdoorpixel(t, x, y, &t->hit.ptr.h[i].render);
+			if (t->hit.u_ptr.h[i].render.draw.x <= y
+				&& t->hit.u_ptr.h[i].render.draw.y >= y
+				&& t->hit.u_ptr.h[i].render.pdist < t->zbuffer[x - t->dx][y])
+				ft_drawdoorpixel(t, x, y, &t->hit.u_ptr.h[i].render);
 		}
 		++i;
 	}

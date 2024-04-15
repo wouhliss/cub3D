@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:23:37 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/12 14:02:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 21:22:19 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (res);
 }
 
-inline void	ft_swapd(double *a, double *b)
+void	ft_swapd(double *a, double *b)
 {
 	double	c;
 

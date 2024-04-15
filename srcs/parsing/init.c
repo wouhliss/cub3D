@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/14 09:44:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:09:38 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,30 @@
 // 	printf("Y : %f\n", pos.y);
 // }
 
+static inline void	ft_init_textures(t_game *g)
+{
+	int	i;
+
+	i = -1;
+	while (++i < WTEXTURES)
+	{
+		g->wt[i].a = 0;
+		g->wt[i].img = 0;
+	}
+	i = -1;
+	while (++i < STEXTURES)
+	{
+		g->st[i].a = 0;
+		g->st[i].img = 0;
+	}
+	i = -1;
+	while (++i < PTEXTURES)
+	{
+		g->ptextures[i].a = 0;
+		g->ptextures[i].img = 0;
+	}
+}
+
 void	init_map(char *path, t_game *game)
 {
 	int	i;
@@ -62,22 +86,5 @@ void	init_map(char *path, t_game *game)
 	if (!check_map(game))
 		panic(CHAR_ERR);
 	format_map(game);
-	i = -1;
-	while (++i < WTEXTURES)
-	{
-		game->wt[i].a = 0;
-		game->wt[i].img = 0;
-	}
-	i = -1;
-	while (++i < STEXTURES)
-	{
-		game->st[i].a = 0;
-		game->st[i].img = 0;
-	}
-	i = -1;
-	while (++i < PTEXTURES)
-	{
-		game->ptextures[i].a = 0;
-		game->ptextures[i].img = 0;
-	}
+	ft_init_textures(game);
 }

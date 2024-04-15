@@ -6,18 +6,19 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 18:00:14 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/15 22:05:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline void	my_mlx_pixel_tput(const t_screen *data, const int x, const int y, unsigned int color)
+static inline void	my_mlx_pixel_tput(const t_screen *data, const int x,
+		const int y, unsigned int color)
 {
-	char			*dst;
-	t_color			tcolor;
-	t_color			scolor;
-	t_color			dcolor;
+	char	*dst;
+	t_color	tcolor;
+	t_color	scolor;
+	t_color	dcolor;
 
 	dst = data->a + (y * data->ll + x * (data->bpp / 8));
 	scolor.hex = *(unsigned int *)dst;
@@ -27,6 +28,25 @@ static inline void	my_mlx_pixel_tput(const t_screen *data, const int x, const in
 	dcolor.green = (0.35 * scolor.green) + (0.65 * tcolor.green);
 	dcolor.blue = (0.35 * scolor.blue) + (0.65 * tcolor.blue);
 	*(unsigned int *)dst = dcolor.hex;
+}
+
+static inline void	ft_put_pixel_map(t_game *g, t_intvec *sp, t_intvec *pos,
+		t_intvec *draw)
+{
+	pos->x = sp->x + ((draw->x - MX) >> MS);
+	draw->y = MY;
+	while (++draw->y < MH + MY && sp->y + ((draw->y - MY) >> MS) < g->length)
+	{
+		pos->y = sp->y + ((draw->y - MY) >> MS);
+		if (g->map.map[pos->y][pos->x] == '1')
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00000000);
+		else if (g->map.map[pos->y][pos->x] == 'D')
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00444444);
+		else
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FFFFFF);
+		if ((int)g->p.pos.x == pos->x && (int)g->p.pos.y == pos->y)
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FF0000);
+	}
 }
 
 void	ft_drawmap(t_game *g)
@@ -43,19 +63,6 @@ void	ft_drawmap(t_game *g)
 	draw.x = MX;
 	while (++draw.x < MW + MX && sp.x + ((draw.x - MX) >> MS) < g->width)
 	{
-		pos.x = sp.x + ((draw.x - MX) >> MS);
-		draw.y = MY;
-		while (++draw.y < MH + MY && sp.y + ((draw.y - MY) >> MS) < g->length)
-		{
-			pos.y = sp.y + ((draw.y - MY) >> MS);
-			if (g->map.map[pos.y][pos.x] == '1')
-				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00000000);
-			else if (g->map.map[pos.y][pos.x] == 'D')
-				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00444444);
-			else
-				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00FFFFFF);
-			if ((int)g->p.pos.x == pos.x && (int)g->p.pos.y == pos.y)
-				my_mlx_pixel_tput(&g->s, draw.x, draw.y, 0x00FF0000);
-		}
+		ft_put_pixel_map(g, &sp, &pos, &draw);
 	}
 }

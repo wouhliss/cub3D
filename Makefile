@@ -15,7 +15,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse
-ENGINE = mlx render loop walls movement aim minimap doors hit sprites
+ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\
