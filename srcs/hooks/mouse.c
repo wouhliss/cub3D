@@ -6,20 +6,34 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 00:00:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:18:57 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline void	ft_changestate(t_weapon *w)
+static inline void	ft_changestate(t_game *g, int button)
 {
 	const int	states[4] = {0, 0, 1, 2};
 
-	if (w->state < states[w->type])
-		++w->state;
+	if (button == 4)
+	{
+		++g->p.weapon.type;
+		if (g->p.weapon.type > 3)
+			g->p.weapon.type = 0;
+		g->p.weapon.state = 0;
+	}
+	else if (button == 5)
+	{
+		--g->p.weapon.type;
+		if (g->p.weapon.type < 0)
+			g->p.weapon.type = 3;
+		g->p.weapon.state = 0;
+	}
+	else if (g->p.weapon.state < states[g->p.weapon.type])
+		++g->p.weapon.state;
 	else
-		w->state = 0;
+		g->p.weapon.state = 0;
 }
 
 static inline void	ft_break_block(t_game *g)
@@ -80,26 +94,18 @@ int	on_mouse_click(int button, int x, int y, void *param)
 	(void)x;
 	(void)y;
 	game = param;
-	if (button == 1 && game->p.looking && game->p.weapon.type == 2)
+	if (button == 1 && game->p.weapon.type == 1)
+		ft_add_projectile(game, game->p.pos, game->p.dir, 0);
+	else if (button == 1 && game->p.weapon.type == 0)
+		ft_add_projectile(game, game->p.pos, game->p.dir, 1);
+	else if (button == 3 && game->p.weapon.type == 0)
+		ft_add_projectile(game, game->p.pos, game->p.dir, 2);
+	else if (button == 1 && game->p.looking && game->p.weapon.type == 2)
 		ft_break_block(game);
 	else if (button == 3 && game->p.looking && game->p.weapon.type == 2)
 		ft_place_block(game);
-	else if (button == 4)
-	{
-		++game->p.weapon.type;
-		if (game->p.weapon.type > 3)
-			game->p.weapon.type = 0;
-		game->p.weapon.state = 0;
-	}
-	else if (button == 5)
-	{
-		--game->p.weapon.type;
-		if (game->p.weapon.type < 0)
-			game->p.weapon.type = 3;
-		game->p.weapon.state = 0;
-	}
-	else if (button == 2)
-		ft_changestate(&game->p.weapon);
+	else if (button == 2 || button == 4 || button == 5)
+		ft_changestate(game, button);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:45:09 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 00:52:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:04:30 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void	ft_portal_hit(t_thread *t, const t_game *g, t_render *r)
 		hit.render.hit = 5;
 	else
 		return ;
-	if (!r->portal)
-		r->portal = 1;
 	if (hit.render.hit == 4)
 	{
 		if (g->portal_r.side)
@@ -165,5 +163,5 @@ void	ft_portal_hit(t_thread *t, const t_game *g, t_render *r)
 			hit.render.hit = 7;
 		}
 	}
-	ft_add_to_vector(&t->hit, &hit);
+	ft_add_to_vector(t->g, &t->hit, &hit);
 }

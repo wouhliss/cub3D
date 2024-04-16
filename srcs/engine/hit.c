@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:43:32 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 00:36:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:25:31 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_drawhit(t_thread *t, const int x)
 		{
 			if (t->hit.u_ptr.h[i].render.draw.x <= y
 				&& t->hit.u_ptr.h[i].render.draw.y >= y
-				&& t->hit.u_ptr.h[i].render.pdist < t->zbuffer[x - t->dx][y])
+				&& t->hit.u_ptr.h[i].render.pdist <= t->zbuffer[x - t->dx][y])
 			{
 				if (t->hit.u_ptr.h[i].render.hit == 2)
 					ft_drawdoorpixel(t, x, y, &t->hit.u_ptr.h[i].render);

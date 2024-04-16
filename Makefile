@@ -1,5 +1,5 @@
 CC = gcc-12 
-CFLAGS = -Wall -Wextra -Werror -MMD -MP -march=native -O3 $(EXTRAFLAGS)
+CFLAGS = -Wall -Wextra -Werror -MMD -MP -march=native -g3 $(EXTRAFLAGS)
 MLXPATH = minilibx-linux/
 MLXFLAGS = -L $(MLXPATH) -lmlx -Ilmlx -lXext -lX11 -lm
 INCLUDE = -I./includes -Iminilibx-linux
@@ -15,7 +15,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
 HOOKSB = key_bonus window mouse block_utils
-ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils
+ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils projectile
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

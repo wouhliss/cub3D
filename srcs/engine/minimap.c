@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 23:32:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:08:06 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ static inline void	ft_put_pixel_map(t_game *g, t_intvec *sp, t_intvec *pos,
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00AAAAAA);
 		else
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FFFFFF);
+		if (g->portal_l.side && g->portal_l.pos.x == pos->x && g->portal_l.pos.y == pos->y)
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x0000AAFF);
+		else if (g->portal_r.side && g->portal_r.pos.x == pos->x && g->portal_r.pos.y == pos->y)
+			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FFAA00);
 		if ((int)g->p.pos.x == pos->x && (int)g->p.pos.y == pos->y)
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FF0000);
 	}

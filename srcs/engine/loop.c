@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 22:38:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:27:55 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int	ft_loop(void *param)
 	game->p.looking = false;
 	ft_steps(game);
 	ft_dda(game);
+	ft_handle_projectiles(game);
 	ft_update_doors(game);
 	ft_render_queue(game);
 	game->last = game->now;

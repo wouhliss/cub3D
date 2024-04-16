@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:29:14 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 00:40:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:34:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,18 @@ static inline double	get_wall_x(t_render *r)
 		wallx = r->pos.x + r->pdist * r->ray_dir.x;
 	wallx -= floor(wallx);
 	return (wallx);
+}
+
+static inline int	get_ptex_x(t_render *r, const double wallx)
+{
+	int	val;
+
+	val = (wallx * r->ptwidth);
+	if (r->side < 0 && r->ray_dir.x > 0)
+		val = r->ptwidth - val - 1;
+	if (r->side > 1 && r->ray_dir.y > 0)
+		val = r->ptwidth - val - 1;
+	return (val);
 }
 
 static inline int	get_tex_x(t_render *r, const double wallx)
@@ -40,9 +52,24 @@ void	ft_portal(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	r->id = r->hit - 4;
-	r->twidth = game->ptextures[r->id].width;
-	r->s = game->ptextures[r->id].s;
+	r->pid = r->hit - 4;
+	r->ptwidth = game->ptextures[r->pid].width;
+	r->ps = game->ptextures[r->pid].s;
+	wallx = get_wall_x(r);
+	r->ptex.x = get_ptex_x(r, wallx);
+	r->pmystep = (double)r->ptwidth / r->lh;
+	r->ptexpos = (r->draw.x - HALF_HEIGHT + r->lh / 2 - game->p.y
+			- (int)(game->p.jump) / r->pdist) * r->pmystep;
+	if (r->side == -1)
+		r->id = TEA;
+	else if (r->side == -2)
+		r->id = TWE;
+	else if (r->side == 1)
+		r->id = TSO;
+	else if (r->side == 2)
+		r->id = TNO;
+	r->twidth = game->wt[r->id].width;
+	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx);
 	r->mystep = (double)r->twidth / r->lh;
@@ -53,22 +80,32 @@ void	ft_portal(const t_game *game, t_render *r)
 void	ft_drawppixel(t_thread *t, const int x, const int y, t_render *r)
 {
 	unsigned int	color;
+	unsigned int	wcolor;
 
 	r->tex.y = (int)r->texpos & (r->twidth - 1);
 	r->texpos += r->mystep;
+	r->ptex.y = (int)r->ptexpos & (r->ptwidth - 1);
+	r->ptexpos += r->pmystep;
 	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->tex.y || r->tex.y == r->twidth
-			- 1 || !r->tex.x || r->tex.x == r->twidth - 1))
+		&& t->g->p.look_pos.y == r->map.y && (!r->ptex.y || r->ptex.y == r->ptwidth
+			- 1 || !r->ptex.x || r->ptex.x == r->ptwidth - 1))
 	{
 		color = 0x00FF0000;
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 		return ;
 	}
-	color = ((int *)t->g->ptextures[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
+	color = ((int *)t->g->ptextures[r->pid].a)[r->ps + r->ptwidth * r->ptex.y + r->ptex.x];
+	wcolor = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
 	if ((color & 0x00FFFFFF) != 0 && color != 65280)
 	{
 		t->zbuffer[x - t->dx][y] = r->pdist;
 		if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
 			*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
+	}
+	else if (color == 65280)
+	{
+		t->zbuffer[x - t->dx][y] = r->pdist;
+		if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != wcolor)
+			*(((unsigned int *)t->g->s.a) + (y * W) + x) = wcolor;
 	}
 }

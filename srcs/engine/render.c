@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 00:53:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:22:13 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,11 @@ static inline void	ft_hit(const t_game *g, t_render *r, t_thread *t)
 	t_hit	hit;
 	size_t	i;
 
-	ft_portal_hit(t, g, r);
 	if (g->map.map[r->map.y][r->map.x] == 't')
 	{
 		hit.render = *r;
 		hit.render.hit = 3;
-		ft_add_to_vector(&t->hit, &hit);
+		ft_add_to_vector(g, &t->hit, &hit);
 		return ;
 	}
 	i = 0;
@@ -34,7 +33,7 @@ static inline void	ft_hit(const t_game *g, t_render *r, t_thread *t)
 			hit.render = *r;
 			hit.render.hit = 2;
 			hit.render.shift = fabs(g->doors.u_ptr.d[i].frame);
-			ft_add_to_vector(&t->hit, &hit);
+			ft_add_to_vector(g, &t->hit, &hit);
 			return ;
 		}
 		++i;
@@ -85,6 +84,7 @@ static inline void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 			if (r->step.y < 0)
 				r->side = 2;
 		}
+		ft_portal_hit(t, g, r);
 		if (!r->pass && !ft_outside(g, r->map.x, r->map.y)
 			&& g->map.map[r->map.y][r->map.x] == '1')
 			r->hit = 1;

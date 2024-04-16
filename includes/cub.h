@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/16 01:04:48 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:28:37 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@
 # define SPRITE 2
 # define HIT 3
 
-# define DFL_SIZE 20
+# define DFL_SIZE 150
 
 typedef unsigned int		t_ui;
 
@@ -209,6 +209,7 @@ typedef struct s_door
 }							t_door;
 
 typedef struct s_sprite		t_sprite;
+typedef struct s_projectile	t_projectile;
 
 typedef struct s_sprite
 {
@@ -223,9 +224,9 @@ typedef struct s_sprite
 	double					vdiff;
 	int						hide;
 	bool					delete;
+	bool					collision;
 }							t_sprite;
 
-typedef struct s_projectile	t_projectile;
 
 typedef struct s_projectile
 {
@@ -273,11 +274,14 @@ typedef struct s_render
 	t_intvec				step;
 	t_intvec				draw;
 	t_intvec				tex;
+	t_intvec				ptex;
 	t_intvec				p;
 	double					camera_x;
 	double					pdist;
 	double					texpos;
+	double					ptexpos;
 	double					mystep;
+	double					pmystep;
 	double					ind;
 	double					shift;
 	int						spritewidth;
@@ -287,9 +291,11 @@ typedef struct s_render
 	int						side;
 	int						lh;
 	int						id;
+	int						pid;
 	int						twidth;
+	int						ptwidth;
 	int						s;
-	int						portal;
+	int						ps;
 	int						vpos;
 	bool					pass;
 }							t_render;
@@ -447,6 +453,7 @@ int							on_mouse_click(int button, int x, int y,
 void						ft_portal(const t_game *game, t_render *r);
 void						ft_portal_hit(t_thread *t, const t_game *g,
 								t_render *r);
+void						ft_handle_projectiles(t_game *g);
 void						ft_drawppixel(t_thread *t, const int x, const int y,
 								t_render *r);
 bool						ft_can_move(t_game *g, const double x,
@@ -477,6 +484,8 @@ void						ft_handle_aim(t_game *g);
 bool						ft_check_doors(t_game *g, double x, double y);
 char						ft_get_block(t_game *g);
 void						ft_glass(const t_game *game, t_render *r);
+void						ft_add_projectile(t_game *g, t_vec pos, t_vec dir,
+								int type);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);
@@ -517,10 +526,10 @@ int							ft_outside(const t_game *game, const int x,
 								const int y);
 void						ft_create_vector(t_vector *vector, int type,
 								size_t size);
-void						ft_add_to_vector(t_vector *vec, void *u_ptr);
+void						*ft_add_to_vector(const t_game *g, t_vector *vec, void *u_ptr);
 void						*ft_resize_dvector(t_vector *vector);
 void						*ft_resize_pvector(t_vector *vector);
-void						*ft_resize_svector(t_vector *vector);
+void						*ft_resize_svector(const t_game *g, t_vector *vector);
 void						*ft_resize_hvector(t_vector *vector);
 
 /*Garbage collector*/

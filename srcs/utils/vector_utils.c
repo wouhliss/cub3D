@@ -6,11 +6,25 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:57:58 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 01:03:47 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:47:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+static inline t_projectile	*ft_get_linked_projectile(const t_game *g, t_sprite *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < g->projectiles.index)
+	{
+		if (g->projectiles.u_ptr.p[i].sprite == s)
+			return (&g->projectiles.u_ptr.p[i]);
+		++i;
+	}
+	return (NULL);
+}
 
 void	*ft_resize_dvector(t_vector *vector)
 {
@@ -18,7 +32,7 @@ void	*ft_resize_dvector(t_vector *vector)
 	size_t	i;
 	size_t	j;
 
-	res = ft_calloc(vector->size * 2, vector->bsize);
+	res = gc(ft_calloc(vector->size * 2, vector->bsize), ADD);
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -29,7 +43,6 @@ void	*ft_resize_dvector(t_vector *vector)
 			res[j++] = vector->u_ptr.d[i];
 		++i;
 	}
-	free(vector->u_ptr.d);
 	vector->u_ptr.d = res;
 	vector->size *= 2;
 	vector->index = j;
@@ -42,7 +55,7 @@ void	*ft_resize_pvector(t_vector *vector)
 	size_t			i;
 	size_t			j;
 
-	res = ft_calloc(vector->size * 2, vector->bsize);
+	res = gc(ft_calloc(vector->size * 2, vector->bsize), ADD);
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -53,31 +66,38 @@ void	*ft_resize_pvector(t_vector *vector)
 			res[j++] = vector->u_ptr.p[i];
 		++i;
 	}
-	free(vector->u_ptr.p);
 	vector->u_ptr.p = res;
 	vector->size *= 2;
 	vector->index = j;
 	return (res);
 }
 
-void	*ft_resize_svector(t_vector *vector)
+void	*ft_resize_svector(const t_game *g, t_vector *vector)
 {
-	t_sprite	*res;
-	size_t		i;
-	size_t		j;
+	t_sprite		*res;
+	t_projectile	*linked;
+	size_t			i;
+	size_t			j;
 
-	res = ft_calloc(vector->size * 2, vector->bsize);
+	res = gc(ft_calloc(vector->size * 2, vector->bsize), ADD);
 	if (!res)
 		return (NULL);
 	i = 0;
 	j = 0;
 	while (i < vector->index)
 	{
+		linked = ft_get_linked_projectile(g, &vector->u_ptr.s[i]);
+		if (linked)
+		{
+			if (vector->u_ptr.s[i].delete)
+				linked->delete = 1;
+			else
+				linked->sprite = &res[j];
+		}
 		if (!vector->u_ptr.s[i].delete)
 			res[j++] = vector->u_ptr.s[i];
 		++i;
 	}
-	free(vector->u_ptr.s);
 	vector->u_ptr.s = res;
 	vector->size *= 2;
 	vector->index = j;
@@ -90,7 +110,7 @@ void	*ft_resize_hvector(t_vector *vector)
 	size_t	i;
 	size_t	j;
 
-	res = ft_calloc(vector->size * 2, vector->bsize);
+	res = gc(ft_calloc(vector->size * 2, vector->bsize), ADD);
 	if (!res)
 		return (NULL);
 	i = 0;
@@ -101,7 +121,6 @@ void	*ft_resize_hvector(t_vector *vector)
 			res[j++] = vector->u_ptr.h[i];
 		++i;
 	}
-	free(vector->u_ptr.h);
 	vector->u_ptr.h = res;
 	vector->size *= 2;
 	vector->index = j;

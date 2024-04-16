@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/15 23:28:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 01:44:06 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,9 @@ void	set_player(char c, int i, int j, t_game *game)
 		game->p.dir = (t_vec){-1, 0};
 		game->p.p = (t_vec){0, 0.66};
 	}
-	sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 1};
+	sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 1, .collision = 0};
 	sprite.pos = game->map.s_pos;
-	ft_add_to_vector(&game->sprites, &sprite);
+	ft_add_to_vector(game, &game->sprites, &sprite);
 	game->map.map[i][j] = '0';
 }
 
@@ -63,7 +63,7 @@ static inline void	ft_setsprite(t_game *game, int i, int j)
 	if (game->map.map[i][j] == 'b')
 	{
 		sprite = (t_sprite){.type = 2, .vdiff = 0.0, .hr = 2, .vr = 2,
-			.hide = 0};
+			.hide = 0, .collision = 1};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		sprite.vdiff = HEIGHT / (sprite.vr * 2);
 		game->map.map[i][j] = '0';
@@ -71,18 +71,18 @@ static inline void	ft_setsprite(t_game *game, int i, int j)
 	else if (game->map.map[i][j] == 'B')
 	{
 		sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0};
+			.hide = 0, .collision = 1};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		game->map.map[i][j] = '0';
 	}
 	else if (game->map.map[i][j] == 'P')
 	{
 		sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0};
+			.hide = 0, .collision = 1};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		game->map.map[i][j] = '0';
 	}
-	ft_add_to_vector(&game->sprites, &sprite);
+	ft_add_to_vector(game, &game->sprites, &sprite);
 }
 
 int	check_one(t_game *game, int i, int j, int *player_count)
@@ -106,7 +106,7 @@ int	check_one(t_game *game, int i, int j, int *player_count)
 	else if (ft_in_charset("D", game->map.map[i][j]))
 	{
 		door = (t_door){.frame = 0, .pos = (t_intvec){j, i}, .state = 0};
-		ft_add_to_vector(&game->doors, &door);
+		ft_add_to_vector(game, &game->doors, &door);
 		return (ft_in_charset("01NSEWPbBtD", game->map.map[i + 1][j])
 			&& ft_in_charset("01NSEWPbBtD", game->map.map[i][j + 1]));
 	}
