@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 01:58:20 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:55:12 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,25 @@ void	ft_start(t_game *g)
 	mlx_hook(g->mlx.win, ON_MOUSEDOWN, BUTTONPRESS_MASK, on_mouse_click, g);
 	mlx_loop_hook(g->mlx.mlx, ft_loop, g);
 	mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g);
-	g->ptextures[0].img = mlx_xpm_file_to_image(g->mlx.mlx, "assets/textures/walls/blue.xpm", &g->ptextures[0].width, &g->ptextures[0].height);
-	g->ptextures[0].a = mlx_get_data_addr(g->ptextures[0].img, &g->ptextures[0].bpp, &g->ptextures[0].ll, &g->ptextures[0].endian);
-	g->ptextures[1].img = mlx_xpm_file_to_image(g->mlx.mlx, "assets/textures/walls/orange.xpm", &g->ptextures[1].width, &g->ptextures[1].height);
-	g->ptextures[1].a = mlx_get_data_addr(g->ptextures[1].img, &g->ptextures[1].bpp, &g->ptextures[1].ll, &g->ptextures[1].endian);
-	g->ptextures[2].img = mlx_xpm_file_to_image(g->mlx.mlx, "assets/textures/walls/blue.xpm", &g->ptextures[2].width, &g->ptextures[2].height);
-	g->ptextures[2].a = mlx_get_data_addr(g->ptextures[2].img, &g->ptextures[2].bpp, &g->ptextures[2].ll, &g->ptextures[2].endian);
-	g->ptextures[3].img = mlx_xpm_file_to_image(g->mlx.mlx, "assets/textures/walls/orange.xpm", &g->ptextures[3].width, &g->ptextures[3].height);
-	g->ptextures[3].a = mlx_get_data_addr(g->ptextures[3].img, &g->ptextures[3].bpp, &g->ptextures[3].ll, &g->ptextures[3].endian);
+	g->ptextures[0].img = mlx_xpm_file_to_image(g->mlx.mlx,
+			"assets/textures/walls/blue.xpm", &g->ptextures[0].width,
+			&g->ptextures[0].height);
+	g->ptextures[0].a = mlx_get_data_addr(g->ptextures[0].img,
+			&g->ptextures[0].bpp, &g->ptextures[0].ll, &g->ptextures[0].endian);
+	g->ptextures[1].img = mlx_xpm_file_to_image(g->mlx.mlx,
+			"assets/textures/walls/orange.xpm", &g->ptextures[1].width,
+			&g->ptextures[1].height);
+	g->ptextures[1].a = mlx_get_data_addr(g->ptextures[1].img,
+			&g->ptextures[1].bpp, &g->ptextures[1].ll, &g->ptextures[1].endian);
+	g->ptextures[2].img = mlx_xpm_file_to_image(g->mlx.mlx,
+			"assets/textures/walls/blue.xpm", &g->ptextures[2].width,
+			&g->ptextures[2].height);
+	g->ptextures[2].a = mlx_get_data_addr(g->ptextures[2].img,
+			&g->ptextures[2].bpp, &g->ptextures[2].ll, &g->ptextures[2].endian);
+	g->ptextures[3].img = mlx_xpm_file_to_image(g->mlx.mlx,
+			"assets/textures/walls/orange.xpm", &g->ptextures[3].width,
+			&g->ptextures[3].height);
+	g->ptextures[3].a = mlx_get_data_addr(g->ptextures[3].img,
+			&g->ptextures[3].bpp, &g->ptextures[3].ll, &g->ptextures[3].endian);
 	mlx_loop(g->mlx.mlx);
 }

@@ -6,14 +6,15 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 01:27:55 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline void	ft_steps(t_game *game)
+static inline void	ft_lsteps(t_game *game)
 {
+	game->p.looking = false;
 	game->p.dd.x = fabs(1.0 / -game->p.dir.x);
 	game->p.dd.y = fabs(1.0 / game->p.dir.y);
 	game->p.map = (t_intvec){(int)game->p.pos.x, (int)game->p.pos.y};
@@ -39,7 +40,7 @@ static inline void	ft_steps(t_game *game)
 	}
 }
 
-static inline void	ft_dda(t_game *g)
+static inline void	ft_ldda(t_game *g)
 {
 	while (!g->p.looking && !ft_outside(g, g->p.map.x, g->p.map.y))
 	{
@@ -130,10 +131,9 @@ int	ft_loop(void *param)
 		return (0);
 	ft_handle_movement(game);
 	ft_handle_aim(game);
-	game->p.looking = false;
-	ft_steps(game);
-	ft_dda(game);
-	ft_handle_projectiles(game);
+	ft_lsteps(game);
+	ft_ldda(game);
+	ft_handle_pls(game);
 	ft_update_doors(game);
 	ft_render_queue(game);
 	game->last = game->now;

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:57:58 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 01:47:15 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ static inline t_projectile	*ft_get_linked_projectile(const t_game *g, t_sprite *
 	size_t	i;
 
 	i = 0;
-	while (i < g->projectiles.index)
+	while (i < g->pls.index)
 	{
-		if (g->projectiles.u_ptr.p[i].sprite == s)
-			return (&g->projectiles.u_ptr.p[i]);
+		if (g->pls.u_ptr.p[i].sprite == s)
+			return (&g->pls.u_ptr.p[i]);
 		++i;
 	}
 	return (NULL);
@@ -116,11 +116,7 @@ void	*ft_resize_hvector(t_vector *vector)
 	i = 0;
 	j = 0;
 	while (i < vector->index)
-	{
-		if (!vector->u_ptr.h[i].delete)
-			res[j++] = vector->u_ptr.h[i];
-		++i;
-	}
+		res[j++] = vector->u_ptr.h[i++];
 	vector->u_ptr.h = res;
 	vector->size *= 2;
 	vector->index = j;

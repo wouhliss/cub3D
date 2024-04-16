@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 14:38:23 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 00:17:45 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:55:22 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 			{
 				color = 0x00FF0000;
 				if ((color & 0x00FFFFFF) != 0 && r->t.y < t->zbuffer[d.x
-					- t->dx][d.y])
+						- t->dx][d.y])
 				{
 					*(((t_ui *)t->g->s.a) + (d.y * W) + d.x) = color;
 					t->zbuffer[d.x - t->dx][d.y] = r->t.y;

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/16 02:28:37 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,6 @@ typedef struct s_sprite
 	bool					collision;
 }							t_sprite;
 
-
 typedef struct s_projectile
 {
 	t_sprite				*sprite;
@@ -303,7 +302,6 @@ typedef struct s_render
 typedef struct s_hit
 {
 	t_render				render;
-	bool					delete;
 }							t_hit;
 
 typedef struct s_weapon
@@ -391,7 +389,7 @@ typedef struct s_game
 	t_screen				s;
 	t_vector				sprites;
 	t_vector				doors;
-	t_vector				projectiles;
+	t_vector				pls;
 	t_thread				threads[THREADS];
 	char					*files[WTEXTURES];
 	int						timeframes[WTEXTURES];
@@ -453,7 +451,7 @@ int							on_mouse_click(int button, int x, int y,
 void						ft_portal(const t_game *game, t_render *r);
 void						ft_portal_hit(t_thread *t, const t_game *g,
 								t_render *r);
-void						ft_handle_projectiles(t_game *g);
+void						ft_handle_pls(t_game *g);
 void						ft_drawppixel(t_thread *t, const int x, const int y,
 								t_render *r);
 bool						ft_can_move(t_game *g, const double x,
@@ -467,7 +465,7 @@ void						ft_drawtpixel(t_thread *t, const int x, const int y,
 								t_render *r);
 void						ft_hitcalc(const t_game *g, t_render *r,
 								const int type);
-void						ft_drawhit(t_thread *t, const int x);
+void						ft_drawhit(t_thread *t, t_render *r);
 void						*ft_draw(void *p);
 void						ft_drawmap(t_game *game);
 void						ft_wall(const t_game *game, t_render *r);
@@ -486,6 +484,24 @@ char						ft_get_block(t_game *g);
 void						ft_glass(const t_game *game, t_render *r);
 void						ft_add_projectile(t_game *g, t_vec pos, t_vec dir,
 								int type);
+void						ft_hit(const t_game *g, t_render *r, t_thread *t);
+void						ft_steps(const t_game *g, t_render *r);
+void						ft_dda(const t_game *g, t_render *r, t_thread *t);
+void						ft_rays(const t_game *g, t_render *r, const int x,
+								t_thread *t);
+void						ft_portal_1(t_render *r, const t_game *g);
+void						ft_portal_2(t_render *r, const t_game *g);
+void						ft_portal_3(t_render *r, const t_game *g);
+void						ft_portal_4(t_render *r, const t_game *g);
+void						ft_portal_l(const t_game *g, t_render *r,
+								t_hit *hit);
+void						ft_portal_r(const t_game *g, t_render *r,
+								t_hit *hit);
+void						ft_psteps(t_projectile *p);
+void						ft_pdda(t_game *game, t_projectile *p);
+bool						ft_candelete(t_game *game, double x, double y);
+bool						ft_oob(t_game *game, double x, double y);
+bool						ft_projectile_hit(t_game *g, t_projectile *p);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);
@@ -526,10 +542,12 @@ int							ft_outside(const t_game *game, const int x,
 								const int y);
 void						ft_create_vector(t_vector *vector, int type,
 								size_t size);
-void						*ft_add_to_vector(const t_game *g, t_vector *vec, void *u_ptr);
+void						*ft_add_to_vector(const t_game *g, t_vector *vec,
+								void *u_ptr);
 void						*ft_resize_dvector(t_vector *vector);
 void						*ft_resize_pvector(t_vector *vector);
-void						*ft_resize_svector(const t_game *g, t_vector *vector);
+void						*ft_resize_svector(const t_game *g,
+								t_vector *vector);
 void						*ft_resize_hvector(t_vector *vector);
 
 /*Garbage collector*/

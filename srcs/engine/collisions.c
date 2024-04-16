@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 21:35:45 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 01:22:43 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/16 02:55:29 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ bool	ft_check_doors(t_game *g, const double x, const double y)
 	i = 0;
 	while (i < g->doors.index)
 	{
-		if (!g->doors.u_ptr.d[i].delete &&g->doors.u_ptr.d[i].state != OPEN
+		if (!g->doors.u_ptr.d[i].delete && g->doors.u_ptr.d[i].state != OPEN
 			&& g->doors.u_ptr.d[i].pos.x >= (int)((g->p.pos.x + x))
 			&& g->doors.u_ptr.d[i].pos.x <= (int)((g->p.pos.x + x))
 			&& g->doors.u_ptr.d[i].pos.y >= (int)((g->p.pos.y + y))
@@ -30,7 +30,7 @@ bool	ft_check_doors(t_game *g, const double x, const double y)
 	i = 0;
 	while (i < g->sprites.index)
 	{
-		if (!g->sprites.u_ptr.s[i].delete &&g->sprites.u_ptr.s[i].collision
+		if (!g->sprites.u_ptr.s[i].delete && g->sprites.u_ptr.s[i].collision
 			&& sqrt((pow(g->p.pos.x + x - g->sprites.u_ptr.s[i].pos.x, 2.0)
 					+ pow(g->p.pos.y + y - g->sprites.u_ptr.s[i].pos.y,
 						2.0))) < 0.5 / g->sprites.u_ptr.s[i].hr)
