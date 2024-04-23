@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 14:29:49 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:41:36 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@
 # define MX MW / 4
 # define MY MH / 4
 # define MS 3
-# define MPR MX / 2
+# define MPR MH / 32
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -275,6 +275,8 @@ typedef struct s_render
 	t_vec					dd;
 	t_vec					t;
 	t_vec					sp;
+	t_vec					sp2;
+	t_vec					tsp;
 	t_vec					pos;
 	t_intvec				draw_x;
 	t_intvec				draw_y;
@@ -526,6 +528,7 @@ bool						ft_projectile_hit(t_game *g, t_projectile *p);
 void						my_mlx_pixel_tput(const t_screen *data, const int x,
 								const int y, unsigned int color);
 bool						ft_can_step(t_game *g, t_sprite *s);
+void						ft_portal_sprite(t_game *g, t_thread *t);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);
@@ -575,6 +578,8 @@ void						*ft_resize_svector(const t_game *g,
 void						*ft_resize_hvector(t_vector *vector);
 t_intvec					ft_get_facing_int(const int side, t_intvec vec);
 t_vec						ft_get_facing(const int side, t_vec vec);
+t_vec						ft_side_to_plane(const int side);
+t_vec						ft_side_to_dir(const int side);
 /*Garbage collector*/
 
 void						*gc(void *u_ptr, int i);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:29:14 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 16:00:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:02:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,13 +61,11 @@ static inline void	ft_putppixel(t_thread *t, const int x, const int y,
 	wcolor = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
 	if ((color & 0x00FFFFFF) != 0 && color != 65280)
 	{
-		t->zbuffer[x - t->dx][y] = r->pdist;
 		if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
 			*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 	}
 	else if (color == 65280)
 	{
-		t->zbuffer[x - t->dx][y] = r->pdist;
 		if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != wcolor)
 			*(((unsigned int *)t->g->s.a) + (y * W) + x) = wcolor;
 	}

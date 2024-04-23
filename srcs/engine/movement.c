@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 19:00:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 14:26:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 17:28:14 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,6 @@ static inline void	ft_move_x(t_game *g, int ms)
 		speed *= 0.99;
 		--ms;
 	}
-	if (!ft_can_move(g, speed * 0.01, 0))
-		g->p.pos.x -= speed * 0.01;
-	else if (!ft_can_move(g, -speed * 0.01, 0))
-		g->p.pos.x += speed * 0.01;
 }
 
 static inline void	ft_move_y(t_game *g, int ms)
@@ -47,10 +43,6 @@ static inline void	ft_move_y(t_game *g, int ms)
 		speed *= 0.99;
 		--ms;
 	}
-	if (!ft_can_move(g, 0, speed * 0.01))
-		g->p.pos.y -= speed * 0.01;
-	else if (!ft_can_move(g, 0, -speed * 0.01))
-		g->p.pos.y += speed * 0.01;
 }
 
 static inline void	ft_move_player(t_game *g, const double speed,
