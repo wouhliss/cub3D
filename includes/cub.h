@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:20:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,12 @@
 
 # define DFL_SIZE 150
 
+# define CUBES 3
+# define GLASS 18
+
+# define WEAPONS 3
+# define SPRITES 2
+
 typedef unsigned int		t_ui;
 
 typedef struct s_texture
@@ -273,13 +279,16 @@ typedef struct s_render
 	t_intvec				step;
 	t_intvec				draw;
 	t_intvec				tex;
+	t_intvec				linetex;
 	t_intvec				ptex;
 	t_intvec				p;
 	double					camera_x;
 	double					pdist;
 	double					texpos;
+	double					linepos;
 	double					ptexpos;
 	double					mystep;
+	double					linestep;
 	double					pmystep;
 	double					ind;
 	double					shift;
@@ -347,6 +356,8 @@ typedef struct s_screen
 	int						bpp;
 	int						ll;
 	int						endian;
+	double					lratio;
+	double					rratio;
 }							t_screen;
 
 typedef struct s_mlx
@@ -385,7 +396,8 @@ typedef struct s_game
 	t_mlx					mlx;
 	t_texture				wt[WTEXTURES];
 	t_texture				st[STEXTURES];
-	t_texture				ptextures[PTEXTURES];
+	t_texture				pt[PTEXTURES];
+	t_texture				gt[GLASS];
 	t_screen				s;
 	t_vector				sprites;
 	t_vector				doors;
@@ -449,6 +461,7 @@ int							on_mouse_click(int button, int x, int y,
 
 /*Engine*/
 void						ft_portal(const t_game *game, t_render *r);
+void						ft_truc(const t_game *game, t_render *r);
 void						ft_portal_hit(t_thread *t, const t_game *g,
 								t_render *r);
 void						ft_handle_pls(t_game *g);
@@ -456,7 +469,7 @@ void						ft_drawppixel(t_thread *t, const int x, const int y,
 								t_render *r);
 bool						ft_can_move(t_game *g, const double x,
 								const double y);
-void						ft_remove_door(t_game *g, int x, int y);
+void						ft_remove_door(t_game *g, t_door *door);
 bool						ft_check_doors(t_game *g, const double x,
 								const double y);
 void						ft_update_door(t_game *g, t_door *door);
@@ -474,6 +487,8 @@ void						ft_drawwallpixel(t_game *game, const int x,
 								const int y, t_render *r);
 void						ft_drawdoorpixel(t_thread *t, const int x,
 								const int y, t_render *r);
+void						ft_drawspixel(t_thread *t, const int x, const int y,
+								t_render *r);
 int							ft_loop(void *param);
 int							ft_init_mlx(t_game *g);
 void						ft_start(t_game *game);
@@ -484,7 +499,7 @@ char						ft_get_block(t_game *g);
 void						ft_glass(const t_game *game, t_render *r);
 void						ft_add_projectile(t_game *g, t_vec pos, t_vec dir,
 								int type);
-void						ft_hit(const t_game *g, t_render *r, t_thread *t);
+void						*ft_hit(const t_game *g, t_render *r, t_thread *t);
 void						ft_steps(const t_game *g, t_render *r);
 void						ft_dda(const t_game *g, t_render *r, t_thread *t);
 void						ft_rays(const t_game *g, t_render *r, const int x,
@@ -502,6 +517,9 @@ void						ft_pdda(t_game *game, t_projectile *p);
 bool						ft_candelete(t_game *game, double x, double y);
 bool						ft_oob(t_game *game, double x, double y);
 bool						ft_projectile_hit(t_game *g, t_projectile *p);
+void						my_mlx_pixel_tput(const t_screen *data, const int x,
+								const int y, unsigned int color);
+bool						ft_can_step(t_game *g, t_sprite *s);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);

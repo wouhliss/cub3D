@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 14:38:23 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 02:55:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 09:45:56 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,6 @@ static inline t_intvec	ft_getx(t_render *r, const t_sprite *s, const int x,
 	if (draw_x.y > x)
 		draw_x.y = x;
 	return (draw_x);
-}
-
-static inline void	my_mlx_pixel_tput(const t_screen *data, const int x,
-		const int y, unsigned int color)
-{
-	char	*dst;
-	t_color	tcolor;
-	t_color	dcolor;
-
-	dst = data->a + (y * data->ll + x * (data->bpp / 8));
-	tcolor.hex = color;
-	dcolor.t = (0.65 * tcolor.t);
-	dcolor.red = (0.65 * tcolor.red);
-	dcolor.green = (0.65 * tcolor.green);
-	dcolor.blue = (0.65 * tcolor.blue);
-	*(unsigned int *)dst = dcolor.hex;
 }
 
 static inline void	ft_putsprite(t_game *g, const t_sprite *s,

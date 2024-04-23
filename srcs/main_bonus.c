@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/15 21:35:02 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:58:22 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int	main(int ac, char **av)
 	if (ft_init_mlx(&game))
 		return (3);
 	game.texturec = WTEXTURES;
+	game.s.lratio = 0.25;
+	game.s.rratio = 0.75;
 	ft_start(&game);
 	mlx_destroy_image(game.mlx.mlx, game.s.img);
 	i = -1;

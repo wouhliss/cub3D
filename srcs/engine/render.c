@@ -6,38 +6,39 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 02:55:00 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:36:25 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	ft_hit(const t_game *g, t_render *r, t_thread *t)
+void	*ft_hit(const t_game *g, t_render *r, t_thread *t)
 {
 	t_hit	hit;
 	size_t	i;
 
-	if (g->map.map[r->map.y][r->map.x] == 't')
+	if (ft_in_charset("ts", g->map.map[r->map.y][r->map.x]))
 	{
 		hit.render = *r;
 		hit.render.hit = 3;
-		ft_add_to_vector(g, &t->hit, &hit);
-		return ;
+		if (g->map.map[r->map.y][r->map.x] == 's')
+			hit.render.hit = 8;
+		return (ft_add_to_vector(g, &t->hit, &hit));
 	}
 	i = 0;
 	while (i < g->doors.index)
 	{
-		if (!g->doors.u_ptr.d[i].delete && g->doors.u_ptr.d[i].pos.x == r->map.x
+		if (!g->doors.u_ptr.d[i].delete &&g->doors.u_ptr.d[i].pos.x == r->map.x
 			&& g->doors.u_ptr.d[i].pos.y == r->map.y)
 		{
 			hit.render = *r;
 			hit.render.hit = 2;
 			hit.render.shift = fabs(g->doors.u_ptr.d[i].frame);
-			ft_add_to_vector(g, &t->hit, &hit);
-			return ;
+			return (ft_add_to_vector(g, &t->hit, &hit));
 		}
 		++i;
 	}
+	return (NULL);
 }
 
 void	ft_steps(const t_game *g, t_render *r)
@@ -66,7 +67,7 @@ void	ft_steps(const t_game *g, t_render *r)
 
 void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 {
-	while (!r->hit && !ft_outside(g, r->map.x, r->map.y))
+	while (!r->hit && !ft_outside(g, r->map.x, r->map.y) && t->hit.index < 25)
 	{
 		if (r->sd.x < r->sd.y)
 		{

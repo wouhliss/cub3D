@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:33:29 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,8 @@ static inline void	ft_init_textures(t_game *g)
 	i = -1;
 	while (++i < PTEXTURES)
 	{
-		g->ptextures[i].a = 0;
-		g->ptextures[i].img = 0;
+		g->pt[i].a = 0;
+		g->pt[i].img = 0;
 	}
 }
 

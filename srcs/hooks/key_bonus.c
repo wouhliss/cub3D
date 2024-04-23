@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 22:12:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:59:48 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,16 @@ int	on_key_press(int k, void *param)
 		ft_interact(game);
 	else if (k == XK_space)
 		game->space = 1;
+	else if (k == XK_j || k == XK_J)
+	{
+		game->s.lratio -= 0.01;
+		game->s.rratio += 0.01;
+	}
+	else if (k == XK_k || k == XK_K)
+	{
+		game->s.lratio += 0.01;
+		game->s.rratio -= 0.01;
+	}
 	ft_handle_mkey(game, k);
 	return (0);
 }

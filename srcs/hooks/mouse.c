@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 01:18:57 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:37:23 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 static inline void	ft_changestate(t_game *g, int button)
 {
-	const int	states[4] = {0, 0, 1, 2};
+	const int	states[] = {0, 0, CUBES, SPRITES};
 
 	if (button == 4)
 	{
 		++g->p.weapon.type;
-		if (g->p.weapon.type > 3)
+		if (g->p.weapon.type > WEAPONS)
 			g->p.weapon.type = 0;
 		g->p.weapon.state = 0;
 	}
@@ -27,7 +27,7 @@ static inline void	ft_changestate(t_game *g, int button)
 	{
 		--g->p.weapon.type;
 		if (g->p.weapon.type < 0)
-			g->p.weapon.type = 3;
+			g->p.weapon.type = WEAPONS;
 		g->p.weapon.state = 0;
 	}
 	else if (g->p.weapon.state < states[g->p.weapon.type])
@@ -41,50 +41,34 @@ static inline void	ft_break_block(t_game *g)
 	if (g->p.look_pos.x < 1 || g->p.look_pos.y < 1
 		|| g->p.look_pos.x >= g->width - 1 || g->p.look_pos.y >= g->length - 1)
 		return ;
-	if (g->p.look_pos.y == g->portal_l.pos.y
-		&& g->p.look_pos.x == g->portal_l.pos.x)
-		g->portal_l.side = 0;
-	else if (g->p.look_pos.y == g->portal_r.pos.y
-		&& g->p.look_pos.x == g->portal_r.pos.x)
-		g->portal_r.side = 0;
-	if (g->map.map[g->p.look_pos.y][g->p.look_pos.x] == 'D')
-	{
-		ft_remove_door(g, g->p.look_pos.x, g->p.look_pos.y);
-		return ;
-	}
 	g->map.map[g->p.look_pos.y][g->p.look_pos.x] = '0';
-	if (g->map.map[g->p.look_pos.y + 1][g->p.look_pos.x] == 'D')
-		ft_remove_door(g, g->p.look_pos.x, g->p.look_pos.y + 1);
-	else if (g->map.map[g->p.look_pos.y - 1][g->p.look_pos.x] == 'D')
-		ft_remove_door(g, g->p.look_pos.x, g->p.look_pos.y - 1);
-	else if (g->map.map[g->p.look_pos.y][g->p.look_pos.x + 1] == 'D')
-		ft_remove_door(g, g->p.look_pos.x + 1, g->p.look_pos.y);
-	else if (g->map.map[g->p.look_pos.y][g->p.look_pos.x - 1] == 'D')
-		ft_remove_door(g, g->p.look_pos.x - 1, g->p.look_pos.y);
 }
 
 static inline void	ft_place_block(t_game *g)
 {
-	if (g->p.looking_side == -2 && ((int)g->p.pos.x != g->p.look_pos.x + 1
-			|| (int)g->p.pos.y != g->p.look_pos.y))
-		g->map.map[g->p.look_pos.y][g->p.look_pos.x + 1] = ft_get_block(g);
-	else if (g->p.looking_side == -1 && ((int)g->p.pos.x != g->p.look_pos.x - 1
-			|| (int)g->p.pos.y != g->p.look_pos.y))
-		g->map.map[g->p.look_pos.y][g->p.look_pos.x - 1] = ft_get_block(g);
-	else if (g->p.looking_side == 2 && ((int)g->p.pos.x != g->p.look_pos.x
-			|| (int)g->p.pos.y != g->p.look_pos.y + 1))
-		g->map.map[g->p.look_pos.y + 1][g->p.look_pos.x] = ft_get_block(g);
-	else if (g->p.looking_side == 1 && ((int)g->p.pos.x != g->p.look_pos.x
-			|| (int)g->p.pos.y != g->p.look_pos.y - 1))
-		g->map.map[g->p.look_pos.y - 1][g->p.look_pos.x] = ft_get_block(g);
-	if (g->p.looking_side == g->portal_l.side
-		&& g->portal_l.pos.x == g->p.look_pos.x
-		&& g->portal_l.pos.y == g->p.look_pos.y)
-		g->portal_l.side = 0;
-	else if (g->p.looking_side == g->portal_r.side
-		&& g->portal_r.pos.x == g->p.look_pos.x
-		&& g->portal_r.pos.y == g->p.look_pos.y)
-		g->portal_r.side = 0;
+	t_door	door;
+	int		x;
+	int		y;
+	char	block;
+
+	x = g->p.look_pos.x;
+	y = g->p.look_pos.y;
+	if (g->p.looking_side == -2)
+		++x;
+	else if (g->p.looking_side == -1)
+		--x;
+	else if (g->p.looking_side == 2)
+		++y;
+	else if (g->p.looking_side == 1)
+		--y;
+	if (y == (int)g->p.pos.y && x == (int)g->p.pos.x)
+		return ;
+	block = ft_get_block(g);
+	g->map.map[y][x] = block;
+	if (block != 'D')
+		return ;
+	door = (t_door){.frame = 0, .pos = (t_intvec){x, y}, .state = 0};
+	ft_add_to_vector(g, &g->doors, &door);
 }
 
 int	on_mouse_click(int button, int x, int y, void *param)

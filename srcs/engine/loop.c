@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:34:04 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static inline void	ft_ldda(t_game *g)
 	}
 }
 
-static inline void	ft_update_doors(t_game *g)
+static inline void	ft_update_doors_portals(t_game *g)
 {
 	size_t	i;
 
@@ -86,8 +86,46 @@ static inline void	ft_update_doors(t_game *g)
 			continue ;
 		}
 		ft_update_door(g, &g->doors.u_ptr.d[i]);
+		if (g->map.map[g->doors.u_ptr.d[i].pos.y][g->doors.u_ptr.d[i].pos.x] != 'D'
+			|| (!(g->map.map[g->doors.u_ptr.d[i].pos.y
+					+ 1][g->doors.u_ptr.d[i].pos.x] == '1'
+					&& g->map.map[g->doors.u_ptr.d[i].pos.y
+					- 1][g->doors.u_ptr.d[i].pos.x] == '1')
+				&& !(g->map.map[g->doors.u_ptr.d[i].pos.y][g->doors.u_ptr.d[i].pos.x
+					+ 1] == '1'
+					&& g->map.map[g->doors.u_ptr.d[i].pos.y][g->doors.u_ptr.d[i].pos.x
+					- 1] == '1')))
+			ft_remove_door(g, &g->doors.u_ptr.d[i]);
 		++i;
 	}
+	if (g->map.map[g->portal_l.pos.y][g->portal_l.pos.x] != '1')
+		g->portal_l.side = 0;
+	if (g->map.map[g->portal_r.pos.y][g->portal_r.pos.x] != '1')
+		g->portal_r.side = 0;
+	if (g->portal_l.side == -2
+		&& g->map.map[g->portal_l.pos.y][g->portal_l.pos.x + 1] != '0')
+		g->portal_l.side = 0;
+	else if (g->portal_l.side == -1
+		&& g->map.map[g->portal_l.pos.y][g->portal_l.pos.x - 1] != '0')
+		g->portal_l.side = 0;
+	else if (g->portal_l.side == 2 && g->map.map[g->portal_l.pos.y
+		+ 1][g->portal_l.pos.x] != '0')
+		g->portal_l.side = 0;
+	else if (g->portal_l.side == 1 && g->map.map[g->portal_l.pos.y
+		- 1][g->portal_l.pos.x] != '0')
+		g->portal_l.side = 0;
+	if (g->portal_r.side == -2
+		&& g->map.map[g->portal_r.pos.y][g->portal_r.pos.x + 1] != '0')
+		g->portal_r.side = 0;
+	else if (g->portal_r.side == -1
+		&& g->map.map[g->portal_r.pos.y][g->portal_r.pos.x - 1] != '0')
+		g->portal_r.side = 0;
+	else if (g->portal_r.side == 2 && g->map.map[g->portal_r.pos.y
+		+ 1][g->portal_r.pos.x] != '0')
+		g->portal_r.side = 0;
+	else if (g->portal_r.side == 1 && g->map.map[g->portal_r.pos.y
+		- 1][g->portal_r.pos.x] != '0')
+		g->portal_r.side = 0;
 }
 
 static inline void	ft_render_queue(t_game *g)
@@ -134,7 +172,7 @@ int	ft_loop(void *param)
 	ft_lsteps(game);
 	ft_ldda(game);
 	ft_handle_pls(game);
-	ft_update_doors(game);
+	ft_update_doors_portals(game);
 	ft_render_queue(game);
 	game->last = game->now;
 	++game->frames;

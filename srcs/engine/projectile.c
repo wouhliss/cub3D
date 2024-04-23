@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:12:43 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 03:29:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 11:44:16 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,6 @@ static inline void	ft_delete_projectile(t_game *g, const int i,
 			+ g->pls.u_ptr.p[i].sprite->dir.y
 			* step)][(int)(g->pls.u_ptr.p[i].sprite->pos.x
 			+ -g->pls.u_ptr.p[i].sprite->dir.x * step)] = '0';
-	if ((int)(g->pls.u_ptr.p[i].sprite->pos.y + g->pls.u_ptr.p[i].sprite->dir.y
-		* step) == g->portal_l.pos.y
-		&& (int)(g->pls.u_ptr.p[i].sprite->pos.x +
-			-g->pls.u_ptr.p[i].sprite->dir.x * step) == g->portal_l.pos.x)
-		g->portal_l.side = 0;
-	else if ((int)(g->pls.u_ptr.p[i].sprite->pos.y
-		+ g->pls.u_ptr.p[i].sprite->dir.y * step) == g->portal_r.pos.y
-		&& (int)(g->pls.u_ptr.p[i].sprite->pos.x +
-			-g->pls.u_ptr.p[i].sprite->dir.x * step) == g->portal_r.pos.x)
-		g->portal_r.side = 0;
 	g->pls.u_ptr.p[i].delete = 1;
 	g->pls.u_ptr.p[i].sprite->delete = 1;
 	g->pls.u_ptr.p[i].sprite->hide = 1;
@@ -94,7 +84,7 @@ void	ft_add_projectile(t_game *g, t_vec pos, t_vec dir, int type)
 	t_sprite		sprite;
 	t_projectile	projectile;
 
-	sprite = (t_sprite){.type = 2, .vdiff = 64.0, .hr = 2, .vr = 2, .hide = 0,
+	sprite = (t_sprite){.type = 2, .vdiff = 64.0, .hr = 4, .vr = 4, .hide = 0,
 		.pos = pos, .dir = dir};
 	projectile = (t_projectile){.type = type, .delete = 0,
 		.sprite = ft_add_to_vector(g, &g->sprites, &sprite)};

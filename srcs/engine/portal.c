@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:29:14 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 02:58:51 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:32:51 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@ static inline double	get_wall_x(t_render *r)
 	return (wallx);
 }
 
-static inline int	get_ptex_x(t_render *r, const double wallx)
+static inline int	get_ptex_x(t_render *r, const double wallx, const int tw)
 {
 	int	val;
 
-	val = (wallx * r->ptwidth);
+	val = (wallx * tw);
 	if (r->side < 0 && r->ray_dir.x > 0)
-		val = r->ptwidth - val - 1;
+		val = tw - val - 1;
 	if (r->side > 1 && r->ray_dir.y > 0)
-		val = r->ptwidth - val - 1;
+		val = tw - val - 1;
 	return (val);
 }
 
@@ -41,13 +41,17 @@ void	ft_portal(const t_game *game, t_render *r)
 	double	wallx;
 
 	r->pid = r->hit - 4;
-	r->ptwidth = game->ptextures[r->pid].width;
-	r->ps = game->ptextures[r->pid].s;
+	r->ptwidth = game->pt[r->pid].width;
+	r->ps = game->pt[r->pid].s;
 	wallx = get_wall_x(r);
-	r->ptex.x = get_ptex_x(r, wallx);
+	r->ptex.x = get_ptex_x(r, wallx, r->twidth);
+	r->linetex.x = get_ptex_x(r, wallx, 64);
 	r->pmystep = (double)r->ptwidth / r->lh;
+	r->linestep = (double)64 / r->lh;
 	r->ptexpos = (r->draw.x - HALF_HEIGHT + r->lh / 2 - game->p.y
 			- (int)(game->p.jump) / r->pdist) * r->pmystep;
+	r->linepos = (r->draw.x - HALF_HEIGHT + r->lh / 2 - game->p.y
+			- (int)(game->p.jump) / r->pdist) * r->linestep;
 	ft_wall(game, r);
 }
 
@@ -57,7 +61,7 @@ static inline void	ft_putppixel(t_thread *t, const int x, const int y,
 	t_ui	color;
 	t_ui	wcolor;
 
-	color = ((int *)t->g->ptextures[r->pid].a)[r->ps + r->ptwidth * r->ptex.y
+	color = ((int *)t->g->pt[r->pid].a)[r->ps + r->ptwidth * r->ptex.y
 		+ r->ptex.x];
 	wcolor = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
 	if ((color & 0x00FFFFFF) != 0 && color != 65280)
@@ -82,10 +86,11 @@ void	ft_drawppixel(t_thread *t, const int x, const int y, t_render *r)
 	r->texpos += r->mystep;
 	r->ptex.y = (int)r->ptexpos & (r->ptwidth - 1);
 	r->ptexpos += r->pmystep;
+	r->linetex.y = (int)r->linepos & (63);
+	r->linepos += r->linestep;
 	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->ptex.y
-			|| r->ptex.y == r->ptwidth - 1 || !r->ptex.x
-			|| r->ptex.x == r->ptwidth - 1))
+		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y
+			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;

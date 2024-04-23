@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 03:11:20 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 03:23:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:06:23 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,7 @@
 bool	ft_candelete(t_game *game, double x, double y)
 {
 	return (x >= 1.0 && y >= 1.0 && (int)x < game->width - 1
-		&& (int)y < game->length - 1
-		&& game->map.map[(int)(y)][(int)(x)] == '1');
+		&& (int)y < game->length - 1);
 }
 
 bool	ft_oob(t_game *game, double x, double y)

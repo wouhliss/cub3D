@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   glass.c                                            :+:      :+:    :+:   */
+/*   truc.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 12:35:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:32:42 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ static inline int	get_tex_x(t_render *r, const double wallx, const int tw)
 	return (val);
 }
 
-void	ft_glass(const t_game *game, t_render *r)
+void	ft_truc(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	r->id = 0;
-	r->twidth = game->gt[r->id].width;
-	r->s = game->gt[r->id].s;
+	r->id = 5;
+	r->twidth = game->wt[r->id].width;
+	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx, r->twidth);
 	r->linetex.x = get_tex_x(r, wallx, 64);
@@ -54,8 +54,8 @@ void	ft_glass(const t_game *game, t_render *r)
 			- (int)(game->p.jump) / r->pdist) * r->linestep;
 }
 
-void	ft_drawtpixel(t_thread *t, const int x, const int y, t_render *r)
-{
+void	ft_drawspixel(t_thread *t, const int x, const int y, t_render *r)
+{	
 	unsigned int	color;
 
 	r->tex.y = (int)r->texpos & (r->twidth - 1);
@@ -63,14 +63,13 @@ void	ft_drawtpixel(t_thread *t, const int x, const int y, t_render *r)
 	r->linetex.y = (int)r->linepos & (63);
 	r->linepos += r->linestep;
 	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y
-			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
+		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y || r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 		return ;
 	}
-	color = ((int *)t->g->gt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
-	if ((color & 0x00FFFFFF) != 0)
-		my_mlx_pixel_tput(&t->g->s, x, y, color);
+	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
+	color = ((color + *(((unsigned int *)t->g->s.a) + (y * W) + x)) >> 1);
+	*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
 }

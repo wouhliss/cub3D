@@ -6,13 +6,13 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:43:32 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 02:49:58 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 09:59:49 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	ft_hitcalc(const t_game *g, t_render *r, const int type)
+static inline void	ft_calcdraw(const t_game *g, t_render *r, const int type)
 {
 	if (type == 2)
 	{
@@ -30,12 +30,19 @@ void	ft_hitcalc(const t_game *g, t_render *r, const int type)
 	r->draw.y = r->lh / 2 + HALF_HEIGHT + g->p.y + (int)(g->p.jump) / r->pdist;
 	if (r->draw.y >= HEIGHT)
 		r->draw.y = HEIGHT - 1;
+}
+
+void	ft_hitcalc(const t_game *g, t_render *r, const int type)
+{
+	ft_calcdraw(g, r, type);
 	if (type == 2)
 		ft_door(g, r);
 	else if (type == 3)
 		ft_glass(g, r);
 	else if (type > 3 && type < 8)
 		ft_portal(g, r);
+	else if (type == 8)
+		ft_truc(g, r);
 	else
 		ft_wall(g, r);
 }
@@ -52,18 +59,19 @@ static inline void	ft_drawhitrow(t_thread *t, const int x)
 		y = -1;
 		while (++y < HEIGHT)
 		{
-			if (t->hit.u_ptr.h[i].render.draw.x <= y
-				&& t->hit.u_ptr.h[i].render.draw.y >= y
-				&& t->hit.u_ptr.h[i].render.pdist <= t->zbuffer[x - t->dx][y])
-			{
-				if (t->hit.u_ptr.h[i].render.hit == 2)
-					ft_drawdoorpixel(t, x, y, &t->hit.u_ptr.h[i].render);
-				else if (t->hit.u_ptr.h[i].render.hit == 3)
-					ft_drawtpixel(t, x, y, &t->hit.u_ptr.h[i].render);
-				else if (t->hit.u_ptr.h[i].render.hit > 3
-					&& t->hit.u_ptr.h[i].render.hit < 8)
-					ft_drawppixel(t, x, y, &t->hit.u_ptr.h[i].render);
-			}
+			if (t->hit.u_ptr.h[i].render.draw.x > y
+				|| t->hit.u_ptr.h[i].render.draw.y < y
+				|| t->hit.u_ptr.h[i].render.pdist > t->zbuffer[x - t->dx][y])
+				continue ;
+			if (t->hit.u_ptr.h[i].render.hit == 2)
+				ft_drawdoorpixel(t, x, y, &t->hit.u_ptr.h[i].render);
+			else if (t->hit.u_ptr.h[i].render.hit == 3)
+				ft_drawtpixel(t, x, y, &t->hit.u_ptr.h[i].render);
+			else if (t->hit.u_ptr.h[i].render.hit > 3
+				&& t->hit.u_ptr.h[i].render.hit < 8)
+				ft_drawppixel(t, x, y, &t->hit.u_ptr.h[i].render);
+			else if (t->hit.u_ptr.h[i].render.hit == 8)
+				ft_drawspixel(t, x, y, &t->hit.u_ptr.h[i].render);
 		}
 	}
 }

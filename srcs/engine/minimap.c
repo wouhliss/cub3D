@@ -6,29 +6,11 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 02:55:07 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:11:12 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
-
-static inline void	my_mlx_pixel_tput(const t_screen *data, const int x,
-		const int y, unsigned int color)
-{
-	char	*dst;
-	t_color	tcolor;
-	t_color	scolor;
-	t_color	dcolor;
-
-	dst = data->a + (y * data->ll + x * (data->bpp / 8));
-	scolor.hex = *(unsigned int *)dst;
-	tcolor.hex = color;
-	dcolor.t = (0.35 * scolor.t) + (0.65 * tcolor.t);
-	dcolor.red = (0.35 * scolor.red) + (0.65 * tcolor.red);
-	dcolor.green = (0.35 * scolor.green) + (0.65 * tcolor.green);
-	dcolor.blue = (0.35 * scolor.blue) + (0.65 * tcolor.blue);
-	*(unsigned int *)dst = dcolor.hex;
-}
 
 static inline void	ft_put_pixel_map(t_game *g, t_intvec *sp, t_intvec *pos,
 		t_intvec *draw)
