@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 14:38:23 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 09:45:56 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:45:11 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,30 @@ static inline t_intvec	ft_getx(t_render *r, const t_sprite *s, const int x,
 static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 		const t_render *r, t_thread *t)
 {
+	t_intvec	tex;
 	t_intvec	d;
 	int			color;
 
-	(void)g;
-	(void)s;
 	d.x = r->draw_x.x - 1;
 	while (++d.x < r->draw_x.y)
 	{
+		tex.x = (int)(256 * (d.x - (-r->spritewidth / 2 + r->spsx))
+				* g->st[s->type].width / r->spritewidth) / 256;
 		if (r->t.y > 0 && d.x > 0 && d.x < W)
 		{
 			d.y = r->draw_y.x - 1;
 			while (++d.y < r->draw_y.y)
 			{
-				color = 0x00FF0000;
-				if ((color & 0x00FFFFFF) != 0 && r->t.y < t->zbuffer[d.x
-						- t->dx][d.y])
+				tex.y = ((((d.y - g->p.y - ((int)(g->p.jump) / r->t.y) - r->vpos)
+								* 256 - HEIGHT * 128 + r->sph * 128)
+							* g->st[s->type].width) / r->sph) / 256;
+				color = 0;
+				if (tex.y > 0 && tex.y < g->st[s->type].width)
+					color = ((int *)g->st[s->type].a)[g->st[s->type].s + g->st[s->type].width * tex.y
+						+ tex.x];
+				if ((color & 0x00FFFFFF) != 0
+					&& r->t.y < t->zbuffer[d.x
+					- t->dx][d.y])
 				{
 					*(((t_ui *)t->g->s.a) + (d.y * W) + d.x) = color;
 					t->zbuffer[d.x - t->dx][d.y] = r->t.y;

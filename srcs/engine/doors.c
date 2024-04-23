@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 12:32:32 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:01:15 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_door(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	r->id = 4;
+	r->id = TD;
 	r->twidth = game->wt[r->id].width;
 	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
@@ -59,6 +59,7 @@ void	ft_door(const t_game *game, t_render *r)
 			- (int)(game->p.jump) / r->pdist) * r->mystep;
 	r->linepos = (r->draw.x - HALF_HEIGHT + r->lh / 2 - game->p.y
 			- (int)(game->p.jump) / r->pdist) * r->linestep;
+	r->s = game->wt[r->id].s;
 }
 
 void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)

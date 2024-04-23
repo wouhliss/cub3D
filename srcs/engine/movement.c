@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 19:00:41 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/15 21:36:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:26:22 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ static inline void	ft_move_player(t_game *g, const double speed,
 		g->p.jumping = FALLING;
 	}
 	ft_move_x(g, ms);
-	g->p.speed.x *= 1.0 - ms / 50.0;
+	g->p.speed.x *= 1.0 - ms / 45.0;
 	ft_move_y(g, ms);
-	g->p.speed.y *= 1.0 - ms / 50.0;
+	g->p.speed.y *= 1.0 - ms / 45.0;
 }
 
 void	ft_handle_movement(t_game *g)
@@ -89,7 +89,7 @@ void	ft_handle_movement(t_game *g)
 	double	angle;
 	double	sangle;
 
-	speed = g->delta / 60000000.0;
+	speed = g->delta / 70000000.0;
 	speed += g->shift * 0.6 * speed;
 	angle = atan2(g->p.dir.y, -g->p.dir.x);
 	sangle = atan2(-g->p.dir.x, -g->p.dir.y);

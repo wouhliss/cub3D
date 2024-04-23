@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 11:34:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 15:20:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static inline void	ft_ldda(t_game *g)
 
 static inline void	ft_update_doors_portals(t_game *g)
 {
-	size_t	i;
+	size_t		i;
+	t_intvec	facing;
 
 	if (g->p.looking_side < 0 && g->p.step.x < 0)
 		g->p.looking_side = -2;
@@ -102,29 +103,11 @@ static inline void	ft_update_doors_portals(t_game *g)
 		g->portal_l.side = 0;
 	if (g->map.map[g->portal_r.pos.y][g->portal_r.pos.x] != '1')
 		g->portal_r.side = 0;
-	if (g->portal_l.side == -2
-		&& g->map.map[g->portal_l.pos.y][g->portal_l.pos.x + 1] != '0')
+	facing = ft_get_facing_int(g->portal_l.side, g->portal_l.pos);
+	if (g->map.map[facing.y][facing.x] != '0')
 		g->portal_l.side = 0;
-	else if (g->portal_l.side == -1
-		&& g->map.map[g->portal_l.pos.y][g->portal_l.pos.x - 1] != '0')
-		g->portal_l.side = 0;
-	else if (g->portal_l.side == 2 && g->map.map[g->portal_l.pos.y
-		+ 1][g->portal_l.pos.x] != '0')
-		g->portal_l.side = 0;
-	else if (g->portal_l.side == 1 && g->map.map[g->portal_l.pos.y
-		- 1][g->portal_l.pos.x] != '0')
-		g->portal_l.side = 0;
-	if (g->portal_r.side == -2
-		&& g->map.map[g->portal_r.pos.y][g->portal_r.pos.x + 1] != '0')
-		g->portal_r.side = 0;
-	else if (g->portal_r.side == -1
-		&& g->map.map[g->portal_r.pos.y][g->portal_r.pos.x - 1] != '0')
-		g->portal_r.side = 0;
-	else if (g->portal_r.side == 2 && g->map.map[g->portal_r.pos.y
-		+ 1][g->portal_r.pos.x] != '0')
-		g->portal_r.side = 0;
-	else if (g->portal_r.side == 1 && g->map.map[g->portal_r.pos.y
-		- 1][g->portal_r.pos.x] != '0')
+	facing = ft_get_facing_int(g->portal_r.side, g->portal_r.pos);
+	if (g->map.map[facing.y][facing.x] != '0')
 		g->portal_r.side = 0;
 }
 
@@ -150,6 +133,40 @@ static inline void	ft_render_queue(t_game *g)
 	mlx_put_image_to_window(g->mlx.mlx, g->mlx.win, g->s.img, 0, 0);
 }
 
+static inline void	ft_animate(t_game *g)
+{
+	int	index;
+
+	index = -1;
+	while (++index < WTEXTURES)
+	{
+		if (g->wframes[index] && g->now - g->wt[index].last > g->wframes[index]
+			* 1000000)
+		{
+			++g->wt[index].f;
+			if (g->wt[index].f == g->wt[index].frames)
+				g->wt[index].f = 0;
+			g->wt[index].s = g->wt[index].f * g->wt[index].width
+				* g->wt[index].width;
+			g->wt[index].last = g->now;
+		}
+	}
+	index = -1;
+	while (++index < STEXTURES)
+	{
+		if (g->sframes[index] && g->now - g->st[index].last > g->sframes[index]
+			* 1000000)
+		{
+			++g->st[index].f;
+			if (g->st[index].f == g->st[index].frames)
+				g->st[index].f = 0;
+			g->st[index].s = g->st[index].f * g->st[index].width
+				* g->st[index].width;
+			g->st[index].last = g->now;
+		}
+	}
+}
+
 int	ft_loop(void *param)
 {
 	t_game			*game;
@@ -167,6 +184,7 @@ int	ft_loop(void *param)
 	game->delta = game->now - game->last;
 	if (game->delta < 8000000)
 		return (0);
+	ft_animate(game);
 	ft_handle_movement(game);
 	ft_handle_aim(game);
 	ft_lsteps(game);

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:06:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/12 14:07:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:11:32 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,18 @@ int	set_texture_color(char *line, int *c, t_game *game)
 	else if (!ft_strncmp(line, "EA ", 3))
 		return ((*c)++, set_texture(line, game));
 	else if (!ft_strncmp(line, "D ", 2))
-		return ((*c)++, set_texture(line, game));
+		return (set_texture(line, game));
 	else if (!ft_strncmp(line, "B ", 2))
-		return ((*c)++, set_texture(line, game));
+		return (set_texture(line, game));
+	else if (!ft_strncmp(line, "P ", 2))
+		return (set_texture(line, game));
 	else if (!ft_strncmp(line, "F ", 2))
 		return ((*c)++, set_colors(line, game));
 	else if (!ft_strncmp(line, "C ", 2))
 		return ((*c)++, set_colors(line, game));
 	else if (!(*line))
 		return (1);
-	return (printf("test %s\n", line), 0);
+	return (0);
 }
 
 void	get_info_map(t_game *game)

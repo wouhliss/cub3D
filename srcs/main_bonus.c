@@ -6,15 +6,33 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 10:58:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 13:47:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	__attribute__ ((destructor))	aftermain(void)
+void	__attribute__((destructor)) aftermain(void)
 {
 	gc(NULL, EMPTY);
+}
+
+static inline void	ft_default_texture(t_game *g)
+{
+	g->dfl.a = g->dfl_a;
+	g->dfl.bpp = 8;
+	g->dfl.endian = 2;
+	g->dfl.f = 0;
+	g->dfl.frames = 0;
+	g->dfl.height = 2;
+	g->dfl.width = 2;
+	g->dfl.img = 0;
+	g->dfl.ll = 2;
+	g->dfl.s = 0;
+	*(((unsigned int *)g->dfl.a)) = 0x00A020F0;
+	*(((unsigned int *)g->dfl.a) + 1) = 0;
+	*(((unsigned int *)g->dfl.a) + 2) = 0;
+	*(((unsigned int *)g->dfl.a) + 3) = 0x00A020F0;
 }
 
 int	main(int ac, char **av)
@@ -29,6 +47,7 @@ int	main(int ac, char **av)
 	if (!s || ft_strcmp(s, EXT))
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, EXT_ERR), 2);
 	init_map(av[1], &game);
+	ft_default_texture(&game);
 	if (ft_init_mlx(&game))
 		return (3);
 	game.texturec = WTEXTURES;
@@ -38,12 +57,20 @@ int	main(int ac, char **av)
 	mlx_destroy_image(game.mlx.mlx, game.s.img);
 	i = -1;
 	while (++i < WTEXTURES)
-		mlx_destroy_image(game.mlx.mlx, game.wt[i].img);
+		if (game.wt[i].img)
+			mlx_destroy_image(game.mlx.mlx, game.wt[i].img);
 	i = -1;
 	while (++i < STEXTURES)
 		if (game.st[i].img)
 			mlx_destroy_image(game.mlx.mlx, game.st[i].img);
+	i = -1;
+	while (++i < GLASS)
+		if (game.gt[i].img)
+			mlx_destroy_image(game.mlx.mlx, game.gt[i].img);
+	i = -1;
+	while (++i < PTEXTURES)
+		if (game.pt[i].img)
+			mlx_destroy_image(game.mlx.mlx, game.pt[i].img);
 	return (mlx_destroy_window(game.mlx.mlx, game.mlx.win),
-		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx),
-		0);
+		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx), 0);
 }

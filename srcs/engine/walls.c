@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 12:31:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:00:22 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ static inline int	get_tex_x(t_render *r, const double wallx, const int tw)
 {
 	int	val;
 
+	(void)r;
 	val = (wallx * tw);
-	if (r->side < 0 && r->ray_dir.x > 0)
-		val = tw - val - 1;
-	if (r->side > 1 && r->ray_dir.y > 0)
+	if (r->side == 1 || r->side == -2)
 		val = tw - val - 1;
 	return (val);
 }
@@ -59,6 +58,7 @@ void	ft_wall(const t_game *game, t_render *r)
 			- (int)(game->p.jump) / r->pdist) * r->mystep;
 	r->linepos = (r->draw.x - HALF_HEIGHT + r->lh / 2 - game->p.y
 			- (int)(game->p.jump) / r->pdist) * r->linestep;
+	r->s = game->wt[r->id].s;
 }
 
 void	ft_drawwallpixel(t_game *game, const int x, const int y, t_render *r)

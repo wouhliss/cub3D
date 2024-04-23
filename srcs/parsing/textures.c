@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 07:49:28 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/12 13:58:39 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:08:58 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,43 +50,51 @@ int	set_texture(char *line, t_game *game)
 		return (0);
 	if (!ft_strcmp(splitted[0], "D") && game->files[TD])
 		return (0);
-	if (!ft_strcmp(splitted[0], "B") && game->files[TB])
+	if (!ft_strcmp(splitted[0], "P") && game->sfiles[TP])
+		return (0);
+	if (!ft_strcmp(splitted[0], "B") && game->sfiles[TB])
 		return (0);
 	if (!ft_strcmp(splitted[0], "NO"))
 	{
 		game->files[TNO] = gc(ft_strdup(splitted_pf[0]), ADD);
 		if (plen(splitted_pf) == 2)
-			game->timeframes[TNO] = ft_atoi(splitted_pf[1]);
+			game->wframes[TNO] = ft_atoi(splitted_pf[1]);
 	}
 	if (!ft_strcmp(splitted[0], "SO"))
 	{
 		game->files[TSO] = gc(ft_strdup(splitted_pf[0]), ADD);
 		if (plen(splitted_pf) == 2)
-			game->timeframes[TSO] = ft_atoi(splitted_pf[1]);
+			game->wframes[TSO] = ft_atoi(splitted_pf[1]);
 	}
 	if (!ft_strcmp(splitted[0], "WE"))
 	{
 		game->files[TWE] = gc(ft_strdup(splitted_pf[0]), ADD);
 		if (plen(splitted_pf) == 2)
-			game->timeframes[TWE] = ft_atoi(splitted_pf[1]);
+			game->wframes[TWE] = ft_atoi(splitted_pf[1]);
 	}
 	if (!ft_strcmp(splitted[0], "EA"))
 	{
 		game->files[TEA] = gc(ft_strdup(splitted_pf[0]), ADD);
 		if (plen(splitted_pf) == 2)
-			game->timeframes[TEA] = ft_atoi(splitted_pf[1]);
+			game->wframes[TEA] = ft_atoi(splitted_pf[1]);
 	}
 	if (!ft_strcmp(splitted[0], "D"))
 	{
 		game->files[TD] = gc(ft_strdup(splitted_pf[0]), ADD);
 		if (plen(splitted_pf) == 2)
-			game->timeframes[TD] = ft_atoi(splitted_pf[1]);
+			game->wframes[TD] = ft_atoi(splitted_pf[1]);
+	}
+	if (!ft_strcmp(splitted[0], "P"))
+	{
+		game->sfiles[TP] = gc(ft_strdup(splitted_pf[0]), ADD);
+		if (plen(splitted_pf) == 2)
+			game->sframes[TP] = ft_atoi(splitted_pf[1]);
 	}
 	if (!ft_strcmp(splitted[0], "B"))
 	{
-		game->files[TB] = gc(ft_strdup(splitted_pf[0]), ADD);
+		game->sfiles[TB] = gc(ft_strdup(splitted_pf[0]), ADD);
 		if (plen(splitted_pf) == 2)
-			game->timeframes[TB] = ft_atoi(splitted_pf[1]);
+			game->sframes[TB] = ft_atoi(splitted_pf[1]);
 	}
 	return (1);
 }

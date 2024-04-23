@@ -6,37 +6,29 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 10:50:25 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:48:52 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-int	ft_import_textures(t_game *g)
+void	ft_import_textures(t_game *g)
 {
-	int	exit;
 	int	i;
 
 	g->s.a = mlx_get_data_addr(g->s.img, &g->s.bpp, &g->s.ll, &g->s.endian);
 	i = WTEXTURES;
-	exit = 0;
 	while (i--)
 	{
 		if (!g->wt[i].img)
-			exit = 1;
+		{
+			g->wt[i] = g->dfl;
+			g->wt[i].img = 0;
+		}
 		else
 			g->wt[i].a = mlx_get_data_addr(g->wt[i].img, &g->wt[i].bpp,
 					&g->wt[i].ll, &g->wt[i].endian);
 	}
-	i = WTEXTURES;
-	while (exit && i--)
-		if (g->wt[i].img)
-			mlx_destroy_image(g->mlx.mlx, g->wt[i].img);
-	if (exit)
-		return (mlx_destroy_image(g->mlx.mlx, g->s.img),
-			mlx_destroy_window(g->mlx.mlx, g->mlx.win),
-			mlx_destroy_display(g->mlx.mlx), free(g->mlx.mlx), 1);
-	return (0);
 }
 
 int	ft_init_mlx(t_game *g)
@@ -56,43 +48,14 @@ int	ft_init_mlx(t_game *g)
 			mlx_destroy_display(g->mlx.mlx), free(g->mlx.mlx), 1);
 	i = -1;
 	while (++i < WTEXTURES)
-	{
-		g->wt[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->files[i],
-				&g->wt[i].width, &g->wt[i].height);
-	}
-	if (ft_import_textures(g))
-		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, IMPORT_ERR), 1);
+		if (g->files[i])
+			g->wt[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->files[i],
+					&g->wt[i].width, &g->wt[i].height);
+	ft_import_textures(g);
 	return (0);
 }
 
-int	ft_check_textures(t_game *game)
-{
-	int	i;
-	int	err;
-
-	err = 0;
-	i = WTEXTURES;
-	while (i--)
-	{
-		if (!game->wt[i].width || game->wt[i].height % game->wt[i].width)
-			err = 1;
-		game->wt[i].frames = game->wt[i].height / game->wt[i].width;
-	}
-	i = STEXTURES;
-	while (i--)
-	{
-		if (!game->st[i].a)
-			continue ;
-		if (!game->st[i].width || game->st[i].height % game->st[i].width)
-			return (1);
-		game->st[i].frames = game->st[i].height / game->st[i].width;
-	}
-	if (err)
-		return (ft_dprintf(2, ERR_FORMAT, NAME, TEXTURE_SIZE), err);
-	return (0);
-}
-
-void	ft_start(t_game *g)
+int	ft_check_textures(t_game *g)
 {
 	const char	*gt[] = {"glass.xpm", "black_stained_glass.xpm",
 			"blue_stained_glass.xpm", "brown_stained_glass.xpm",
@@ -103,8 +66,81 @@ void	ft_start(t_game *g)
 			"red_stained_glass.xpm", "light_gray_stained_glass.xpm",
 			"white_stained_glass.xpm", "yellow_stained_glass.xpm",
 			"tinted_stained_glass.xpm", "orange_stained_glass.xpm", 0};
-	int			index;
+	const char	*pt[] = {"blue_closed.xpm", "orange_closed.xpm", "blue.xpm",
+			"orange.xpm", 0};
+	int			i;
+	int			err;
 
+	i = -1;
+	while (pt[++i])
+	{
+		g->pt[i].img = mlx_xpm_file_to_image(g->mlx.mlx,
+				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", pt[i]),
+					ADD), &g->pt[i].width, &g->pt[i].height);
+		if (!g->pt[i].img)
+		{
+			g->pt[i] = g->dfl;
+			g->pt[i].img = 0;
+		}
+		else
+			g->pt[i].a = mlx_get_data_addr(g->pt[i].img, &g->pt[i].bpp,
+					&g->pt[i].ll, &g->pt[i].endian);
+	}
+	i = -1;
+	while (gt[++i])
+	{
+		g->gt[i].img = mlx_xpm_file_to_image(g->mlx.mlx,
+				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", gt[i]),
+					ADD), &g->gt[i].width, &g->gt[i].height);
+		if (!g->gt[i].img)
+		{
+			g->gt[i] = g->dfl;
+			g->gt[i].img = 0;
+		}
+		else
+			g->gt[i].a = mlx_get_data_addr(g->gt[i].img, &g->gt[i].bpp,
+					&g->gt[i].ll, &g->gt[i].endian);
+	}
+	i = -1;
+	while (++i < STEXTURES)
+	{
+		if (g->sfiles[i])
+			g->st[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->sfiles[i],
+					&g->st[i].width, &g->st[i].height);
+		if (!g->st[i].img)
+		{
+			g->st[i] = g->dfl;
+			g->st[i].img = 0;
+		}
+		else
+			g->st[i].a = mlx_get_data_addr(g->st[i].img, &g->st[i].bpp,
+					&g->st[i].ll, &g->st[i].endian);
+	}
+	err = 0;
+	i = WTEXTURES;
+	while (i--)
+	{
+		if (!g->wt[i].width || g->wt[i].height % g->wt[i].width)
+			err = 1;
+		else
+			g->wt[i].frames = g->wt[i].height / g->wt[i].width;
+	}
+	i = STEXTURES;
+	while (i--)
+	{
+		if (!g->st[i].a)
+			continue ;
+		if (!g->st[i].width || g->st[i].height % g->st[i].width)
+			return (1);
+		g->st[i].frames = g->st[i].height / g->st[i].width;
+	}
+	if (err)
+		return (ft_dprintf(2, ERR_FORMAT, NAME, TEXTURE_SIZE), err);
+	return (0);
+}
+
+void	ft_start(t_game *g)
+{
 	if (ft_check_textures(g))
 		return ;
 	mlx_hook(g->mlx.win, ON_KEYDOWN, KEYPRESS_MASK, on_key_press, g);
@@ -113,38 +149,5 @@ void	ft_start(t_game *g)
 	mlx_hook(g->mlx.win, ON_MOUSEDOWN, BUTTONPRESS_MASK, on_mouse_click, g);
 	mlx_loop_hook(g->mlx.mlx, ft_loop, g);
 	mlx_hook(g->mlx.win, ON_KEYUP, KEYRELEASE_MASK, on_key_release, g);
-	g->pt[0].img = mlx_xpm_file_to_image(g->mlx.mlx,
-			"assets/textures/walls/blue.xpm", &g->pt[0].width,
-			&g->pt[0].height);
-	g->pt[0].a = mlx_get_data_addr(g->pt[0].img, &g->pt[0].bpp, &g->pt[0].ll,
-			&g->pt[0].endian);
-	g->pt[1].img = mlx_xpm_file_to_image(g->mlx.mlx,
-			"assets/textures/walls/orange.xpm", &g->pt[1].width,
-			&g->pt[1].height);
-	g->pt[1].a = mlx_get_data_addr(g->pt[1].img, &g->pt[1].bpp, &g->pt[1].ll,
-			&g->pt[1].endian);
-	g->pt[2].img = mlx_xpm_file_to_image(g->mlx.mlx,
-			"assets/textures/walls/blue.xpm", &g->pt[2].width,
-			&g->pt[2].height);
-	g->pt[2].a = mlx_get_data_addr(g->pt[2].img, &g->pt[2].bpp, &g->pt[2].ll,
-			&g->pt[2].endian);
-	g->pt[3].img = mlx_xpm_file_to_image(g->mlx.mlx,
-			"assets/textures/walls/orange.xpm", &g->pt[3].width,
-			&g->pt[3].height);
-	g->pt[3].a = mlx_get_data_addr(g->pt[3].img, &g->pt[3].bpp, &g->pt[3].ll,
-			&g->pt[3].endian);
-	index = -1;
-	while (gt[++index])
-	{
-		g->gt[index].img = mlx_xpm_file_to_image(g->mlx.mlx,
-				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", gt[index]), ADD), &g->gt[index].width,
-				&g->gt[index].height);
-		if (!g->gt[index].img)
-			g->gt[index].a = mlx_get_data_addr(g->wt[0].img, &g->gt[index].bpp,
-					&g->gt[index].ll, &g->gt[index].endian);
-		else
-			g->gt[index].a = mlx_get_data_addr(g->gt[index].img,
-					&g->gt[index].bpp, &g->gt[index].ll, &g->gt[index].endian);
-	}
 	mlx_loop(g->mlx.mlx);
 }

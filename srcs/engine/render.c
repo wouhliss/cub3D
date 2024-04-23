@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 12:36:25 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 16:00:46 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 			r->side += 1 * (r->step.y < 0);
 		}
 		ft_portal_hit(t, g, r);
-		if (!r->pass && !ft_outside(g, r->map.x, r->map.y)
+		if (!ft_outside(g, r->map.x, r->map.y)
 			&& g->map.map[r->map.y][r->map.x] == '1')
 			r->hit = 1;
 		else if (r->pass && !ft_outside(g, r->map.x, r->map.y)

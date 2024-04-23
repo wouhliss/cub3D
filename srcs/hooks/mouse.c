@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 11:37:23 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:21:44 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,34 +46,26 @@ static inline void	ft_break_block(t_game *g)
 
 static inline void	ft_place_block(t_game *g)
 {
-	t_door	door;
-	int		x;
-	int		y;
-	char	block;
+	t_door		door;
+	t_intvec	facing;
+	char		block;
 
-	x = g->p.look_pos.x;
-	y = g->p.look_pos.y;
-	if (g->p.looking_side == -2)
-		++x;
-	else if (g->p.looking_side == -1)
-		--x;
-	else if (g->p.looking_side == 2)
-		++y;
-	else if (g->p.looking_side == 1)
-		--y;
-	if (y == (int)g->p.pos.y && x == (int)g->p.pos.x)
+	facing = ft_get_facing_int(g->p.looking_side, g->p.look_pos);
+	if (facing.y == (int)g->p.pos.y && facing.x == (int)g->p.pos.x)
 		return ;
 	block = ft_get_block(g);
-	g->map.map[y][x] = block;
+	g->map.map[facing.y][facing.x] = block;
 	if (block != 'D')
 		return ;
-	door = (t_door){.frame = 0, .pos = (t_intvec){x, y}, .state = 0};
+	door = (t_door){.frame = 0, .pos = (t_intvec){facing.x, facing.y},
+		.state = 0};
 	ft_add_to_vector(g, &g->doors, &door);
 }
 
 int	on_mouse_click(int button, int x, int y, void *param)
 {
-	t_game	*game;
+	t_game		*game;
+	t_sprite	sprite;
 
 	(void)x;
 	(void)y;
@@ -88,6 +80,22 @@ int	on_mouse_click(int button, int x, int y, void *param)
 		ft_break_block(game);
 	else if (button == 3 && game->p.looking && game->p.weapon.type == 2)
 		ft_place_block(game);
+	else if (button == 3 && game->p.weapon.type == 3)
+	{
+		if (game->p.weapon.state == 0)
+			sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
+				.hide = 0, .pos = game->p.pos};
+		else if (game->p.weapon.state == 1)
+			sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
+				.pos = game->p.pos};
+		else if (game->p.weapon.state == 2)
+		{
+			sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 2, .vr = 2,
+				.pos = game->p.pos};
+			sprite.vdiff = HEIGHT / (sprite.vr * 2);
+		}
+		ft_add_to_vector(game, &game->sprites, &sprite);
+	}
 	else if (button == 2 || button == 4 || button == 5)
 		ft_changestate(game, button);
 	return (0);

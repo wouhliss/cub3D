@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 12:20:44 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:29:49 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@
 # define TWE 2
 # define TEA 3
 # define TD 4
-# define TB 5
+
+# define TP 0
+# define TB 1
 
 # define ERR_FORMAT "%s: %s\n"
 # define NAME "cub3D"
@@ -137,7 +139,7 @@
 # define G 2
 # define B 3
 
-# define PARAMS 8
+# define PARAMS 6
 
 # define DOOR 0
 # define PROJECTILE 1
@@ -166,6 +168,7 @@ typedef struct s_texture
 	int						frames;
 	int						f;
 	int						s;
+	time_t					last;
 }							t_texture;
 
 typedef union u_trgb
@@ -398,14 +401,17 @@ typedef struct s_game
 	t_texture				st[STEXTURES];
 	t_texture				pt[PTEXTURES];
 	t_texture				gt[GLASS];
+	char					dfl_a[4];
+	t_texture				dfl;
 	t_screen				s;
 	t_vector				sprites;
 	t_vector				doors;
 	t_vector				pls;
 	t_thread				threads[THREADS];
 	char					*files[WTEXTURES];
-	int						timeframes[WTEXTURES];
+	int						wframes[WTEXTURES];
 	char					*sfiles[STEXTURES];
+	int						sframes[STEXTURES];
 	char					*pfiles[PTEXTURES];
 	int						colors_c[4];
 	int						colors_f[4];
@@ -567,7 +573,8 @@ void						*ft_resize_pvector(t_vector *vector);
 void						*ft_resize_svector(const t_game *g,
 								t_vector *vector);
 void						*ft_resize_hvector(t_vector *vector);
-
+t_intvec					ft_get_facing_int(const int side, t_intvec vec);
+t_vec						ft_get_facing(const int side, t_vec vec);
 /*Garbage collector*/
 
 void						*gc(void *u_ptr, int i);

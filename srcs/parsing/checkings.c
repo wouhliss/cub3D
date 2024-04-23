@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 09:50:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:12:09 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ static inline void	ft_setsprite(t_game *game, int i, int j)
 
 	if (game->map.map[i][j] == 'b')
 	{
-		sprite = (t_sprite){.type = 2, .vdiff = 0.0, .hr = 2, .vr = 2,
-			.hide = 0, .collision = 1};
+		sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 2, .vr = 2,
+			.hide = 0, .collision = 1, .delete = false};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		sprite.vdiff = HEIGHT / (sprite.vr * 2);
 		game->map.map[i][j] = '0';
@@ -71,14 +71,14 @@ static inline void	ft_setsprite(t_game *game, int i, int j)
 	else if (game->map.map[i][j] == 'B')
 	{
 		sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0, .collision = 1};
+			.hide = 0, .collision = 1, .delete = false};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		game->map.map[i][j] = '0';
 	}
 	else if (game->map.map[i][j] == 'P')
 	{
 		sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0, .collision = 1};
+			.hide = 0, .collision = 1, .delete = false};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		game->map.map[i][j] = '0';
 	}

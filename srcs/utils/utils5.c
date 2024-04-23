@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 07:13:46 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 12:08:14 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/23 14:20:17 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,30 @@ bool	ft_can_step(t_game *g, t_sprite *s)
 		++i;
 	}
 	return (true);
+}
+
+t_intvec	ft_get_facing_int(const int side, t_intvec vec)
+{
+	if (side == -2)
+		++vec.x;
+	else if (side == -1)
+		--vec.x;
+	else if (side == 2)
+		++vec.y;
+	else if (side == 1)
+		--vec.y;
+	return (vec);
+}
+
+t_vec	ft_get_facing(const int side, t_vec vec)
+{
+	if (side == -2)
+		++vec.x;
+	else if (side == -1)
+		--vec.x;
+	else if (side == 2)
+		++vec.y;
+	else if (side == 1)
+		--vec.y;
+	return (vec);
 }
