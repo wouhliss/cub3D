@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 13:47:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:18:44 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	__attribute__((destructor)) aftermain(void)
+void	__attribute__((destructor))	aftermain(void)
 {
 	gc(NULL, EMPTY);
 }
@@ -25,7 +25,7 @@ static inline void	ft_default_texture(t_game *g)
 	g->dfl.f = 0;
 	g->dfl.frames = 0;
 	g->dfl.height = 2;
-	g->dfl.width = 2;
+	g->dfl.w = 2;
 	g->dfl.img = 0;
 	g->dfl.ll = 2;
 	g->dfl.s = 0;
@@ -35,11 +35,36 @@ static inline void	ft_default_texture(t_game *g)
 	*(((unsigned int *)g->dfl.a) + 3) = 0x00A020F0;
 }
 
+void	destroy(t_game *game)
+{
+	int	i;
+
+	mlx_destroy_image(game->mlx.mlx, game->s.img);
+	i = -1;
+	while (++i < WTEXTURES)
+		if (game->wt[i].img)
+			mlx_destroy_image(game->mlx.mlx, game->wt[i].img);
+	i = -1;
+	while (++i < STEXTURES)
+		if (game->st[i].img)
+			mlx_destroy_image(game->mlx.mlx, game->st[i].img);
+	i = -1;
+	while (++i < GLASS)
+		if (game->gt[i].img)
+			mlx_destroy_image(game->mlx.mlx, game->gt[i].img);
+	i = -1;
+	while (++i < PTEXTURES)
+		if (game->pt[i].img)
+			mlx_destroy_image(game->mlx.mlx, game->pt[i].img);
+	mlx_destroy_window(game->mlx.mlx, game->mlx.win);
+	mlx_destroy_display(game->mlx.mlx);
+	free(game->mlx.mlx);
+}
+
 int	main(int ac, char **av)
 {
 	static t_game	game = {0};
 	const char		*s;
-	int				i;
 
 	if (ac < 2)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, ARGS_ERR), 1);
@@ -54,23 +79,6 @@ int	main(int ac, char **av)
 	game.s.lratio = 0.25;
 	game.s.rratio = 0.75;
 	ft_start(&game);
-	mlx_destroy_image(game.mlx.mlx, game.s.img);
-	i = -1;
-	while (++i < WTEXTURES)
-		if (game.wt[i].img)
-			mlx_destroy_image(game.mlx.mlx, game.wt[i].img);
-	i = -1;
-	while (++i < STEXTURES)
-		if (game.st[i].img)
-			mlx_destroy_image(game.mlx.mlx, game.st[i].img);
-	i = -1;
-	while (++i < GLASS)
-		if (game.gt[i].img)
-			mlx_destroy_image(game.mlx.mlx, game.gt[i].img);
-	i = -1;
-	while (++i < PTEXTURES)
-		if (game.pt[i].img)
-			mlx_destroy_image(game.mlx.mlx, game.pt[i].img);
-	return (mlx_destroy_window(game.mlx.mlx, game.mlx.win),
-		mlx_destroy_display(game.mlx.mlx), free(game.mlx.mlx), 0);
+	destroy(&game);
+	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 14:48:52 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:18:44 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	ft_init_mlx(t_game *g)
 	while (++i < WTEXTURES)
 		if (g->files[i])
 			g->wt[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->files[i],
-					&g->wt[i].width, &g->wt[i].height);
+					&g->wt[i].w, &g->wt[i].height);
 	ft_import_textures(g);
 	return (0);
 }
@@ -58,16 +58,16 @@ int	ft_init_mlx(t_game *g)
 int	ft_check_textures(t_game *g)
 {
 	const char	*gt[] = {"glass.xpm", "black_stained_glass.xpm",
-			"blue_stained_glass.xpm", "brown_stained_glass.xpm",
-			"cyan_stained_glass.xpm", "gray_stained_glass.xpm",
-			"green_stained_glass.xpm", "light_blue_stained_glass.xpm",
-			"lime_stained_glass.xpm", "magenta_stained_glass.xpm",
-			"pink_stained_glass.xpm", "purple_stained_glass.xpm",
-			"red_stained_glass.xpm", "light_gray_stained_glass.xpm",
-			"white_stained_glass.xpm", "yellow_stained_glass.xpm",
-			"tinted_stained_glass.xpm", "orange_stained_glass.xpm", 0};
+		"blue_stained_glass.xpm", "brown_stained_glass.xpm",
+		"cyan_stained_glass.xpm", "gray_stained_glass.xpm",
+		"green_stained_glass.xpm", "light_blue_stained_glass.xpm",
+		"lime_stained_glass.xpm", "magenta_stained_glass.xpm",
+		"pink_stained_glass.xpm", "purple_stained_glass.xpm",
+		"red_stained_glass.xpm", "light_gray_stained_glass.xpm",
+		"white_stained_glass.xpm", "yellow_stained_glass.xpm",
+		"tinted_stained_glass.xpm", "orange_stained_glass.xpm", 0};
 	const char	*pt[] = {"blue_closed.xpm", "orange_closed.xpm", "blue.xpm",
-			"orange.xpm", 0};
+		"orange.xpm", 0};
 	int			i;
 	int			err;
 
@@ -76,7 +76,7 @@ int	ft_check_textures(t_game *g)
 	{
 		g->pt[i].img = mlx_xpm_file_to_image(g->mlx.mlx,
 				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", pt[i]),
-					ADD), &g->pt[i].width, &g->pt[i].height);
+					ADD), &g->pt[i].w, &g->pt[i].height);
 		if (!g->pt[i].img)
 		{
 			g->pt[i] = g->dfl;
@@ -91,7 +91,7 @@ int	ft_check_textures(t_game *g)
 	{
 		g->gt[i].img = mlx_xpm_file_to_image(g->mlx.mlx,
 				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", gt[i]),
-					ADD), &g->gt[i].width, &g->gt[i].height);
+					ADD), &g->gt[i].w, &g->gt[i].height);
 		if (!g->gt[i].img)
 		{
 			g->gt[i] = g->dfl;
@@ -106,7 +106,7 @@ int	ft_check_textures(t_game *g)
 	{
 		if (g->sfiles[i])
 			g->st[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->sfiles[i],
-					&g->st[i].width, &g->st[i].height);
+					&g->st[i].w, &g->st[i].height);
 		if (!g->st[i].img)
 		{
 			g->st[i] = g->dfl;
@@ -120,19 +120,19 @@ int	ft_check_textures(t_game *g)
 	i = WTEXTURES;
 	while (i--)
 	{
-		if (!g->wt[i].width || g->wt[i].height % g->wt[i].width)
+		if (!g->wt[i].w || g->wt[i].height % g->wt[i].w)
 			err = 1;
 		else
-			g->wt[i].frames = g->wt[i].height / g->wt[i].width;
+			g->wt[i].frames = g->wt[i].height / g->wt[i].w;
 	}
 	i = STEXTURES;
 	while (i--)
 	{
 		if (!g->st[i].a)
 			continue ;
-		if (!g->st[i].width || g->st[i].height % g->st[i].width)
+		if (!g->st[i].w || g->st[i].height % g->st[i].w)
 			return (1);
-		g->st[i].frames = g->st[i].height / g->st[i].width;
+		g->st[i].frames = g->st[i].height / g->st[i].w;
 	}
 	if (err)
 		return (ft_dprintf(2, ERR_FORMAT, NAME, TEXTURE_SIZE), err);

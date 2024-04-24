@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 13:54:54 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static inline void	ft_noclip(t_game *g)
 {
 	g->noclip ^= 1;
 	if (!g->noclip && !ft_can_move(g, 0.01, 0.01))
-		g->p.pos = g->map.s_pos;
+		g->p.pos = g->m.s_pos;
 }
 
 int	on_key_press(int k, void *param)

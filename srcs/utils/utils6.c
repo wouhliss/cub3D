@@ -3,14 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   utils6.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 16:07:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 16:44:37 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:57:36 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
+
+int	ic(char *charset, char c)
+{
+	while (*charset)
+	{
+		if (*charset == c)
+			return (1);
+		++charset;
+	}
+	return (0);
+}
 
 t_vec	ft_side_to_dir(const int side)
 {

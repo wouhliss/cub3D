@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 17:59:26 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 20:09:53 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,21 +80,17 @@
 # ifndef THREADS
 #  define THREADS 2
 # endif
-# ifndef W
-#  define W 640
-# endif
-# define HW W / 2
-# define T_WIDTH W / THREADS
-# ifndef HEIGHT
-#  define HEIGHT 480
-# endif
-# define HALF_HEIGHT HEIGHT / 2
-# define MW W / 4
-# define MH HEIGHT / 4
-# define MX MW / 4
-# define MY MH / 4
+# define W 1280
+# define HW 640
+# define T_WIDTH 640
+# define HEIGHT 720
+# define HALF_HEIGHT 360
+# define MW 320
+# define MH 180
+# define MX 80
+# define MY 20
 # define MS 3
-# define MPR MH / 32
+# define MPR 4
 # define BLACK 0x000000
 # define WHITE 0xFFFFFF
 # define RED 0xFF0000
@@ -146,7 +142,7 @@
 # define SPRITE 2
 # define HIT 3
 
-# define DFL_SIZE 150
+# define DFL_SIZE 4
 
 # define CUBES 21
 # define GLASS 18
@@ -164,7 +160,7 @@ typedef struct s_texture
 	int						ll;
 	int						endian;
 	int						height;
-	int						width;
+	int						w;
 	int						frames;
 	int						f;
 	int						s;
@@ -225,8 +221,7 @@ typedef struct s_sprite
 	t_vec					pos;
 	t_vec					dir;
 	t_vec					plane;
-	t_texture				*t;
-	int						type;
+	int						t;
 	int						vr;
 	int						hr;
 	int						vpos;
@@ -239,11 +234,11 @@ typedef struct s_sprite
 typedef struct s_projectile
 {
 	t_sprite				*sprite;
-	int						type;
+	int						t;
 	bool					delete;
 	t_vec					dd;
 	t_vec					sd;
-	t_intvec				map;
+	t_intvec				m;
 	t_intvec				step;
 	double					pdist;
 	int						side;
@@ -253,7 +248,7 @@ typedef struct s_hit		t_hit;
 
 typedef struct s_vector
 {
-	int						type;
+	int						t;
 	size_t					size;
 	size_t					bsize;
 	size_t					index;
@@ -280,7 +275,7 @@ typedef struct s_render
 	t_vec					pos;
 	t_intvec				draw_x;
 	t_intvec				draw_y;
-	t_intvec				map;
+	t_intvec				m;
 	t_intvec				step;
 	t_intvec				draw;
 	t_intvec				tex;
@@ -320,7 +315,7 @@ typedef struct s_hit
 
 typedef struct s_weapon
 {
-	int						type;
+	int						t;
 	int						state;
 	t_texture				*texture;
 }							t_weapon;
@@ -336,7 +331,7 @@ typedef struct s_player
 	t_vec					sd;
 	t_intvec				look_pos;
 	t_intvec				step;
-	t_intvec				map;
+	t_intvec				m;
 	double					pdist;
 	bool					looking;
 	int						looking_side;
@@ -348,7 +343,7 @@ typedef struct s_player
 typedef struct s_map
 {
 	t_vec					s_pos;
-	char					**map;
+	char					**m;
 	char					s_dir;
 	t_color					cc;
 	t_color					fc;
@@ -369,7 +364,7 @@ typedef struct s_mlx
 {
 	void					*mlx;
 	void					*win;
-	int						width;
+	int						w;
 	int						height;
 }							t_mlx;
 
@@ -398,7 +393,7 @@ typedef struct s_thread
 
 typedef struct s_game
 {
-	t_map					map;
+	t_map					m;
 	t_player				p;
 	t_mlx					mlx;
 	t_texture				wt[WTEXTURES];
@@ -420,8 +415,8 @@ typedef struct s_game
 	int						colors_c[4];
 	int						colors_f[4];
 	int						rendered[THREADS];
-	t_portal				portal_l;
-	t_portal				portal_r;
+	t_portal				pl;
+	t_portal				pr;
 	double					speed;
 	double					sens;
 	time_t					now;
@@ -436,7 +431,7 @@ typedef struct s_game
 	int						frames;
 	int						fd;
 	int						length;
-	int						width;
+	int						w;
 	bool					front;
 	bool					back;
 	bool					up;
@@ -487,7 +482,7 @@ void						ft_drawsprites(t_thread *t);
 void						ft_drawtpixel(t_thread *t, const int x, const int y,
 								t_render *r);
 void						ft_hitcalc(const t_game *g, t_render *r,
-								const int type);
+								const int t);
 void						ft_drawhit(t_thread *t, t_render *r);
 void						*ft_draw(void *p);
 void						ft_drawmap(t_game *game);
@@ -509,7 +504,7 @@ bool						ft_check_doors(t_game *g, double x, double y);
 char						ft_get_block(t_game *g);
 void						ft_glass(const t_game *game, t_render *r);
 void						ft_add_projectile(t_game *g, t_vec pos, t_vec dir,
-								int type);
+								int t);
 void						*ft_hit(const t_game *g, t_render *r, t_thread *t);
 void						ft_steps(const t_game *g, t_render *r);
 void						ft_dda(const t_game *g, t_render *r, t_thread *t);
@@ -532,6 +527,9 @@ void						my_mlx_pixel_tput(const t_screen *data, const int x,
 								const int y, unsigned int color);
 bool						ft_can_step(t_game *g, t_sprite *s);
 void						ft_portal_sprite(t_game *g, t_thread *t);
+void						ft_animate(t_game *g);
+void						ft_check_door(t_game *g);
+void						ft_place_sprite(t_game *g);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);
@@ -543,7 +541,7 @@ int							check_map(t_game *game);
 int							set_texture(char *line, t_game *game);
 /*Utils*/
 
-int							ft_in_charset(char *charset, char c);
+int							ic(char *charset, char c);
 char						*get_next_line(int fd);
 int							ft_strnchr(t_buffer *buffer);
 char						*ft_strchr(char *s, int c);
@@ -551,15 +549,15 @@ char						*ft_strrchr(char *s, int c);
 int							ft_dprintf(int fd, const char *str, ...);
 int							ft_strcmp(const char *s1, const char *s2);
 char						*ft_strdup(const char *s);
-char						**join_tab(char **map, char *str);
+char						**join_tab(char **m, char *str);
 int							ft_strlen(const char *str);
-char						**ft_copy(char **map);
-int							plen(char **map);
+char						**ft_copy(char **m);
+int							plen(char **m);
 int							ft_strncmp(const char *s1, const char *s2,
 								size_t n);
 void						*ft_calloc(size_t nmemb, size_t size);
 void						skip_spaces(char *line, int *i);
-int							plen(char **map);
+int							plen(char **m);
 int							ft_atoc(const char *str);
 long						ft_atoi(const char *str);
 int							max(int a, int b);
@@ -570,7 +568,7 @@ void						ft_swapi(int *a, int *b);
 void						ft_swapd(double *a, double *b);
 int							ft_outside(const t_game *game, const int x,
 								const int y);
-void						ft_create_vector(t_vector *vector, int type,
+void						ft_create_vector(t_vector *vector, int t,
 								size_t size);
 void						*ft_add_to_vector(const t_game *g, t_vector *vec,
 								void *u_ptr);

@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   hit.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:43:32 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 17:18:07 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:19:07 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline void	ft_calcdraw(const t_game *g, t_render *r, const int type)
+static inline void	ft_calcdraw(const t_game *g, t_render *r, const int t)
 {
-	if (type == 2)
+	if (t == 2)
 	{
 		r->dd.y /= 2;
 		r->dd.x /= 2;
@@ -32,16 +32,16 @@ static inline void	ft_calcdraw(const t_game *g, t_render *r, const int type)
 		r->draw.y = HEIGHT - 1;
 }
 
-void	ft_hitcalc(const t_game *g, t_render *r, const int type)
+void	ft_hitcalc(const t_game *g, t_render *r, const int t)
 {
-	ft_calcdraw(g, r, type);
-	if (type == 2)
+	ft_calcdraw(g, r, t);
+	if (t == 2)
 		ft_door(g, r);
-	else if (type == 3)
+	else if (t == 3)
 		ft_glass(g, r);
-	else if (type > 3 && type < 8)
+	else if (t > 3 && t < 8)
 		ft_portal(g, r);
-	else if (type == 8)
+	else if (t == 8)
 		ft_truc(g, r);
 	else
 		ft_wall(g, r);

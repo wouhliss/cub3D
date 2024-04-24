@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   walls.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 13:36:48 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 16:00:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_wall(const t_game *game, t_render *r)
 		r->id = TSO;
 	else if (r->side == 2)
 		r->id = TNO;
-	r->twidth = game->wt[r->id].width;
+	r->twidth = game->wt[r->id].w;
 	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx, r->twidth);
@@ -70,8 +70,8 @@ void	ft_drawwallpixel(t_game *game, const int x, const int y, t_render *r)
 	r->linetex.y = (int)r->linepos & (63);
 	r->linepos += r->linestep;
 	color = ((int *)game->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
-	if (game->p.looking && game->p.look_pos.x == r->map.x
-		&& game->p.look_pos.y == r->map.y && (!r->linetex.y
+	if (game->p.looking && game->p.look_pos.x == r->m.x
+		&& game->p.look_pos.y == r->m.y && (!r->linetex.y
 			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;

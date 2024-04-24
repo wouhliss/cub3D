@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mouse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 15:49:24 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,19 @@ static inline void	ft_changestate(t_game *g, int button)
 
 	if (button == 4)
 	{
-		++g->p.weapon.type;
-		if (g->p.weapon.type > WEAPONS)
-			g->p.weapon.type = 0;
+		++g->p.weapon.t;
+		if (g->p.weapon.t > WEAPONS)
+			g->p.weapon.t = 0;
 		g->p.weapon.state = 0;
 	}
 	else if (button == 5)
 	{
-		--g->p.weapon.type;
-		if (g->p.weapon.type < 0)
-			g->p.weapon.type = WEAPONS;
+		--g->p.weapon.t;
+		if (g->p.weapon.t < 0)
+			g->p.weapon.t = WEAPONS;
 		g->p.weapon.state = 0;
 	}
-	if (button == 2 && g->p.weapon.state < states[g->p.weapon.type])
+	if (button == 2 && g->p.weapon.state < states[g->p.weapon.t])
 		++g->p.weapon.state;
 	else if (button == 2)
 		g->p.weapon.state = 0;
@@ -39,9 +39,9 @@ static inline void	ft_changestate(t_game *g, int button)
 static inline void	ft_break_block(t_game *g)
 {
 	if (g->p.look_pos.x < 1 || g->p.look_pos.y < 1
-		|| g->p.look_pos.x >= g->width - 1 || g->p.look_pos.y >= g->length - 1)
+		|| g->p.look_pos.x >= g->w - 1 || g->p.look_pos.y >= g->length - 1)
 		return ;
-	g->map.map[g->p.look_pos.y][g->p.look_pos.x] = '0';
+	g->m.m[g->p.look_pos.y][g->p.look_pos.x] = '0';
 }
 
 static inline void	ft_place_block(t_game *g)
@@ -54,7 +54,7 @@ static inline void	ft_place_block(t_game *g)
 	if (facing.y == (int)g->p.pos.y && facing.x == (int)g->p.pos.x)
 		return ;
 	block = ft_get_block(g);
-	g->map.map[facing.y][facing.x] = block;
+	g->m.m[facing.y][facing.x] = block;
 	if (block != 'D')
 		return ;
 	door = (t_door){.frame = 0, .pos = (t_intvec){facing.x, facing.y},
@@ -65,37 +65,22 @@ static inline void	ft_place_block(t_game *g)
 int	on_mouse_click(int button, int x, int y, void *param)
 {
 	t_game		*game;
-	t_sprite	sprite;
 
 	(void)x;
 	(void)y;
 	game = param;
-	if (button == 1 && game->p.weapon.type == 1)
+	if (button == 1 && game->p.weapon.t == 1)
 		ft_add_projectile(game, game->p.pos, game->p.dir, 0);
-	else if (button == 1 && game->p.weapon.type == 0)
+	else if (button == 1 && game->p.weapon.t == 0)
 		ft_add_projectile(game, game->p.pos, game->p.dir, 1);
-	else if (button == 3 && game->p.weapon.type == 0)
+	else if (button == 3 && game->p.weapon.t == 0)
 		ft_add_projectile(game, game->p.pos, game->p.dir, 2);
-	else if (button == 1 && game->p.looking && game->p.weapon.type == 2)
+	else if (button == 1 && game->p.looking && game->p.weapon.t == 2)
 		ft_break_block(game);
-	else if (button == 3 && game->p.looking && game->p.weapon.type == 2)
+	else if (button == 3 && game->p.looking && game->p.weapon.t == 2)
 		ft_place_block(game);
-	else if (button == 3 && game->p.weapon.type == 3)
-	{
-		if (game->p.weapon.state == 0)
-			sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
-				.hide = 0, .pos = game->p.pos};
-		else if (game->p.weapon.state == 1)
-			sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
-				.pos = game->p.pos};
-		else if (game->p.weapon.state == 2)
-		{
-			sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 2, .vr = 2,
-				.pos = game->p.pos};
-			sprite.vdiff = HEIGHT / (sprite.vr * 2);
-		}
-		ft_add_to_vector(game, &game->sprites, &sprite);
-	}
+	else if (button == 3 && game->p.weapon.t == 3)
+		ft_place_sprite(game);
 	else if (button == 2 || button == 4 || button == 5)
 		ft_changestate(game, button);
 	return (0);

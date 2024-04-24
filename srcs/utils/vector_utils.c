@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   vector_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:57:58 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/16 03:28:53 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:10:07 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-static inline t_projectile	*ft_get_linked_projectile(const t_game *g, t_sprite *s)
+static inline void	ft_get_del_linked(const t_game *g,
+		t_sprite *s, t_sprite *res)
 {
 	size_t	i;
 
@@ -20,10 +21,14 @@ static inline t_projectile	*ft_get_linked_projectile(const t_game *g, t_sprite *
 	while (i < g->pls.index)
 	{
 		if (g->pls.u_ptr.p[i].sprite == s)
-			return (&g->pls.u_ptr.p[i]);
+		{
+			if (s->delete)
+				g->pls.u_ptr.p[i].delete = 1;
+			else
+				g->pls.u_ptr.p[i].sprite = res;
+		}
 		++i;
 	}
-	return (NULL);
 }
 
 void	*ft_resize_dvector(t_vector *vector)
@@ -75,7 +80,6 @@ void	*ft_resize_pvector(t_vector *vector)
 void	*ft_resize_svector(const t_game *g, t_vector *vector)
 {
 	t_sprite		*res;
-	t_projectile	*linked;
 	size_t			i;
 	size_t			j;
 
@@ -86,14 +90,7 @@ void	*ft_resize_svector(const t_game *g, t_vector *vector)
 	j = 0;
 	while (i < vector->index)
 	{
-		linked = ft_get_linked_projectile(g, &vector->u_ptr.s[i]);
-		if (linked)
-		{
-			if (vector->u_ptr.s[i].delete)
-				linked->delete = 1;
-			else
-				linked->sprite = &res[j];
-		}
+		ft_get_del_linked(g, &vector->u_ptr.s[i], &res[j]);
 		if (!vector->u_ptr.s[i].delete)
 			res[j++] = vector->u_ptr.s[i];
 		++i;

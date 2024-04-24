@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   map.c                                              :+:      :+:    :+:   */
+/*   m.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:06:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 14:11:32 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:18:44 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void	get_map(t_game *game, char *line)
 {
 	while (line)
 	{
-		game->map.map = gc(join_tab(game->map.map, line), ADD);
+		game->m.m = gc(join_tab(game->m.m, line), ADD);
 		game->length++;
-		game->width = max(game->width, ft_strlen(line));
+		game->w = max(game->w, ft_strlen(line));
 		line = gc(get_next_line(game->fd), ADD);
 	}
-	if (!game->map.map)
+	if (!game->m.m)
 		panic(MAP_ERR);
 }
 

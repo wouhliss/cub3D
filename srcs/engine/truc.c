@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   truc.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 17:42:01 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_truc(const t_game *game, t_render *r)
 	double	wallx;
 
 	r->id = 5;
-	r->twidth = game->wt[r->id].width;
+	r->twidth = game->wt[r->id].w;
 	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx, r->twidth);
@@ -62,8 +62,8 @@ void	ft_drawspixel(t_thread *t, const int x, const int y, t_render *r)
 	r->texpos += r->mystep;
 	r->linetex.y = (int)r->linepos & (63);
 	r->linepos += r->linestep;
-	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y
+	if (t->g->p.looking && t->g->p.look_pos.x == r->m.x
+		&& t->g->p.look_pos.y == r->m.y && (!r->linetex.y
 			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;

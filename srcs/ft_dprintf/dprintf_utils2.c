@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dprintf_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 03:36:51 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/11 21:55:40 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:19:07 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_count_chars(t_print *print, const char *s, va_list args)
 	const char	*str;
 
 	str = s;
-	print->type = 2;
+	print->t = 2;
 	print->len = 0;
 	print->size = 0;
 	while (*str)

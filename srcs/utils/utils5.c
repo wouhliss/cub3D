@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils5.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 07:13:46 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 14:20:17 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_outside(const t_game *game, const int x, const int y)
 {
-	return (x < 0 || x >= game->width || y < 0 || y >= game->length);
+	return (x < 0 || x >= game->w || y < 0 || y >= game->length);
 }
 
 void	my_mlx_pixel_tput(const t_screen *data, const int x, const int y,
@@ -40,11 +40,11 @@ bool	ft_can_step(t_game *g, t_sprite *s)
 {
 	size_t	i;
 
-	if (g->map.map[(int)s->pos.y][(int)s->pos.x] == '1')
+	if (g->m.m[(int)s->pos.y][(int)s->pos.x] == '1')
 		return (false);
-	else if (g->map.map[(int)s->pos.y][(int)s->pos.x] == '0')
+	else if (g->m.m[(int)s->pos.y][(int)s->pos.x] == '0')
 		return (true);
-	else if (g->map.map[(int)s->pos.y][(int)s->pos.x] == 't')
+	else if (g->m.m[(int)s->pos.y][(int)s->pos.x] == 't')
 		return (true);
 	i = 0;
 	while (i < g->doors.index)

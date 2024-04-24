@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_dprintf.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 14:56:35 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/05 11:41:22 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:19:07 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*ft_mprintf(const char *s, ...)
 	va_start(args, s);
 	ft_count_chars(&print, s, args);
 	va_end(args);
-	print.type = 3;
+	print.t = 3;
 	print.str = malloc(print.size + 1);
 	if (!print.str)
 		return (0);
@@ -70,7 +70,7 @@ char	*ft_sprintf(char *buff, const char *s, ...)
 	t_print		print;
 
 	str = s;
-	print.type = 3;
+	print.t = 3;
 	print.len = 0;
 	print.size = 0;
 	print.str = buff;
@@ -98,7 +98,7 @@ int	ft_dprintf(int fd, const char *s, ...)
 	print.fd = fd;
 	print.len = 0;
 	print.size = 0;
-	print.type = 1;
+	print.t = 1;
 	va_start(args, s);
 	while (*s)
 	{
@@ -123,7 +123,7 @@ int	ft_printf(const char *s, ...)
 	print.fd = 1;
 	print.len = 0;
 	print.size = 0;
-	print.type = 0;
+	print.t = 0;
 	va_start(args, s);
 	while (*s)
 	{

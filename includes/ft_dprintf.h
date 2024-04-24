@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_dprintf.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/10 18:45:33 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/02/21 15:00:32 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:19:07 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ typedef struct s_print
 	int		fd;
 	int		len;
 	int		size;
-	int		type;
+	int		t;
 }			t_print;
 
 int			ft_printf(const char *str, ...);

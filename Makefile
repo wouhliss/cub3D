@@ -14,8 +14,8 @@ ERROR = panic garbage
 DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key window
-HOOKSB = key_bonus window mouse block_utils
-ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils portal_utils2 projectile projectile_utils projectile_utils2 truc
+HOOKSB = key_bonus window mouse block_utils sprite_utils
+ENGINE = mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils portal_utils2 projectile projectile_utils projectile_utils2 truc animation
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\

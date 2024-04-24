@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   portal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:29:14 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 18:50:43 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_portal(const t_game *game, t_render *r)
 	double	wallx;
 
 	r->pid = r->hit - 4;
-	r->ptwidth = game->pt[r->pid].width;
+	r->ptwidth = game->pt[r->pid].w;
 	r->ps = game->pt[r->pid].s;
 	wallx = get_wall_x(r);
 	r->ptex.x = get_ptex_x(r, wallx, r->ptwidth);
@@ -81,8 +81,8 @@ void	ft_drawppixel(t_thread *t, const int x, const int y, t_render *r)
 	r->texpos += r->mystep;
 	r->ptex.y = (int)r->ptexpos & (r->ptwidth - 1);
 	r->ptexpos += r->pmystep;
-	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->ptex.y
+	if (t->g->p.looking && t->g->p.look_pos.x == r->m.x
+		&& t->g->p.look_pos.y == r->m.y && (!r->ptex.y
 			|| r->ptex.y == r->ptwidth - 1 || !r->ptex.x
 			|| r->ptex.x == r->ptwidth - 1))
 	{

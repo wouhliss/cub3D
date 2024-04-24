@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   doors.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 17:42:09 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_door(const t_game *game, t_render *r)
 	double	wallx;
 
 	r->id = TD;
-	r->twidth = game->wt[r->id].width;
+	r->twidth = game->wt[r->id].w;
 	r->s = game->wt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = wallx * r->twidth;
@@ -70,8 +70,8 @@ void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 	r->texpos += r->mystep;
 	r->linetex.y = (int)r->linepos & (63);
 	r->linepos += r->linestep;
-	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y
+	if (t->g->p.looking && t->g->p.look_pos.x == r->m.x
+		&& t->g->p.look_pos.y == r->m.y && (!r->linetex.y
 			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;
@@ -88,4 +88,33 @@ void	ft_drawdoorpixel(t_thread *t, const int x, const int y, t_render *r)
 	t->zbuffer[x - t->dx][y] = r->pdist;
 	if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
+}
+
+void	ft_check_door(t_game *g)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < g->doors.index)
+	{
+		if (g->doors.u_ptr.d[i].delete || g->now
+			- g->doors.u_ptr.d[i].last < 5000000)
+		{
+			++i;
+			continue ;
+		}
+		ft_update_door(g, &g->doors.u_ptr.d[i]);
+		if (g->m.m[g->doors.u_ptr.d[i].pos.y][g->doors.u_ptr.d[i].pos.x]
+		!= 'D'
+			|| (!(g->m.m[g->doors.u_ptr.d[i].pos.y
+					+ 1][g->doors.u_ptr.d[i].pos.x] == '1'
+					&& g->m.m[g->doors.u_ptr.d[i].pos.y
+					- 1][g->doors.u_ptr.d[i].pos.x] == '1')
+				&& !(g->m.m[g->doors.u_ptr.d[i].pos.y]
+				[g->doors.u_ptr.d[i].pos.x + 1] == '1'
+					&& g->m.m[g->doors.u_ptr.d[i].pos.y]
+					[g->doors.u_ptr.d[i].pos.x - 1] == '1')))
+			ft_remove_door(g, &g->doors.u_ptr.d[i]);
+		++i;
+	}
 }

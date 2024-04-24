@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   format.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/27 16:55:13 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 17:01:42 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,21 @@ void	new_line(t_game *game, int i)
 	char	*res;
 	int		j;
 
-	res = gc(ft_calloc(1, game->width + 1), ADD);
+	res = gc(ft_calloc(1, game->w + 1), ADD);
 	if (!res)
 		panic(MALLOC_ERR);
 	j = 0;
-	while (j < ft_strlen(game->map.map[i]))
+	while (j < ft_strlen(game->m.m[i]))
 	{
-		if (game->map.map[i][j] == ' ')
+		if (game->m.m[i][j] == ' ')
 			res[j] = '2';
 		else
-			res[j] = game->map.map[i][j];
+			res[j] = game->m.m[i][j];
 		j++;
 	}
-	while (j < game->width)
+	while (j < game->w)
 		res[j++] = '2';
-	game->map.map[i] = res;
+	game->m.m[i] = res;
 }
 
 void	format_line(t_game *game, int i)
@@ -39,10 +39,10 @@ void	format_line(t_game *game, int i)
 	int	j;
 
 	j = 0;
-	while (j < game->width)
+	while (j < game->w)
 	{
-		if (game->map.map[i][j] == ' ')
-			game->map.map[i][j] = '2';
+		if (game->m.m[i][j] == ' ')
+			game->m.m[i][j] = '2';
 		j++;
 	}
 }
@@ -52,9 +52,9 @@ void	pre_format_map(t_game *game)
 	int	i;
 
 	i = 0;
-	while (game->map.map[i])
+	while (game->m.m[i])
 	{
-		if (ft_strlen(game->map.map[i]) < game->width)
+		if (ft_strlen(game->m.m[i]) < game->w)
 			new_line(game, i);
 		else
 			format_line(game, i);
@@ -68,13 +68,13 @@ void	format_map(t_game *game)
 	int	j;
 
 	i = 0;
-	while (game->map.map[i])
+	while (game->m.m[i])
 	{
 		j = 0;
-		while (game->map.map[i][j])
+		while (game->m.m[i][j])
 		{
-			if (game->map.map[i][j] == '2')
-				game->map.map[i][j] = '1';
+			if (game->m.m[i][j] == '2')
+				game->m.m[i][j] = '1';
 			j++;
 		}
 		i++;

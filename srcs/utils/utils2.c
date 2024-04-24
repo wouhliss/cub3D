@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/12 19:32:26 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/15 21:22:13 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,21 +43,21 @@ int	ft_strlen(const char *str)
 	return (s - str);
 }
 
-char	**ft_copy(char **map)
+char	**ft_copy(char **m)
 {
 	char	**copied;
 	int		i;
 
 	i = 0;
-	copied = malloc(sizeof(char *) * (plen(map) + 1));
+	copied = malloc(sizeof(char *) * (plen(m) + 1));
 	if (!copied)
 	{
 		panic(MALLOC_ERR);
 		return (NULL);
 	}
-	while (i < plen(map))
+	while (i < plen(m))
 	{
-		copied[i] = ft_strdup(map[i]);
+		copied[i] = ft_strdup(m[i]);
 		i++;
 	}
 	copied[i] = NULL;

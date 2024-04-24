@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   glass.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 18:07:38 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,64 +39,8 @@ void	ft_glass(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	switch (r->c)
-	{
-		case 'n':
-			r->id = 1;
-			break ;
-		case 'a':
-			r->id = 2;
-			break ;
-		case 'm':
-			r->id = 3;
-			break ;
-		case 'c':
-			r->id = 4;
-			break ;
-		case 'g':
-			r->id = 5;
-			break ;
-		case 'v':
-			r->id = 6;
-			break ;
-		case 'A':
-			r->id = 7;
-			break ;
-		case 'l':
-			r->id = 8;
-			break;
-		case 'M':
-			r->id = 9;
-			break;
-		case 'r':
-			r->id = 10;
-			break;
-		case 'V':
-			r->id = 11;
-			break;
-		case 'O':
-			r->id = 12;
-			break;
-		case 'G':
-			r->id = 13;
-			break;
-		case 'w':
-			r->id = 14;
-			break;
-		case 'j':
-			r->id = 15;
-			break;
-		case 't':
-			r->id = 16;
-			break;
-		case 'o':
-			r->id = 17;
-			break;
-		default:
-			r->id = 0;
-			break;
-	}
-	r->twidth = game->gt[r->id].width;
+	r->id = 0;
+	r->twidth = game->gt[r->id].w;
 	r->s = game->gt[r->id].s;
 	wallx = get_wall_x(r);
 	r->tex.x = get_tex_x(r, wallx, r->twidth);
@@ -118,8 +62,8 @@ void	ft_drawtpixel(t_thread *t, const int x, const int y, t_render *r)
 	r->texpos += r->mystep;
 	r->linetex.y = (int)r->linepos & (63);
 	r->linepos += r->linestep;
-	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y
+	if (t->g->p.looking && t->g->p.look_pos.x == r->m.x
+		&& t->g->p.look_pos.y == r->m.y && (!r->linetex.y
 			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;

@@ -3,32 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   checkings.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:21 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 17:58:13 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 20:03:37 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-int	ft_in_charset(char *charset, char c)
-{
-	while (*charset)
-	{
-		if (*charset == c)
-			return (1);
-		++charset;
-	}
-	return (0);
-}
-
 void	set_player(char c, int i, int j, t_game *game)
 {
-	t_sprite	sprite;
-
-	game->map.s_dir = c;
-	game->map.s_pos = (t_vec){j + 0.5, i + 0.5};
+	game->m.s_dir = c;
+	game->m.s_pos = (t_vec){j + 0.5, i + 0.5};
 	game->p.pos = (t_vec){j + 0.5, i + 0.5};
 	if (c == 'N')
 	{
@@ -50,72 +37,70 @@ void	set_player(char c, int i, int j, t_game *game)
 		game->p.dir = (t_vec){-1, 0};
 		game->p.p = (t_vec){0, 0.66};
 	}
-	sprite = (t_sprite){.type = 3, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 1, .collision = 0};
-	sprite.pos = game->map.s_pos;
-	ft_add_to_vector(game, &game->sprites, &sprite);
-	game->map.map[i][j] = '0';
+	game->m.m[i][j] = '0';
 }
 
 static inline void	ft_setsprite(t_game *game, int i, int j)
 {
 	t_sprite	sprite;
 
-	if (game->map.map[i][j] == 'b')
+	if (game->m.m[i][j] == 'b')
 	{
-		sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 2, .vr = 2,
-			.hide = 0, .collision = 1, .delete = false};
+		sprite = (t_sprite){.t = 1, .vdiff = 0.0, .hr = 2, .vr = 2, .hide = 0,
+			.collision = 1, .delete = false};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
 		sprite.vdiff = HEIGHT / (sprite.vr * 2);
-		game->map.map[i][j] = '0';
+		game->m.m[i][j] = '0';
 	}
-	else if (game->map.map[i][j] == 'B')
+	else if (game->m.m[i][j] == 'B')
 	{
-		sprite = (t_sprite){.type = 1, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0, .collision = 1, .delete = false};
+		sprite = (t_sprite){.t = 1, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 0,
+			.collision = 1, .delete = false};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
-		game->map.map[i][j] = '0';
+		game->m.m[i][j] = '0';
 	}
-	else if (game->map.map[i][j] == 'P')
+	else if (game->m.m[i][j] == 'P')
 	{
-		sprite = (t_sprite){.type = 0, .vdiff = 0.0, .hr = 1, .vr = 1,
-			.hide = 0, .collision = 1, .delete = false};
+		sprite = (t_sprite){.t = 0, .vdiff = 0.0, .hr = 1, .vr = 1, .hide = 0,
+			.collision = 1, .delete = false};
 		sprite.pos = (t_vec){j + 0.5, i + 0.5};
-		game->map.map[i][j] = '0';
+		game->m.m[i][j] = '0';
 	}
 	ft_add_to_vector(game, &game->sprites, &sprite);
 }
 
-int	check_one(t_game *game, int i, int j, int *player_count)
+static inline void	ft_add_door(t_game *g, const int i, const int j)
 {
 	t_door	door;
 
-	if (i == 0 || i == game->length - 1 || j == 0 || j == game->width - 1)
-		return (ft_in_charset("12 ", game->map.map[i][j]));
-	if (game->map.map[i][j] == '2')
-		return (ft_in_charset("12", game->map.map[i + 1][j])
-			&& ft_in_charset("12", game->map.map[i][j + 1]));
-	else if (game->map.map[i][j] == '0')
-		return (ft_in_charset("01NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i][j + 1]));
-	else if (ft_in_charset("PbB", game->map.map[i][j]))
+	door = (t_door){.frame = 0, .pos = (t_intvec){j, i}, .state = 0};
+	ft_add_to_vector(g, &g->doors, &door);
+}
+
+int	check_one(t_game *g, int i, int j, int *player_count)
+{
+	if (i == 0 || i == g->length - 1 || j == 0 || j == g->w - 1)
+		return (ic("12 ", g->m.m[i][j]));
+	if (g->m.m[i][j] == '2')
+		return (ic("12", g->m.m[i + 1][j]) && ic("12", g->m.m[i][j + 1]));
+	else if (g->m.m[i][j] == '0')
+		return (ic("01NSEWPbBtsD", g->m.m[i + 1][j]) && ic("01NSEWPbBtsD",
+				g->m.m[i][j + 1]));
+	else if (ic("PbB", g->m.m[i][j]))
 	{
-		ft_setsprite(game, i, j);
-		return (ft_in_charset("01NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i][j + 1]));
+		ft_setsprite(g, i, j);
+		return (ic("01NSEWPbBtDs", g->m.m[i + 1][j]) && ic("01NSEWPbBtsD",
+				g->m.m[i][j + 1]));
 	}
-	else if (ft_in_charset("D", game->map.map[i][j]))
+	else if (ic("D", g->m.m[i][j]))
+		return (ft_add_door(g, i, j), ic("01NSEWPbBtDs", g->m.m[i + 1][j]) &&
+		ic("01NSEWPbBtDs", g->m.m[i][j + 1]));
+	else if (ic("NSEW", g->m.m[i][j]))
 	{
-		door = (t_door){.frame = 0, .pos = (t_intvec){j, i}, .state = 0};
-		ft_add_to_vector(game, &game->doors, &door);
-		return (ft_in_charset("01NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i + 1][j])
-			&& ft_in_charset("01NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i][j + 1]));
-	}
-	else if (ft_in_charset("NSEW", game->map.map[i][j]))
-	{
-		set_player(game->map.map[i][j], i, j, game);
+		set_player(g->m.m[i][j], i, j, g);
 		++(*player_count);
-		return (ft_in_charset("01PbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i + 1][j])
-			&& ft_in_charset("01PbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i][j + 1]));
+		return (ic("01PbBtDs", g->m.m[i + 1][j]) && ic("01PbBtDs", g->m.m[i][j
+				+ 1]));
 	}
 	return (1);
 }
@@ -128,12 +113,12 @@ int	check_map(t_game *game)
 
 	i = 0;
 	player_count = 0;
-	while (game->map.map[i])
+	while (game->m.m[i])
 	{
 		j = 0;
-		while (game->map.map[i][j])
+		while (game->m.m[i][j])
 		{
-			if (!ft_in_charset("012NSEWPbBgoanmcgvAGlVOrMRtwjDs", game->map.map[i][j]))
+			if (!ic("012NSEWPbBtsD", game->m.m[i][j]))
 				return (0);
 			if (!check_one(game, i, j, &player_count))
 				return (0);
