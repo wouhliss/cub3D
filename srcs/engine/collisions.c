@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   collisions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 21:35:45 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 20:02:18 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/25 00:28:53 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,16 +101,16 @@ bool	ft_can_move(t_game *g, const double x, const double y)
 		return (false);
 	if (g->noclip)
 		return (true);
-	if (x < 0.0 && ic("1goanmcgvAGlVOrMRtwj", g->m.m[(int)(g->p.pos.y
+	if (x < 0.0 && ic("1eryuiopadfghjklzxtwj", g->m.m[(int)(g->p.pos.y
 				+ y)][(int)((g->p.pos.x + x) - 0.1)]))
 		return (false);
-	if (x > 0.0 && ic("1goanmcgvAGlVOrMRtwj", g->m.m[(int)(g->p.pos.y
+	if (x > 0.0 && ic("1eryuiopadfghjklzxtwj", g->m.m[(int)(g->p.pos.y
 				+ y)][(int)((g->p.pos.x + x) + 0.1)]))
 		return (false);
-	if (y < 0.0 && ic("1goanmcgvAGlVOrMRtwj", g->m.m[(int)((g->p.pos.y + y)
+	if (y < 0.0 && ic("1eryuiopadfghjklzxtwj", g->m.m[(int)((g->p.pos.y + y)
 				- 0.1)][(int)(g->p.pos.x + x)]))
 		return (false);
-	if (y > 0.0 && ic("1goanmcgvAGlVOrMRtwj", g->m.m[(int)((g->p.pos.y + y)
+	if (y > 0.0 && ic("1eryuiopadfghjklzxtwj", g->m.m[(int)((g->p.pos.y + y)
 				+ 0.1)][(int)(g->p.pos.x + x)]))
 		return (false);
 	if (ft_check_doors(g, x, y))

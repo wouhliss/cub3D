@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/05 11:04:33 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/25 00:29:35 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static inline void	ft_put_pixel_map(t_game *g, t_intvec *sp, t_intvec *pos,
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00000000);
 		else if (g->m.m[pos->y][pos->x] == 'D')
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00333333);
-		else if (g->m.m[pos->y][pos->x] == 't')
+		else if (ic("eryuiopadfghjklzxt", g->m.m[pos->y][pos->x]))
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00AAAAAA);
 		else
 			my_mlx_pixel_tput(&g->s, draw->x, draw->y, 0x00FFFFFF);

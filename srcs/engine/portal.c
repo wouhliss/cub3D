@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   portal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 00:29:14 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/25 00:34:23 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,13 @@ static inline void	ft_putppixel(t_thread *t, const int x, const int y,
 	{
 		if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != color)
 			*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
-		t->zbuffer[x - t->dx][y] = r->pdist;
 	}
 	else if (color == 65280)
 	{
 		if (*(((unsigned int *)t->g->s.a) + (y * W) + x) != wcolor)
 			*(((unsigned int *)t->g->s.a) + (y * W) + x) = wcolor;
-		t->zbuffer[x - t->dx][y] = r->pdist;
 	}
+	t->zbuffer[x - t->dx][y] = r->pdist;
 }
 
 void	ft_drawppixel(t_thread *t, const int x, const int y, t_render *r)
