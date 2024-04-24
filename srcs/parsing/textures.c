@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 07:49:28 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 20:15:42 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:13:24 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ static int	only_num(const char *color)
 	return (1);
 }
 
-static inline void	ft_save_wfiles()
+static inline void	ft_save_wfiles(t_game *game, char **splitted,
+		char **splitted_pf)
 {
 	if (!ft_strcmp(splitted[0], "NO"))
 	{
@@ -51,7 +52,8 @@ static inline void	ft_save_wfiles()
 	}
 }
 
-static inline void	ft_save_sfiles()
+static inline void	ft_save_sfiles(t_game *game, char **splitted,
+		char **splitted_pf)
 {
 	if (!ft_strcmp(splitted[0], "D"))
 	{
@@ -75,30 +77,26 @@ static inline void	ft_save_sfiles()
 
 int	set_texture(char *line, t_game *game)
 {
-	char	**splitted;
-	char	**splitted_pf;
+	char	**sp;
+	char	**sp_pf;
 
-	splitted = gc(ft_split(line, ' '), ADD);
-	if (!splitted || plen(splitted) != 2)
+	sp = gc(ft_split(line, ' '), ADD);
+	if (!sp || plen(sp) != 2)
 		return (0);
-	splitted_pf = gc(ft_split(splitted[1], ':'), ADD);
-    if (!splitted_pf || plen(splitted_pf) > 2)
+	sp_pf = gc(ft_split(sp[1], ':'), ADD);
+	if (!sp_pf || plen(sp_pf) > 2)
 		return (0);
-	if (plen(splitted_pf) == 2 && (!only_num(splitted_pf[1]) || ft_atoi(splitted_pf[1]) == (long)INT_MAX + 1))
+	if (plen(sp_pf) == 2 && (!only_num(sp_pf[1])
+			|| ft_atoi(sp_pf[1]) == (long)INT_MAX + 1))
 		return (0);
-	if (!ft_strcmp(splitted[0], "NO") && game->files[TNO])
+	if ((!ft_strcmp(sp[0], "NO") && game->files[TNO]) || (!ft_strcmp(sp[0],
+				"SO") && game->files[TSO]) || (!ft_strcmp(sp[0], "WE")
+			&& game->files[TWE]) || (!ft_strcmp(sp[0], "EA")
+			&& game->files[TEA]) || (!ft_strcmp(sp[0], "D") && game->files[TD])
+		|| (!ft_strcmp(sp[0], "P") && game->sfiles[TP]) || (!ft_strcmp(sp[0],
+				"B") && game->sfiles[TB]))
 		return (0);
-	if (!ft_strcmp(splitted[0], "SO") && game->files[TSO])
-		return (0);
-	if (!ft_strcmp(splitted[0], "WE") && game->files[TWE])
-		return (0);
-	if (!ft_strcmp(splitted[0], "EA") && game->files[TEA])
-		return (0);
-	if (!ft_strcmp(splitted[0], "D") && game->files[TD])
-		return (0);
-	if (!ft_strcmp(splitted[0], "P") && game->sfiles[TP])
-		return (0);
-	if (!ft_strcmp(splitted[0], "B") && game->sfiles[TB])
-		return (0);
+	ft_save_wfiles(game, sp, sp_pf);
+	ft_save_sfiles(game, sp, sp_pf);
 	return (1);
 }

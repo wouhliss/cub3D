@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 20:09:53 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:19:57 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,6 +581,11 @@ t_intvec					ft_get_facing_int(const int side, t_intvec vec);
 t_vec						ft_get_facing(const int side, t_vec vec);
 t_vec						ft_side_to_plane(const int side);
 t_vec						ft_side_to_dir(const int side);
+void						ft_import_portals(t_game *g, const char **pt);
+void						ft_import_glass(t_game *g, const char **gt);
+void						ft_import_sprites(t_game *g);
+bool						ft_check_walls(t_game *g);
+bool						ft_check_sprites(t_game *g);
 /*Garbage collector*/
 
 void						*gc(void *u_ptr, int i);

@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:40:39 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:18:44 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:21:53 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,74 +68,12 @@ int	ft_check_textures(t_game *g)
 		"tinted_stained_glass.xpm", "orange_stained_glass.xpm", 0};
 	const char	*pt[] = {"blue_closed.xpm", "orange_closed.xpm", "blue.xpm",
 		"orange.xpm", 0};
-	int			i;
-	int			err;
 
-	i = -1;
-	while (pt[++i])
-	{
-		g->pt[i].img = mlx_xpm_file_to_image(g->mlx.mlx,
-				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", pt[i]),
-					ADD), &g->pt[i].w, &g->pt[i].height);
-		if (!g->pt[i].img)
-		{
-			g->pt[i] = g->dfl;
-			g->pt[i].img = 0;
-		}
-		else
-			g->pt[i].a = mlx_get_data_addr(g->pt[i].img, &g->pt[i].bpp,
-					&g->pt[i].ll, &g->pt[i].endian);
-	}
-	i = -1;
-	while (gt[++i])
-	{
-		g->gt[i].img = mlx_xpm_file_to_image(g->mlx.mlx,
-				(char *)gc(ft_mprintf("%s%s", "assets/textures/walls/", gt[i]),
-					ADD), &g->gt[i].w, &g->gt[i].height);
-		if (!g->gt[i].img)
-		{
-			g->gt[i] = g->dfl;
-			g->gt[i].img = 0;
-		}
-		else
-			g->gt[i].a = mlx_get_data_addr(g->gt[i].img, &g->gt[i].bpp,
-					&g->gt[i].ll, &g->gt[i].endian);
-	}
-	i = -1;
-	while (++i < STEXTURES)
-	{
-		if (g->sfiles[i])
-			g->st[i].img = mlx_xpm_file_to_image(g->mlx.mlx, g->sfiles[i],
-					&g->st[i].w, &g->st[i].height);
-		if (!g->st[i].img)
-		{
-			g->st[i] = g->dfl;
-			g->st[i].img = 0;
-		}
-		else
-			g->st[i].a = mlx_get_data_addr(g->st[i].img, &g->st[i].bpp,
-					&g->st[i].ll, &g->st[i].endian);
-	}
-	err = 0;
-	i = WTEXTURES;
-	while (i--)
-	{
-		if (!g->wt[i].w || g->wt[i].height % g->wt[i].w)
-			err = 1;
-		else
-			g->wt[i].frames = g->wt[i].height / g->wt[i].w;
-	}
-	i = STEXTURES;
-	while (i--)
-	{
-		if (!g->st[i].a)
-			continue ;
-		if (!g->st[i].w || g->st[i].height % g->st[i].w)
-			return (1);
-		g->st[i].frames = g->st[i].height / g->st[i].w;
-	}
-	if (err)
-		return (ft_dprintf(2, ERR_FORMAT, NAME, TEXTURE_SIZE), err);
+	ft_import_portals(g, pt);
+	ft_import_glass(g, gt);
+	ft_import_sprites(g);
+	if (ft_check_walls(g) || ft_check_sprites(g))
+		return (ft_dprintf(2, ERR_FORMAT, NAME, TEXTURE_SIZE), 1);
 	return (0);
 }
 
