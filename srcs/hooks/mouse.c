@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/21 01:35:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 14:21:44 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 15:49:24 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ static inline void	ft_changestate(t_game *g, int button)
 			g->p.weapon.type = WEAPONS;
 		g->p.weapon.state = 0;
 	}
-	else if (g->p.weapon.state < states[g->p.weapon.type])
+	if (button == 2 && g->p.weapon.state < states[g->p.weapon.type])
 		++g->p.weapon.state;
-	else
+	else if (button == 2)
 		g->p.weapon.state = 0;
 }
 

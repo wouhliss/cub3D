@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 03:11:20 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 12:06:23 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:48:02 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void	ft_pdda(t_game *game, t_projectile *p)
 			if (p->step.y < 0)
 				p->side = 2;
 		}
-		if (p->pdist > game->delta * 0.00000001)
+		if (p->pdist > game->delta * 0.00000002)
 			break ;
 		ft_hitdda(game, p);
 	}

@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 15:20:53 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 15:51:43 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ static inline void	ft_update_doors_portals(t_game *g)
 	i = 0;
 	while (i < g->doors.index)
 	{
-		if (g->now - g->doors.u_ptr.d[i].last < 5000000)
+		if (g->doors.u_ptr.d[i].delete || g->now
+			- g->doors.u_ptr.d[i].last < 5000000)
 		{
 			++i;
 			continue ;

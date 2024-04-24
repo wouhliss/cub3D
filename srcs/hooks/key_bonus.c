@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/12 22:12:18 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 17:21:13 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 13:54:54 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,15 @@ static inline void	ft_interact(t_game *g)
 		i = 0;
 		while (i < g->doors.index)
 		{
-			if (g->doors.u_ptr.d[i].state == CLOSED
-				&& g->doors.u_ptr.d[i].pos.x == g->p.look_pos.x
+			if (g->doors.u_ptr.d[i].pos.x == g->p.look_pos.x
 				&& g->doors.u_ptr.d[i].pos.y == g->p.look_pos.y)
-				g->doors.u_ptr.d[i].state = OPENING;
-			else if (g->doors.u_ptr.d[i].state == OPEN
-				&& g->doors.u_ptr.d[i].pos.x == g->p.look_pos.x
-				&& g->doors.u_ptr.d[i].pos.y == g->p.look_pos.y)
-				g->doors.u_ptr.d[i].state = CLOSING;
+			{
+				if (g->doors.u_ptr.d[i].state == CLOSED)
+					g->doors.u_ptr.d[i].state = OPENING;
+				else if (g->doors.u_ptr.d[i].state == OPEN)
+					g->doors.u_ptr.d[i].state = CLOSING;
+				return ;
+			}
 			++i;
 		}
 	}
@@ -56,6 +57,13 @@ static inline void	ft_handle_mkey(t_game *g, int k)
 		g->shift = 1;
 }
 
+static inline void	ft_noclip(t_game *g)
+{
+	g->noclip ^= 1;
+	if (!g->noclip && !ft_can_move(g, 0.01, 0.01))
+		g->p.pos = g->map.s_pos;
+}
+
 int	on_key_press(int k, void *param)
 {
 	t_game	*game;
@@ -67,19 +75,18 @@ int	on_key_press(int k, void *param)
 		ft_interact(game);
 	else if (k == XK_space)
 		game->space = 1;
-	else if (k == XK_j || k == XK_J)
+	else if ((k == XK_j || k == XK_J) && game->s.rratio < 1.0)
 	{
 		game->s.lratio -= 0.01;
 		game->s.rratio += 0.01;
 	}
-	else if (k == XK_k || k == XK_K)
+	else if ((k == XK_k || k == XK_K) && game->s.rratio > 0.0)
 	{
 		game->s.lratio += 0.01;
 		game->s.rratio -= 0.01;
 	}
-	else if (k == XK_p || k == XK_P)
-	{
-	}
+	else if (k == XK_1)
+		ft_noclip(game);
 	ft_handle_mkey(game, k);
 	return (0);
 }

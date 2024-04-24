@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 16:01:04 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 18:07:38 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,63 @@ void	ft_glass(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	r->id = 0;
+	switch (r->c)
+	{
+		case 'n':
+			r->id = 1;
+			break ;
+		case 'a':
+			r->id = 2;
+			break ;
+		case 'm':
+			r->id = 3;
+			break ;
+		case 'c':
+			r->id = 4;
+			break ;
+		case 'g':
+			r->id = 5;
+			break ;
+		case 'v':
+			r->id = 6;
+			break ;
+		case 'A':
+			r->id = 7;
+			break ;
+		case 'l':
+			r->id = 8;
+			break;
+		case 'M':
+			r->id = 9;
+			break;
+		case 'r':
+			r->id = 10;
+			break;
+		case 'V':
+			r->id = 11;
+			break;
+		case 'O':
+			r->id = 12;
+			break;
+		case 'G':
+			r->id = 13;
+			break;
+		case 'w':
+			r->id = 14;
+			break;
+		case 'j':
+			r->id = 15;
+			break;
+		case 't':
+			r->id = 16;
+			break;
+		case 'o':
+			r->id = 17;
+			break;
+		default:
+			r->id = 0;
+			break;
+	}
 	r->twidth = game->gt[r->id].width;
 	r->s = game->gt[r->id].s;
 	wallx = get_wall_x(r);
@@ -68,9 +124,14 @@ void	ft_drawtpixel(t_thread *t, const int x, const int y, t_render *r)
 	{
 		color = 0x00FF0000;
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
+		t->zbuffer[x - t->dx][y] = r->pdist;
 		return ;
 	}
 	color = ((int *)t->g->gt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
 	if ((color & 0x00FFFFFF) != 0)
+	{
 		my_mlx_pixel_tput(&t->g->s, x, y, color);
+		t->tbuffer[x - t->dx][y] = color;
+		t->tdbuffer[x - t->dx][y] = r->pdist;
+	}
 }

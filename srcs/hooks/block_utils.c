@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 23:18:11 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 11:30:45 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:55:06 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void	ft_remove_door(t_game *g, t_door *door)
 
 char	ft_get_block(t_game *g)
 {
-	const int	blocks[] = {'1', 't', 's', 'D'};
+	const char	blocks[] = {'1', 's', 'D', 'g', 'o', 'a', 'n', 'm', 'c', 'g',
+			'v', 'A', 'G', 'l', 'V', 'O', 'r', 'M', 'R', 't', 'w', 'j'};
 
 	return (blocks[g->p.weapon.state]);
 }

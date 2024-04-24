@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 17:08:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 18:00:47 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_hit(const t_game *g, t_render *r, t_thread *t)
 	t_hit	hit;
 	size_t	i;
 
-	if (ft_in_charset("ts", g->map.map[r->map.y][r->map.x]))
+	if (ft_in_charset("sgoanmcgvAGlVOrMRtwj", g->map.map[r->map.y][r->map.x]))
 	{
 		hit.render = *r;
 		hit.render.hit = 3;
@@ -67,7 +67,7 @@ void	ft_steps(const t_game *g, t_render *r)
 
 void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 {
-	while (!r->hit && !ft_outside(g, r->map.x, r->map.y) && t->hit.index < 25)
+	while (!r->hit && t->hit.index < 150)
 	{
 		if (r->sd.x < r->sd.y)
 		{
@@ -83,12 +83,11 @@ void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 			r->side = 1;
 			r->side += 1 * (r->step.y < 0);
 		}
+		r->c = g->map.map[r->map.y][r->map.x];
 		ft_portal_hit(t, g, r);
-		if (!ft_outside(g, r->map.x, r->map.y)
-			&& g->map.map[r->map.y][r->map.x] == '1')
+		if (r->c == '1')
 			r->hit = 1;
-		else if (r->pass && !ft_outside(g, r->map.x, r->map.y)
-			&& g->map.map[r->map.y][r->map.x] != '0')
+		else if (r->c != '0')
 			ft_hit(g, r, t);
 	}
 }
@@ -111,10 +110,9 @@ void	ft_rays(const t_game *g, t_render *r, const int x, t_thread *t)
 	r->hit = 0;
 	ft_steps(g, r);
 	ft_dda(g, r, t);
-	if (!r->pass)
-		ft_hitcalc(g, r, 0);
+	ft_hitcalc(g, r, 0);
 	i = 0;
-	while (r->pass && i < t->hit.index)
+	while (i < t->hit.index)
 	{
 		ft_hitcalc(g, &t->hit.u_ptr.h[i].render, t->hit.u_ptr.h[i].render.hit);
 		++i;
@@ -127,7 +125,6 @@ void	*ft_draw(void *p)
 	t_thread	*t;
 
 	t = p;
-	r.pass = false;
 	r.side = 0;
 	r.p.x = t->dx;
 	while (r.p.x < t->x)
@@ -137,6 +134,7 @@ void	*ft_draw(void *p)
 		while (++r.p.y < HEIGHT)
 		{
 			t->zbuffer[r.p.x - t->dx][r.p.y] = r.pdist;
+			t->tdbuffer[r.p.x - t->dx][r.p.y] = -1;
 			if (r.p.y < r.draw.x)
 				*(((t_ui *)t->g->s.a) + (r.p.y * W) + r.p.x) = t->g->map.cc.hex;
 			else if (r.p.y > r.draw.y)
@@ -144,8 +142,9 @@ void	*ft_draw(void *p)
 			else
 				ft_drawwallpixel(t->g, r.p.x, r.p.y, &r);
 		}
+		ft_drawhitrow(t, r.p.x);
 		r.p.x += 2;
 	}
-	ft_drawhit(t, &r);
+	ft_drawsprites(t);
 	return (NULL);
 }

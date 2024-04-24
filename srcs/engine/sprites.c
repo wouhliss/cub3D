@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 14:38:23 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 16:57:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:34:00 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 					- t->dx][d.y])
 				{
 					*(((t_ui *)t->g->s.a) + (d.y * W) + d.x) = color;
+					if (t->tdbuffer[d.x - t->dx][d.y] > 0 && r->t.y > t->tdbuffer[d.x - t->dx][d.y])
+						my_mlx_pixel_tput(&g->s, d.x, d.y, t->tbuffer[d.x - t->dx][d.y]);
 					t->zbuffer[d.x - t->dx][d.y] = r->t.y;
 				}
 			}

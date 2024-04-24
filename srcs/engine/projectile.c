@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 01:12:43 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 11:44:16 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:47:51 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	ft_handle_pls(t_game *g)
 	while (i < g->pls.index)
 	{
 		step = 0.0;
-		while (!g->pls.u_ptr.p[i].sprite->hide && step < g->delta * 0.00000001)
+		while (!g->pls.u_ptr.p[i].sprite->hide && step < g->delta * 0.00000002)
 		{
 			if (g->pls.u_ptr.p[i].type == 0 && ft_candelete(g,
 					g->pls.u_ptr.p[i].sprite->pos.x
@@ -72,9 +72,9 @@ void	ft_handle_pls(t_game *g)
 			step += 0.001;
 		}
 		g->pls.u_ptr.p[i].sprite->pos = (t_vec){g->pls.u_ptr.p[i].sprite->pos.x
-			+ -g->pls.u_ptr.p[i].sprite->dir.x * g->delta * 0.00000001,
+			+ -g->pls.u_ptr.p[i].sprite->dir.x * g->delta * 0.00000002,
 			g->pls.u_ptr.p[i].sprite->pos.y + g->pls.u_ptr.p[i].sprite->dir.y
-			* g->delta * 0.00000001};
+			* g->delta * 0.00000002};
 		++i;
 	}
 }

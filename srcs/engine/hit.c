@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:43:32 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 13:28:34 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:18:07 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	ft_hitcalc(const t_game *g, t_render *r, const int type)
 		ft_wall(g, r);
 }
 
-static inline void	ft_drawhitrow(t_thread *t, const int x)
+void	ft_drawhitrow(t_thread *t, const int x)
 {
 	int		y;
 	size_t	i;
@@ -73,18 +73,5 @@ static inline void	ft_drawhitrow(t_thread *t, const int x)
 			else if (t->hit.u_ptr.h[i].render.hit == 8)
 				ft_drawspixel(t, x, y, &t->hit.u_ptr.h[i].render);
 		}
-	}
-}
-
-void	ft_drawhit(t_thread *t, t_render *r)
-{
-	ft_drawsprites(t);
-	r->pass = true;
-	r->p.x = t->dx;
-	while (r->p.x < t->x)
-	{
-		ft_rays(t->g, r, r->p.x, t);
-		ft_drawhitrow(t, r->p.x);
-		r->p.x += 2;
 	}
 }

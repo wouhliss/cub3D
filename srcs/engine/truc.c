@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/23 16:00:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:42:01 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	ft_truc(const t_game *game, t_render *r)
 }
 
 void	ft_drawspixel(t_thread *t, const int x, const int y, t_render *r)
-{	
+{
 	unsigned int	color;
 
 	r->tex.y = (int)r->texpos & (r->twidth - 1);
@@ -63,13 +63,17 @@ void	ft_drawspixel(t_thread *t, const int x, const int y, t_render *r)
 	r->linetex.y = (int)r->linepos & (63);
 	r->linepos += r->linestep;
 	if (t->g->p.looking && t->g->p.look_pos.x == r->map.x
-		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y || r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
+		&& t->g->p.look_pos.y == r->map.y && (!r->linetex.y
+			|| r->linetex.y == 63 || !r->linetex.x || r->linetex.x == 63))
 	{
 		color = 0x00FF0000;
 		*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
+		t->zbuffer[x - t->dx][y] = r->pdist;
 		return ;
 	}
 	color = ((int *)t->g->wt[r->id].a)[r->s + r->twidth * r->tex.y + r->tex.x];
 	color = ((color + *(((unsigned int *)t->g->s.a) + (y * W) + x)) >> 1);
 	*(((unsigned int *)t->g->s.a) + (y * W) + x) = color;
+	t->tbuffer[x - t->dx][y] = color;
+	t->tdbuffer[x - t->dx][y] = r->pdist;
 }

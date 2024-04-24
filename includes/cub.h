@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 17:41:36 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:59:26 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@
 
 # define DFL_SIZE 150
 
-# define CUBES 3
+# define CUBES 21
 # define GLASS 18
 
 # define WEAPONS 3
@@ -310,7 +310,7 @@ typedef struct s_render
 	int						s;
 	int						ps;
 	int						vpos;
-	bool					pass;
+	char					c;
 }							t_render;
 
 typedef struct s_hit
@@ -392,6 +392,8 @@ typedef struct s_thread
 	int						dx;
 	int						x;
 	double					zbuffer[T_WIDTH][HEIGHT];
+	t_ui					tbuffer[T_WIDTH][HEIGHT];
+	double					tdbuffer[T_WIDTH][HEIGHT];
 }							t_thread;
 
 typedef struct s_game
@@ -497,6 +499,7 @@ void						ft_drawdoorpixel(t_thread *t, const int x,
 								const int y, t_render *r);
 void						ft_drawspixel(t_thread *t, const int x, const int y,
 								t_render *r);
+void						ft_drawhitrow(t_thread *t, const int x);
 int							ft_loop(void *param);
 int							ft_init_mlx(t_game *g);
 void						ft_start(t_game *game);
