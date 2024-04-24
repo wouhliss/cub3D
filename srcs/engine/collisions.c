@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 21:35:45 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 17:07:08 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 18:57:24 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,16 +103,16 @@ bool	ft_can_move(t_game *g, const double x, const double y)
 		return (false);
 	if (g->noclip)
 		return (true);
-	if (x < 0.0 && ft_in_charset("1t", g->map.map[(int)(g->p.pos.y
+	if (x < 0.0 && ft_in_charset("1goanmcgvAGlVOrMRtwj", g->map.map[(int)(g->p.pos.y
 				+ y)][(int)((g->p.pos.x + x) - 0.1)]))
 		return (false);
-	if (x > 0.0 && ft_in_charset("1t", g->map.map[(int)(g->p.pos.y
+	if (x > 0.0 && ft_in_charset("1goanmcgvAGlVOrMRtwj", g->map.map[(int)(g->p.pos.y
 				+ y)][(int)((g->p.pos.x + x) + 0.1)]))
 		return (false);
-	if (y < 0.0 && ft_in_charset("1t", g->map.map[(int)((g->p.pos.y + y)
+	if (y < 0.0 && ft_in_charset("1goanmcgvAGlVOrMRtwj", g->map.map[(int)((g->p.pos.y + y)
 				- 0.1)][(int)(g->p.pos.x + x)]))
 		return (false);
-	if (y > 0.0 && ft_in_charset("1t", g->map.map[(int)((g->p.pos.y + y)
+	if (y > 0.0 && ft_in_charset("1goanmcgvAGlVOrMRtwj", g->map.map[(int)((g->p.pos.y + y)
 				+ 0.1)][(int)(g->p.pos.x + x)]))
 		return (false);
 	if (ft_check_doors(g, x, y))
