@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 12:40:51 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:55:39 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_glass(const t_game *game, t_render *r)
 {
 	double	wallx;
 
-	r->id = 0;
+	r->id = ft_get_glass_id(r->c);
 	r->twidth = game->gt[r->id].w;
 	r->s = game->gt[r->id].s;
 	wallx = get_wall_x(r);

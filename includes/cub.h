@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 21:19:57 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 22:00:59 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -530,6 +530,7 @@ void						ft_portal_sprite(t_game *g, t_thread *t);
 void						ft_animate(t_game *g);
 void						ft_check_door(t_game *g);
 void						ft_place_sprite(t_game *g);
+int							ft_get_glass_id(const char c);
 /*Parsing*/
 
 void						init_map(char *path, t_game *game);

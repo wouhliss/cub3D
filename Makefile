@@ -2,7 +2,9 @@ CC = gcc-12
 CFLAGS = -Wall -Wextra -Werror -MMD -MP -march=native -O3 $(EXTRAFLAGS)
 MLXPATH = minilibx-linux/
 MLXFLAGS = -L $(MLXPATH) -lmlx -Ilmlx -lXext -lX11 -lm
-INCLUDE = -I./includes -Iminilibx-linux
+LIBMLX = $(MLXPATH)/libmlx.a
+INCLUDE_PATH = ./includes/
+INCLUDE = -I$(INCLUDE_PATH) -I./minilibx-linux
 VPATH = srcs/parsing srcs/utils srcs/error srcs/ft_dprintf srcs/gnl srcs/hooks srcs/engine srcs
 RM = rm -rvf
 NAME = cub3D
@@ -13,9 +15,8 @@ PARSING = checkings colors init map format settings textures
 ERROR = panic garbage
 DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
-HOOKS = key window
-HOOKSB = key_bonus window mouse block_utils sprite_utils
-ENGINE = import_textures mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils portal_utils2 projectile projectile_utils projectile_utils2 truc animation
+HOOKS = key_bonus window mouse block_utils sprite_utils
+ENGINE = glass_utils import_textures mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils portal_utils2 projectile projectile_utils projectile_utils2 truc animation
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\
@@ -31,9 +32,9 @@ SRCSB = $(addsuffix .c, $(UTILS))\
 	   	$(addsuffix .c, $(ERROR))\
 	   	$(addsuffix .c, $(DPRINTF))\
 	   	$(addsuffix .c, $(GNL))\
-	   	$(addsuffix .c, $(HOOKSB))\
+	   	$(addsuffix .c, $(HOOKS))\
 	   	$(addsuffix .c, $(ENGINE))\
-	   	main_bonus.c
+	   	main.c
 
 OBJ_DIR = obj
 OBJS = $(SRCS:%.c=$(OBJ_DIR)/%.o)
@@ -44,41 +45,57 @@ OBJSB = $(SRCSB:%.c=$(OBJ_DIR)/%.o)
 
 DEPSB = $(SRCSB:%.c=$(OBJ_DIR)/%.d)
 
-all: $(NAME) $(NAME_BONUS)
+
+all:
+	make -j $(NAME)
+
 
 $(NAME): $(OBJ_DIR) $(OBJS)
-	$(MAKE) -C ./minilibx-linux
 	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME)
 
+
 $(NAME_BONUS): $(OBJ_DIR) $(OBJSB)
-	$(MAKE) -C ./minilibx-linux
 	$(CC) $(CFLAGS) $(OBJSB) $(LIBFT) $(MLXFLAGS) -o $(NAME_BONUS)
 
-bonus: $(NAME_BONUS)
+
+$(LIBMLX):
+	wget https://cdn.intra.42.fr/document/document/22794/minilibx-linux.tgz
+	tar -xf minilibx-linux.tgz
+	rm minilibx-linux.tgz
+	make -C $(MLXPATH)
+
 
 $(OBJ_DIR):
 	mkdir -p obj
 
-$(OBJ_DIR)/%.o: %.c includes/cub.h includes/ft_dprintf.h $(MLXPATH)
+
+$(OBJ_DIR)/%.o: %.c $(INCLUDE_PATH)cub.h $(INCLUDE_PATH)ft_dprintf.h $(LIBMLX)
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+
 
 clean:
 	$(RM) $(OBJ_DIR)
+	$(RM) $(MLXPATH)
+
 
 fclean: clean
 	$(RM) $(NAME)
+	$(RM) $(NAME_BONUS)
+
+
+bonus:
+	make -j $(NAME_BONUS)
+
 
 re: fclean
-	make all
+	make -j $(NAME)
+
 
 rebonus: fclean
-	make -j bonus
+	make -j $(NAME_BONUS)
 
-$(MLXPATH):
-	wget https://cdn.intra.42.fr/document/document/22794/minilibx-linux.tgz
-	tar -xf minilibx-linux.tgz
-	rm minilibx-linux.tgz
 
 -include $(DEPS) $(DEPSB)
 
-.PHONY: all clean fclean re bonus
+
+.PHONY: all clean fclean re bonus rebonus

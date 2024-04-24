@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 21:55:30 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*ft_hit(const t_game *g, t_render *r, t_thread *t)
 	t_hit	hit;
 	size_t	i;
 
-	if (ic("sgoanmcgvAGlVOrMRtwj", g->m.m[r->m.y][r->m.x]))
+	if (ic("steryuiopadfghjklzx", g->m.m[r->m.y][r->m.x]))
 	{
 		hit.render = *r;
 		hit.render.hit = 3;
