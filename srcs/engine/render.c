@@ -6,7 +6,7 @@
 /*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 16:55:26 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 18:00:47 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 18:53:43 by wouhliss         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	ft_dda(const t_game *g, t_render *r, t_thread *t)
 			r->side = 1;
 			r->side += 1 * (r->step.y < 0);
 		}
-		r->c = g->map.map[r->map.y][r->map.x];
 		ft_portal_hit(t, g, r);
+		r->c = g->map.map[r->map.y][r->map.x];
 		if (r->c == '1')
 			r->hit = 1;
 		else if (r->c != '0')
