@@ -17,6 +17,7 @@ DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl
 HOOKS = key_bonus window mouse block_utils sprite_utils
 ENGINE = glass_utils import_textures mlx render loop walls movement aim minimap doors hit sprites collisions glass portal portal_utils portal_utils2 projectile projectile_utils projectile_utils2 truc animation
+ENGINEB = glass_utils import_textures mlx render loop_bonus walls movement aim minimap doors hit sprites collisions glass portal portal_utils portal_utils2 projectile projectile_utils projectile_utils2 truc animation
 
 SRCS = $(addsuffix .c, $(UTILS))\
 	   $(addsuffix .c, $(PARSING))\
@@ -33,7 +34,7 @@ SRCSB = $(addsuffix .c, $(UTILS))\
 	   	$(addsuffix .c, $(DPRINTF))\
 	   	$(addsuffix .c, $(GNL))\
 	   	$(addsuffix .c, $(HOOKS))\
-	   	$(addsuffix .c, $(ENGINE))\
+	   	$(addsuffix .c, $(ENGINEB))\
 	   	main.c
 
 OBJ_DIR = obj

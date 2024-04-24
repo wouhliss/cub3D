@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 22:00:59 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 23:02:19 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,11 @@
 # define INVALID_ERR "Invalid/duplicate texture or color found in file"
 
 # ifndef THREADS
-#  define THREADS 2
+#  define THREADS 1
 # endif
 # define W 1280
 # define HW 640
-# define T_WIDTH 640
+# define T_WIDTH 1280
 # define HEIGHT 720
 # define HALF_HEIGHT 360
 # define MW 320
@@ -465,6 +465,7 @@ int							on_mouse_click(int button, int x, int y,
 // int						logic_loop(void *param);
 
 /*Engine*/
+void						ft_update_doors_portals(t_game *g);
 void						ft_portal(const t_game *game, t_render *r);
 void						ft_truc(const t_game *game, t_render *r);
 void						ft_portal_hit(t_thread *t, const t_game *g,

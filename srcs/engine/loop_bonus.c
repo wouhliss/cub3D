@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   loop.c                                             :+:      :+:    :+:   */
+/*   loop_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/03 16:31:10 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 22:52:41 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 22:57:08 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,13 +72,22 @@ static inline void	ft_lsteps(t_game *game)
 
 static inline void	ft_render_queue(t_game *g)
 {
-	g->threads[0].id = 0;
-	g->threads[0].g = g;
-	g->threads[0].dx = (g->frames & 1);
-	g->threads[0].x = W;
-	if (!g->last)
-		ft_create_vector(&g->threads[0].hit, HIT, sizeof(t_hit));
-	ft_draw(&g->threads[0]);
+	int	i;
+
+	i = -1;
+	while (++i < THREADS)
+	{
+		g->threads[i].id = i;
+		g->threads[i].g = g;
+		g->threads[i].dx = T_WIDTH * i + (g->frames & 1);
+		g->threads[i].x = T_WIDTH * (i + 1);
+		if (!g->last)
+			ft_create_vector(&g->threads[i].hit, HIT, sizeof(t_hit));
+		pthread_create(&g->threads[i].tid, NULL, ft_draw, &g->threads[i]);
+	}
+	i = -1;
+	while (++i < THREADS)
+		pthread_join(g->threads[i].tid, NULL);
 	ft_drawmap(g);
 	mlx_put_image_to_window(g->mlx.mlx, g->mlx.win, g->s.img, 0, 0);
 }
@@ -86,10 +95,20 @@ static inline void	ft_render_queue(t_game *g)
 int	ft_loop(void *param)
 {
 	t_game			*game;
+	struct timespec	t;
 
 	game = param;
-	game->delta = 3000000;
-	game->now += 3000000;
+	clock_gettime(CLOCK_MONOTONIC_RAW, &t);
+	game->now = t.tv_nsec + t.tv_sec * 1000000000;
+	if (game->now - game->f > 1000000000)
+	{
+		printf("fps: %d\n", game->frames);
+		game->frames = 0;
+		game->f = game->now;
+	}
+	game->delta = game->now - game->last;
+	if (game->delta < 8000000)
+		return (0);
 	ft_animate(game);
 	ft_handle_movement(game);
 	ft_handle_aim(game);

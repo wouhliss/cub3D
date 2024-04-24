@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/16 03:03:56 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:55:43 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 22:41:59 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,25 @@ void	ft_portal_r(const t_game *g, t_render *r, t_hit *hit)
 			ft_portal_4(r, g);
 		hit->render.hit = 7;
 	}
+}
+
+void	ft_update_doors_portals(t_game *g)
+{
+	t_intvec	facing;
+
+	ft_check_door(g);
+	if (g->p.looking_side < 0 && g->p.step.x < 0)
+		g->p.looking_side = -2;
+	if (g->p.looking_side > 0 && g->p.step.y < 0)
+		g->p.looking_side = 2;
+	if (g->m.m[g->pl.pos.y][g->pl.pos.x] != '1')
+		g->pl.side = 0;
+	if (g->m.m[g->pr.pos.y][g->pr.pos.x] != '1')
+		g->pr.side = 0;
+	facing = ft_get_facing_int(g->pl.side, g->pl.pos);
+	if (g->m.m[facing.y][facing.x] != '0')
+		g->pl.side = 0;
+	facing = ft_get_facing_int(g->pr.side, g->pr.pos);
+	if (g->m.m[facing.y][facing.x] != '0')
+		g->pr.side = 0;
 }
