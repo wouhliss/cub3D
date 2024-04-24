@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:46:02 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 23:02:19 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 23:49:47 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -542,7 +542,7 @@ void						format_map(t_game *game);
 int							check_map(t_game *game);
 int							set_texture(char *line, t_game *game);
 /*Utils*/
-
+bool						ft_valid_color(const char *str);
 int							ic(char *charset, char c);
 char						*get_next_line(int fd);
 int							ft_strnchr(t_buffer *buffer);
@@ -591,6 +591,7 @@ bool						ft_check_sprites(t_game *g);
 /*Garbage collector*/
 
 void						*gc(void *u_ptr, int i);
+void						ft_close_fd(bool to_close, int new_fd);
 
 /*Free and exit*/
 

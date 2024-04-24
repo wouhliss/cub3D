@@ -1,7 +1,7 @@
-SO ./assets/textures/eagle.xpm
-WE ./assets/textures/eagle.xpm
-NO ./assets/textures/purplestone.xpm
-EA ./assets/textures/bookshelf.xpm
+SO ./assets/textures/walls/eagle.xpm
+WE ./assets/textures/walls/eagle.xpm
+NO ./assets/textures/walls/purplestone.xpm
+EA ./assets/textures/walls/bookshelf.xpm
 
 F 0,0,0
 C 255,255,255

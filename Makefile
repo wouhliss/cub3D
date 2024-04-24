@@ -11,7 +11,7 @@ NAME = cub3D
 NAME_BONUS = cub3D_bonus
 
 UTILS = utils1 utils2 utils3 utils4 utils5 utils6 ft_split vector vector_utils
-PARSING = checkings colors init map format settings textures
+PARSING = colors_utils checkings colors init map format settings textures
 ERROR = panic garbage
 DPRINTF = ft_dprintf dprintf_utils dprintf_utils2
 GNL = gnl

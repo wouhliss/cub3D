@@ -1,21 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 14:45:59 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 19:18:44 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 23:46:25 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	__attribute__((destructor))	aftermain(void)
+void	ft_close_fd(bool to_close, int new_fd)
+{
+	static int	fd = -1;
+
+	if (to_close)
+	{
+		close(fd);
+		fd = -1;
+	}
+	else
+		fd = new_fd;
+}
+
+void	__attribute__((destructor)) aftermain(void)
 {
 	gc(NULL, EMPTY);
+	ft_close_fd(true, 0);
 }
+
 
 static inline void	ft_default_texture(t_game *g)
 {
@@ -71,6 +86,7 @@ int	main(int ac, char **av)
 	s = ft_strrchr(av[1], '.');
 	if (!s || ft_strcmp(s, EXT))
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, EXT_ERR), 2);
+	game.fd = -1;
 	init_map(av[1], &game);
 	ft_default_texture(&game);
 	if (ft_init_mlx(&game))

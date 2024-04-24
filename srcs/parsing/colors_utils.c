@@ -1,19 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   panic.c                                            :+:      :+:    :+:   */
+/*   colors_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/24 15:59:33 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/24 23:42:27 by ybelatar         ###   ########.fr       */
+/*   Created: 2024/04/24 23:48:10 by ybelatar          #+#    #+#             */
+/*   Updated: 2024/04/24 23:49:36 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub.h"
 
-void	panic(const char *message)
+bool	ft_valid_color(const char *str)
 {
-	ft_dprintf(2, ERR_FORMAT, NAME, message);
-	exit(1);
+	while (*str)
+	{
+		if (*str == ',' && *(str + 1) == ',')
+			return (false);
+		++str;
+	}
+	return (true);
 }

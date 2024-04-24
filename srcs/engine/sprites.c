@@ -6,7 +6,7 @@
 /*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 14:38:23 by wouhliss          #+#    #+#             */
-/*   Updated: 2024/04/24 19:25:38 by ybelatar         ###   ########.fr       */
+/*   Updated: 2024/04/24 23:52:10 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ static inline void	ft_putsprite(t_game *g, const t_sprite *s,
 								* 256 - HEIGHT * 128 + r->sph * 128)
 							* g->st[s->t].w) / r->sph) / 256;
 				c = 0;
-				if (i.y > 0 && i.y < g->st[s->t].w)
+				if (i.y >= 0 && i.y < g->st[s->t].w)
 					c = ((int *)g->st[s->t].a)[g->st[s->t].s + g->st[s->t].w
 						* i.y + i.x];
 				ft_drawpixel(r, t, c, d);

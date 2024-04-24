@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 18:08:38 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/03 17:02:31 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 23:50:05 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ int	get_color(char *line, int a, t_game *game)
 {
 	char	**splitted;
 
+	if (!ft_valid_color(line))
+		return (0);
 	splitted = gc(ft_split(line, ','), ADD);
 	if (!splitted || plen(splitted) != 3)
 		return (0);

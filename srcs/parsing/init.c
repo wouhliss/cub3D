@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wouhliss <wouhliss@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ybelatar <ybelatar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 16:26:39 by ybelatar          #+#    #+#             */
-/*   Updated: 2024/04/23 10:33:29 by wouhliss         ###   ########.fr       */
+/*   Updated: 2024/04/24 23:45:24 by ybelatar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	init_map(char *path, t_game *game)
 	game->fd = open(path, O_RDONLY);
 	if (game->fd == -1)
 		panic(FILE_ERR);
+	ft_close_fd(false, game->fd);
 	get_info_map(game);
 	put_colors(game);
 	pre_format_map(game);
