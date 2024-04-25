@@ -16,7 +16,7 @@ void	ft_close_fd(bool to_close, int new_fd)
 {
 	static int	fd = -1;
 
-	if (to_close)
+	if (to_close && fd > 2)
 	{
 		close(fd);
 		fd = -1;
@@ -25,12 +25,11 @@ void	ft_close_fd(bool to_close, int new_fd)
 		fd = new_fd;
 }
 
-void	__attribute__((destructor)) aftermain(void)
+void	__attribute__((destructor))	aftermain(void)
 {
 	gc(NULL, EMPTY);
 	ft_close_fd(true, 0);
 }
-
 
 static inline void	ft_default_texture(t_game *g)
 {
@@ -81,7 +80,7 @@ int	main(int ac, char **av)
 	static t_game	game = {0};
 	const char		*s;
 
-	if (ac < 2)
+	if (ac != 2)
 		return (ft_dprintf(STDERR_FILENO, ERR_FORMAT, NAME, ARGS_ERR), 1);
 	s = ft_strrchr(av[1], '.');
 	if (!s || ft_strcmp(s, EXT))
